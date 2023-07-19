@@ -1,0 +1,238 @@
+﻿@model ReferalDB.Models.MedicalReviewViewModel
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+        ActivateMenuSelection();
+
+        if ($('#Comment_AproveInt').val() == 'False') {
+            document.getElementById("radioNo").checked = true
+        }
+        else {
+            document.getElementById("radioYes").checked = true
+        }
+
+    });
+
+    var DocheckSubmit = false;
+    var chekfailed = false;
+    var PageSubmit = false;
+    var message1 = "";
+    var message2 = "";
+    var msg = "";
+    //
+    function checkall(evt) {
+        chekfailed = false;
+        PageSubmit = false;
+        msg = "";
+        $("#dialog").text(msg);
+        var checks = $("input:checkbox:not(:checked)");
+        if (checks.length > 0) {
+            chekfailed = true;
+            msg = "Check Lists are not completed. Do you want to continue?";
+            if (!DocheckSubmit) {
+                evt.preventDefault();
+            }
+
+        }
+        if ($('#Comment_iSSubmitted').val() == 'True') {
+            PageSubmit = true;
+            msg = "This form is already submitted. Do you want to continue?";
+        }
+
+        if (chekfailed && PageSubmit) {
+            msg = "This form is already submitted and Check Lists are not completed. Do you want to continue?";
+        }
+
+        if (chekfailed || PageSubmit) {
+            $("#dialog").text(msg);
+            $("#dialog").dialog("open");
+            $("#dialog").dialog({
+                buttons: {
+                    "Confirm": function () {
+                        DocheckSubmit = true;
+                        
+                        $('#SubmitMedicalReview').attr('type', 'submit');
+                        $('#SubmitMedicalReview').trigger("click");
+                        $(this).dialog("close");
+                    },
+                    "Cancel": function () {
+                        $(this).dialog("close");
+                        return false;
+                    }
+                }
+            });
+
+
+        }
+        else {
+            
+            $('#SubmitMedicalReview').attr('type', 'submit');
+
+        }
+    }
+
+    function desableallbtns(data) {
+        var RefCurrentQueueId = data.split('*');
+        if (RefCurrentQueueId[0] == 'success') {
+            SubmitPage(RefCurrentQueueId[1]);
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+    function SetActiveInt(Val) {
+
+        if ($(Val).attr('id') == 'radioYes') {
+
+            $('#Comment_AproveInt').val(true);
+
+        }
+        else if ($(Val).attr('id') == 'radioNo') {
+
+            $('#Comment_AproveInt').val(false);
+
+        }
+
+
+    }
+
+    function closepopup(evt) {
+        evt.preventDefault();
+        $('#viewUserList').hide();
+    }
+
+    function loadUserPage(chkCounti, chkCountj, evt) {
+        var ids = $('#ChkAll_' + chkCounti + '__chkList_' + chkCountj + '__AssignMultiId').val();
+        if (ids == "") {
+            ids = '0';
+        }
+        $('#viewUserListContent').load('../IntakeAssessment/userList?userIdz=' + ids + '&ChkListId=' + chkCounti + '&ChkCounti=' + chkCounti + '&ChkCountj=' + chkCountj + '');
+        $('#viewUserList').show(250);
+    }
+</script>
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+</style>
+@using (Ajax.BeginForm("MedicalReviewSubmit", "IntakeAssessment", FormMethod.Post, new AjaxOptions { UpdateTargetId = "tdMsg", OnSuccess = "desableallbtns(data);" }))
+{
+   
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div>
+        <table style="width: 100%">
+            <tr>
+
+                <td>
+                    <div id="tdMsg" style="color: white !important;"></div>
+                </td>
+            </tr>
+        </table>
+        @for (int i = 0; i < Model.ChkAll.Count; i++)
+        { 
+            <table style="width: 100%" class="gridStyle">
+                <tr class="HeaderStyle">
+                    <td style="width: 30%"><b>@Model.ChkAll[i].ChkHeadName</b>
+                        @Html.HiddenFor(m => Model.ChkAll[i].ChkHeadId, Model.ChkAll[i].ChkHeadId)
+                        @Html.HiddenFor(m => Model.ChkAll[i].ChkHeadName, Model.ChkAll[i].ChkHeadName)
+                    </td>
+                    <td style="width: 17%">
+                        <b>Assign To</b>
+                    </td>
+                    <td style="width: 17%">
+                        <b>Assign</b>
+
+                    </td>
+                    <td style="width: 17%">
+                        <b>Completed</b>
+                    </td>
+                </tr>
+                @for (int j = 0; j < Model.ChkAll[i].chkList.Count; j++)
+                { 
+                    <tr>
+                        <td>@Model.ChkAll[i].chkList[j].CheckListName
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].CheckListName, Model.ChkAll[i].chkList[j].CheckListName)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].IsPresent, Model.ChkAll[i].chkList[j].IsPresent)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].AssginId, Model.ChkAll[i].chkList[j].AssginId)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].checkListId, Model.ChkAll[i].chkList[j].checkListId)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].ChkHeadId, Model.ChkAll[i].chkList[j].AssginId)
+                        </td>
+                        <td>
+                            <div id="@string.Concat("userName_" + i + "_", j)">@MvcHtmlString.Create(Html.Encode(Model.ChkAll[i].chkList[j].AssignMultiName).Replace(";", "<br />"))</div>
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].AssignMultiId, Model.ChkAll[i].chkList[j].AssignMultiId)
+                        </td>
+                    <td>
+                        <img src="~/Images/AssignUser.png" onclick="loadUserPage(@i,@j,event)" style="cursor:pointer" />
+                    </td>
+                    <td>
+                            @Html.CheckBox("ChkAll[" + i + "].chkList[" + j + "].checkListval", (Model.ChkAll[i].chkList[j].Complete == true) ? true : false, new { value = true })
+                        </td>
+                    </tr>
+                }
+            </table>
+         
+        }
+
+
+        <table style="width: 100%">
+            <tr>
+                <td colspan="3">
+                    <span class="lblSpan">Comments</span>
+                    <br />
+                    @Html.TextAreaFor(objCmts => Model.Comment.Comments, new { maxlength = "500", style = "width: 100%; height: 100px;", value = Model.Comment.Comments })</td>
+            </tr>
+            <tr>
+                <td style="width: 80px">Approved<span style="color: red">*</span>
+                    @Html.HiddenFor(m => Model.Comment.academicReviewId, Model.Comment.academicReviewId)
+                    @Html.HiddenFor(m => Model.Comment.IsPresent, Model.Comment.IsPresent)
+                    @Html.HiddenFor(m => Model.Comment.Comments, Model.Comment.Comments)
+                    @Html.HiddenFor(m => Model.Comment.Type, Model.Comment.Type)
+                    @Html.HiddenFor(m => Model.Comment.iSSubmitted, Model.Comment.iSSubmitted)
+
+                </td>
+
+                <td>
+                    <input id="radioYes" type="radio" name="yesNo" onclick="SetActiveInt(this)" />Yes
+                    <input id="radioNo" type="radio" name="yesNo" onclick="SetActiveInt(this)" />No @Html.HiddenFor(m => Model.Comment.AproveInt, Model.Comment.AproveInt) @Html.HiddenFor(m => Model.approvedStatus, Model.approvedStatus)</td>
+
+                <td style="text-align: right">
+                    @if (ViewBag.permission == "true")
+                    {
+                        <input type="button" name="SaveMedicalReview" value="Submit" id="SubmitMedicalReview" onclick="checkall(event);" />
+                    }
+                    <input type="submit" name="SaveMedicalReview" value="Save" id="SaveMedicalReview" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="viewUserList" class="popUpStyle" style="width: 50%; left: 25%;">
+
+        <a id="close_x" class="close sprited1" style="" href="#" onclick="closepopup(event)">
+            <img width="18" height="18" alt="" style="" src="../Images/button_red_close.png">
+        </a>
+        <hr />
+        <div id="viewUserListContent" style="margin: 0px auto; width: 80%;">
+        </div>
+    </div>
+    <div id="dialog" title="Confirmation Required">
+    </div>
+       
+  
+}
+
+
+

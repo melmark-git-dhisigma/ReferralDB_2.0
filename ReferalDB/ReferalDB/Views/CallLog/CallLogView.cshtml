@@ -1,0 +1,59 @@
+﻿@model ReferalDB.Models.CommonCallLogViewModel
+
+
+<script type="text/javascript">
+    function Show(data) {
+
+        var mywindow = window.open('', 'Call', 'height=600,width=600,scrollbars=yes,resizable=yes,fullscreen=no');
+        mywindow.document.write('<html><head><title>CallLog</title>');
+        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('</body></html>');
+        mywindow.document.close();
+        return true;
+    }
+</script>
+
+
+<div id="CallLogDet">
+    <table>
+        <tr>
+            <td>
+                <input style="width: 142px" type="button" value="Back To Referral" onclick="ReferalBack();" />
+            </td>
+        </tr>
+    </table>
+    <table id="tblContacList" style="width: 100%" class="gridStyle">
+        <tr class="HeaderStyle" style="text-align:center">
+            <th class="tdLabel">Contact Name</th>
+            <th class="tdLabel">Relationship</th>
+            <th class="tdLabel">Call Time</th>
+            <th class="tdLabel">Call Type</th>
+            <th class="tdLabel">Details</th>
+        </tr>
+        @if (Model.CallLists != null)
+        {
+            for (int i = 0; i < Model.CallLists.Count; i++)
+            {
+              
+
+            <tr class="RowStyle">
+                <td style="width: 10%; padding: 0 0 0 50px!important;">@Model.CallLists[i].ContactName</td>
+                <td style="width: 10%; padding: 0 0 0 70px!important;">@Model.CallLists[i].Relationship</td>
+                <td style="width: 10%; padding: 0 0 0 30px!important;">@Convert.ToDateTime(Model.CallLists[i].Calltime).ToString("MMM/dd/yyyy  HH:mm:ss")</td>
+                 
+                    <td style="width: 10%; padding: 0 0 0 80px!important;">@Model.CallLists[i].Callflag</td>
+                
+                <td style="width: 15%; padding: 0 0 0 118px!important;">
+                    @*   @Ajax.ActionLink("CallLog", "CallLogView", new { CallLogId =  @Model.CallLists[i].CallLogId }, new AjaxOptions { OnSuccess="Show" })  </td>*@
+
+                    <a href="#" onclick="CallLogDetailsSelect(@Model.CallLists[i].CallLogId)" >Details</a> </td>
+
+
+            </tr>
+       
+            }
+        }
+    </table>
+</div>

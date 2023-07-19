@@ -1,0 +1,168 @@
+﻿@model ReferalDB.Models.TeamAssignViewModel
+
+
+<script type="text/javascript">
+    // $('#overlay').fadeIn('fast');
+    //function loadDivUser(indexVal) {
+    //    alert(indexVal);
+    //    TeamUsers_0__UserNames
+    //}
+
+
+
+    //function loadDivUser(indexVal) {
+    //    var valUser = $('#TeamUsers_' + indexVal + '__UserNames').val().split(';');
+    //    for (var i = 0; i < valUser.length; i++) {
+    //        $('#UserTab').append('<tr><td>' + valUser[i] + '</td></tr>');
+    //    }
+
+    //    $('#UserView').show();
+    //}
+
+    function loadUserPage(teamId, evt) {
+        evt.preventDefault();
+        $('#viewUserListContent').load('../PreAdmission/userListAssignTeam?TeamIdz=' + teamId + '');
+        $('#UserView').show(250);
+    }
+
+    function closepopup(evt) {
+        evt.preventDefault();
+        $('#UserView').hide();
+    }
+    function desableallbtns(data) {
+        var RefCurrentQueueId = data.split('*');
+        if (RefCurrentQueueId[0] == 'success') {
+            SubmitPage(RefCurrentQueueId[1]);
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+    $(document).ready(function () {
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+
+        ActivateMenuSelection();
+
+        if ($('#iSSubmitted').val() == 'True') {
+            $("#SubmitAssignTeamSave").click(function (e) {
+                // e.preventDefault();
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#SubmitAssignTeamSave').attr('type', 'submit');
+                            $('#SubmitAssignTeamSave').trigger("click");;
+                            //$("#submitClinical").off('click');
+                            //$('#frnClinical').submit();
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#SubmitAssignTeamSave').attr('type', 'submit');
+            //$('#submitAcademic').trigger("click");
+        }
+    });
+
+</script>
+
+@using (Ajax.BeginForm("AssignTeamSave", "PreAdmission", FormMethod.Post, new AjaxOptions { UpdateTargetId = "tdMsg", OnSuccess = "desableallbtns(data);" }))
+{
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div>
+
+        <table style="width: 100%">
+            <tr>
+
+                <td>
+                    <div id="tdMsg" style="color: white !important;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%">
+            <tr>
+                <td colspan="3">
+                    <table style="width: 100%" class="gridStyle">
+                        <thead>
+                            <tr class="HeaderStyle">
+                                <td style="width: 40%"><b>Team Name</b>
+                                </td>
+                                <td style="width: 30%"><b>View</b>
+                                </td>
+                                <td style="width: 30%"><b>Assign</b>
+                                </td>
+                            </tr>
+                        </thead>
+                        @for (int i = 0; i < Model.TeamUsers.Count; i++)
+                        {
+                            <tr>
+                                <td>@Model.TeamUsers[i].TeamName
+                                    @Html.HiddenFor(m => Model.TeamUsers[i].UserNames, Model.TeamUsers[i].UserNames)
+                                    @Html.HiddenFor(m => Model.TeamUsers[i].TeamId, Model.TeamUsers[i].TeamId)
+                                    @Html.HiddenFor(m => Model.TeamUsers[i].TeamAssignId, Model.TeamUsers[i].TeamAssignId)
+                                </td>
+
+                                <td><a onclick="loadUserPage(@Model.TeamUsers[i].TeamId,event)" style="cursor:pointer;">View</a></td>
+
+                                <td>
+                                    @Html.CheckBox("TeamUsers[" + i + "].checkListval", (Model.TeamUsers[i].Complete == true) ? true : false, new { value = true })
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td>@Html.HiddenFor(m => Model.iSSubmitted, Model.iSSubmitted)</td>
+                <td></td>
+                <td style="text-align: right">
+                    @if (ViewBag.permission == "true")
+                    {
+                        <input type="button" name="SaveTeamAssign" value="Submit" id="SubmitAssignTeamSave" />
+                    }
+                    <input type="submit" name="SaveTeamAssign" value="Save" id="SaveAssignTeamSave" />
+                </td>
+            </tr>
+        </table>
+
+
+    </div>
+}
+
+<div id="UserView" class="popUpStyle" style="width: 50%; left: 25%;">
+
+    <a id="close_x" class="close sprited1" style="margin-top: -13px; margin-right: -14px; position: fixed;" href="#" onclick="closepopup(event)">
+        <img width="18" height="18" alt="" style="float: right; margin-right: 0px; margin-top: 0px; position: fixed; z-index: 300; top: 32%; left: 75%;" src="../Images/button_red_close.png">
+    </a>
+    <br />
+    <hr />
+    <div id="viewUserListContent" style="margin: 0px auto; width: 80%;">
+    </div>
+</div>
+<div id="dialog" title="Confirmation Required">
+   This form is already submitted. Do you want to continue?
+</div>

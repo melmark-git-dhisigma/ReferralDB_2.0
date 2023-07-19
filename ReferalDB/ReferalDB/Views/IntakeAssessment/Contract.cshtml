@@ -1,0 +1,423 @@
+﻿@model ReferalDB.Models.ContractViewModel
+<script src="~/CSS/ValidData.js"></script>
+<script src="~/Scripts/jquery.validationEngine-en.js"></script>
+<script src="~/Scripts/jquery.validationEngine.js"></script>
+<script src="../Scripts/jquery.mask.js"></script>
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var Arr_Record = [];
+
+    $(document).ready(function () {
+
+		$('#EndDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showAnim: "fadeIn",
+            yearRange: 'c-80:c+80',
+            //minDate: date,
+            /* fix buggy IE focus functionality */
+            fixFocusIE: false,
+            onSelect: function (dateText, inst) {
+
+                var newValue = $(this).val();
+                var controlId = $(this).attr('id');
+                var labelText = $(this).siblings('.lblSpan').text();
+                var prevValue = Arr_Record[3];
+
+                //if (isInitialValue(controlId, newValue)) {
+
+                //    message = '[' + labelText + ']' + ' was changed from "' + prevValue + '" to "' + newValue + '".';
+
+                //    Arr_Record[4] = newValue;
+                //    Arr_Record[5] = message;
+                //    Arr_Ticker.push(Arr_Record);
+                //    Arr_Record = [];
+                //}
+
+                //writeToTickerBox(Arr_Ticker);
+            }
+        }).attr('readonly', 'true');
+
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+
+        jQuery("#applicationForm1").validationEngine();
+        //$('#btn1').click(function () {
+        //    jQuery("#applicationForm1").validationEngine();
+        //});
+        //$('#btn2').click(function () {
+        //    jQuery("#applicationForm1").validationEngine();
+        //});
+
+        if ($('#isSubmit').val() == 'True') {
+            $("#btn1").click(function (e) {
+                // e.preventDefault();
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#btn1').attr('type', 'submit');
+                            $('#btn1').trigger("click");;
+                            //$("#submitClinical").off('click');
+                            //$('#frnClinical').submit();
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#btn1').attr('type', 'submit');
+            //   $('#submitClinical').trigger("click");
+        }
+
+        GetNameFieldValidate();
+        $('.namefield').bind('paste', function (e) {
+            e.preventDefault();
+        });
+
+
+        $('.usPhone').mask('(000)000-0000');
+    });
+
+    function GetNameFieldValidate() {
+        $('.namefield').keypress(function (event) {
+            var inputValue = event.which;
+            if (((inputValue >= 65 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue == 32) || (inputValue == 39) || (inputValue == 45) || (inputValue == 8) || (inputValue == 0))) {
+            }
+            else {
+                event.preventDefault();
+            }
+        });
+    }
+    @if (ViewBag.Flag == 0)
+    {
+        string load = "$(document).ready(function () { ActivateMenuSelection(); \n "
+
+             + " var options = {" +
+                 "success: showResponse  \n "
+             + "};"
+            + " $('#applicationForm1').ajaxForm(options);"
+        + " });";
+       @MvcHtmlString.Create(load)
+    }
+    function downloadFn(id) {
+        window.open('../IntakeAssessment/DownloadContract?id=' + id + '   ', '_blank');
+    }
+
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        var msg = responseText.split('*');
+        if (msg[0] == "success") {
+            SubmitPage(msg[1]);
+        }
+
+        else
+            //document.getElementById('LoadQueue').innerHTML = responseText;
+        {
+            // $('#LoadQueue').html(responseText);
+            var htmlObj = $(responseText);
+            $('#LoadQueue').load('../IntakeAssessment/Contract?msg=' + encodeURI($(htmlObj).find('#NotiMsg').html()));
+
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+    $(".Saved").click(function (e) {
+        //return runSearch();
+    });
+
+    function ValidateHours() {
+        //alert(parseFloat(10));
+        var hours = $('#NoHours').val();
+        var hr = $('#NoHours');
+        var regexp1 = /^\d+\.\d{0,5}$/;
+        var regexp2 = /^[0-9\s]*$/;
+        if ((regexp1.test(hours)) == false && (regexp2.test(hours)) == false) {
+            document.getElementById('Validate').innerHTML = "Invalid Hours";
+            document.getElementById('NoHours').value = "";
+        }
+        else if ((regexp1.test(hours)) == true || (regexp2.test(hours)) == true) {
+            document.getElementById('Validate').innerHTML = " ";
+            if (document.getElementById('NoHours').value != "")
+                document.getElementById('NoHours').value = (parseFloat(hours)).toFixed(2);
+        }
+    }
+    function runSearch() {
+
+        var Email = $('#txtemail').val();
+        var Phone = $('#txtphone').val();
+
+        var IsEmail = true;
+        var IsPhone = true;
+
+        if (Email != null && Email != "") {
+            IsEmail = EmailRegx(Email);
+        }
+
+        if (Phone != null && Phone != "") {
+            IsPhone = PhoneRegx(Phone);
+        }
+
+        if (IsEmail == true && IsPhone == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    function restrict(evt, elem, condition) {
+        var conditionList = condition.split('|');
+
+        if (conditionList[0] == "digitOnly") {
+            var textValue = (evt.which) ? evt.which : evt.keyCode;
+
+            var number = (conditionList.length == 2) ? conditionList[1] : /[0-9]/;
+            if (number.test(String.fromCharCode(textValue)) || textValue == 8 || textValue == 9 || textValue == 40 || textValue == 41 || textValue == 45) {
+                return true;
+            }
+
+            return false;
+        }
+
+    }
+
+
+</script>
+<style>
+    /*#tblPlacement td {
+        width: 50px !important;
+    }*/
+</style>
+@using (Html.BeginForm("SaveContract", "IntakeAssessment", FormMethod.Post, new { enctype = "multipart/form-data", id = "applicationForm1" }))
+{
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div id="NotiMsg" style="color: white !important;">@Html.Raw(ViewBag.Chkmsg)</div>
+     <table id="tblPlacement" style="width: 100%">
+        <tr>
+            <td colspan="2">
+                <strong>Placement Contract </strong>
+                <hr />
+                @Html.HiddenFor(m => Model.Emailhidden, Model.Emailhidden)
+                @Html.HiddenFor(m => Model.Phonehidden, Model.Phonehidden)
+            </td>
+
+        </tr>
+        <tr>
+            <td style="width:270px;">
+                <span class="lblSpan">State:</span>
+                <br />
+                @Html.DropDownListFor(m => Model.StateId, Model.StateDetails, "-----Select-----", new { @style = "width:80%;margin-bottom:2%;", @Id = "ddlState" })
+            </td>
+            <td>
+                <span class="lblSpan">District:</span>
+                <br />
+                @Html.TextBoxFor(name => Model.DistrictId, new { maxlength = "100", style = "width:92%;", id = "txtDistrict", value = Model.DistrictId })
+
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <span class="lblSpan">Cost Share:</span>
+                <br />
+                @Html.TextBoxFor(objcost => Model.CostShare, new { maxlength = "100", style = "width:92%;", id = "txtCostShare", value = Model.CostShare })
+            </td>
+            <td>
+                <strong>OSD Ind. Price Req. Form (If 1:1)</strong><br/>
+                <span class="lblSpan">1:1 Services:</span><br/>
+                @Html.DropDownListFor(m => Model.Services, Model.ServiceDetails, "-----Select-----", new { @style = "width:80%;margin-bottom:2%;", @Id = "ddlService" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong>Contracts Contact Person</strong><br/>
+                <span class="lblSpan">Contact Name:</span>
+                <br />
+                @Html.TextBoxFor(objcost => Model.ContactName, new { maxlength = "100", style = "width:92%;", id = "txtContactname", value = Model.ContactName, @class = "namefield" })
+            </td>
+            <td>
+                <span class="lblSpan">Number of 1:1 Hours</span><br/>
+                @Html.TextBoxFor(m => Model.NoOfHours, new { onblur="ValidateHours();", @style = "width:80%;margin-bottom:2%;", @Id = "NoHours"})
+                 <label id="Validate" style="color:red"></label>
+            </td>            
+        </tr>
+        
+        <tr>
+            <td>
+                <span class="lblSpan">Phone:</span>
+                <br />
+                @Html.TextBoxFor(objphn => Model.Phone, new { maxlength = "14", style = "width:92%;", id = "txtphone", value = Model.Phone, @class = "validate[custom[usPhoneNumber]] usPhone", })
+            </td>
+
+            <td>
+                <span class="lblSpan">Contact Address:</span>
+                <br />
+                @Html.TextAreaFor(objadds => Model.ContactAddress, new { maxlength = "500", style = "width: 92%; height: 64px;", value = Model.ContactAddress })
+            </td>       
+                 
+        </tr>
+        <tr>
+            <td>
+                <span class="lblSpan">Email:</span>
+                <br />
+                @Html.TextBoxFor(objemail => Model.Email, new { maxlength = "100", style = "width:92%;", id = "txtemail", value = Model.Email, @class = "validate[custom[email]]", })
+            </td>
+            <td>
+                <span class="lblSpan">Fax:</span>
+                <br />
+                @Html.TextBoxFor(objfax => Model.Fax, new { maxlength = "100", style = "width:92%;", id = "txtfax", value = Model.Fax, @class = "validate[custom[usPhoneNumber]] usPhone", })
+            </td>
+        </tr>
+		<tr>
+            <td>
+                <span class="lblSpan">Discharge/End Date</span><span style="color:red"></span>
+                <br />
+                @Html.TextBoxFor(m => m.EndDate, Model.EndDate, new { ID = "EndDate" })
+                @*@Html.TextBoxFor(m => m.EndDate, Model.EndDate, new { @class = "validate[required] datepicker input", ID = "EndDate" })*@
+            </td>
+             <td>
+                <span class="lblSpan">Funding Source:</span>
+                <br />
+                @*@Html.DropDownListFor(m => Model.FundingSourceId, Model.FundingSourceList, new { @class = "validate[required] input", ID = "ddlFundSrc" })*@
+                 @Html.DropDownListFor(m => Model.FundingSourceId, Model.FundingSourceList, new {  ID = "ddlFundSrc" })
+            </td>
+        </tr>
+    </table>
+    <table style="width: 100%" class="gridStyle">
+        <thead>
+            <tr class="HeaderStyle">
+                <td>Contract Forms</td>
+                <td align="center">Download</td>
+                <td align="center">Verified</td>
+            </tr>
+        </thead>
+
+        @for (int i = 0; i < Model.ContractLists.Count; i++)
+        {
+            <tr>
+                <td>@Model.ContractLists[i].IEPName</td>
+                <td align="center">
+                    @Html.HiddenFor(m => Model.ContractLists[i].IEPId, Model.ContractLists[i].IEPId)
+                    <img id="@Model.ContractLists[i].IEPId" src="../Images/download.PNG" onclick="downloadFn(this.id);" />
+                </td>
+                <td align="center">
+                    @* <input type="checkbox" id="chkVerify" />*@
+                    @Html.CheckBox("ContractLists[" + i + "].Verified", (Model.ContractLists[i].Verified == true) ? true : false, new { value = true })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <table style="width: 100%;">
+        <tr style="background-color: #DFE5EF;">
+            <td colspan="4" style="height: 29px;">Select Document</td>
+        </tr>
+        <tr>
+            <td>
+                <span class="lblSpan">Document Name</span>
+                <br />
+                @Html.TextBoxFor(name => Model.DocumentName, new { maxlength = "50", style = "width:90%;", id = "txtDocName" })
+            </td>
+            <td>
+                <span class="lblSpan">Upload Document</span>
+                <br />
+                <input type="file" name="Upfile" id="file" />
+            </td>
+            <td>
+                @*<input type="submit" value="Add" name="SaveContract" style="width: 80px;" />*@
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                        <input type="submit" value="Add" class="" name="SaveContract" style="width: 80px;" />
+                    }
+                    else if (Model.flag == "N")
+                    {
+                        <input type="submit" value="Add" class="" name="SaveContract" style="width: 80px;" />
+                    }
+                }
+                else
+                {
+                    <input type="submit" value="Add" class="" name="SaveContract" style="width: 80px;" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <span class="lblSpan">Comments</span>
+                <br />
+            @Html.TextAreaFor(objCmts => Model.Comments, new { maxlength = "500", style = "width: 100%; height: 100px;", value = Model.Comments })</td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">
+                @Html.HiddenFor(m => Model.flag, Model.flag)
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                            <input type="button" name="SaveContract" class="Saved" id="btn1" value="Submit" />
+                        }
+                        <input type="submit" name="SaveContract" class="Saved" id="btn2" value="Save" />
+
+                    }
+                    else if (Model.flag == "N")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                            <input type="button" name="SaveContract" class="Saved" id="btn1" value="Submit" />
+                        }
+                        <input type="submit" name="SaveContract" class="Saved" id="btn2" value="Save" />
+
+                    }
+                }
+                else
+                {
+                    if (ViewBag.permission == "true")
+                    {
+                        <input type="button" name="SaveContract" class="Saved" id="btn1" value="Submit" />
+                    }
+                    <input type="submit" name="SaveContract" class="Saved" id="btn2" value="Save" />
+
+                }
+            </td>
+            <td>
+                @Html.HiddenFor(m => Model.isSubmit, Model.isSubmit)
+            </td>
+        </tr>
+    </table>
+    <div id="dialog" title="Confirmation Required">
+        This form is already submitted. Do you want to continue?
+    </div>
+
+
+}
+
+

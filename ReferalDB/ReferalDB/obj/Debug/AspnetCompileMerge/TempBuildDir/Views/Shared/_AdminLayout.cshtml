@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+
+    <script src="~/Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+    @* <script src="~/Scripts/jquery.unobtrusive-ajax.js" type="text/javascript"></script>*@
+    <link href="~/CSS/StyleMaster.css" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/StyleControl.css" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/StyleCommon.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var titles = "";
+            $.getJSON('../Dashboard/GetTitle', {}, function (result) {
+                titles = result;
+                // $(document).prop('title', titles);
+                document.title = result;
+            });
+
+            $('#UserName').load('../Dashboard/GetUserName'); // To load User Name    
+
+        });
+        function loadmaster() {
+
+            self.location = '../../../LoginContinue.aspx';
+
+        }
+
+    </script>
+</head>
+
+<body>
+    <div class="mainContainer">
+        <div class="topHead">
+            <a class="admin" href="#">
+                <div id="UserName"></div>
+            </a>
+            <a class="landing" href="../../LoginContinue.aspx">Landing Portal</a>
+            <a class="logout" href="../Login/Logout">Logout</a>
+        </div>
+        <div class="Dashboard-logo"></div>
+        <div class="contentPart">
+            <div class="logoContainer">
+                <div class="imgcorner">
+                </div>
+                <ul>
+                    <li onclick=""><a href="../AdminView/AdminView">
+                        <img src="~/Images/visual.png" width="26" height="23" alt="" /><br>
+                        Admin</a></li>
+                    <li onclick=""><a href="../Dashboard/Dashboard">
+                        <img src="~/Images/home.png" width="26" height="23" alt="" /><br>
+                        Home</a></li>
+                    <li onclick=""><a href="../Reports/ReferralReports.aspx">
+                        <img src="~/Images/Reports.png" width="26" height="23" alt="" /><br>
+                        Reports</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+
+            <div class="ContentAreaContainer">
+
+                <div style="float:left;width:100%;min-width:800px;overflow-x:auto">
+                    @RenderBody()
+                </div>
+                <div class="clear"></div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+        <div class="clear"></div>
+        <div class="footer">
+            <img src="~/Images/smllogo.JPG" width="109" height="18" />
+            <div class="copyright">&copy; Copyright 2015, Melmark, Inc. All rights reserved.</div>
+
+        </div>
+
+
+        <div class="clear"></div>
+    </div>
+
+
+
+
+
+</body>
+</html>
+

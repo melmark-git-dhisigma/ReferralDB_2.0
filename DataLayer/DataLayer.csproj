@@ -1,0 +1,731 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F6A6A04D-8DF1-4BB9-9901-088CB851A0C4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataLayer</RootNamespace>
+    <AssemblyName>DataLayer</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=4.4.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AcdSheetMtng.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActiveReferalNdUser_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AdaptiveEquipment.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Address.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AddressList.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AsmntGoalRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AsmntLPRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AsmntTempStg.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AsmntYear.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Assessment.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BasicBehavioralInformation.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehaveLookup.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Behavior.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehaviorCategory.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehaviorReminder.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Behaviour.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehaviourCalc.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehaviourDetail.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehaviourLPRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BehavioursPA.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="binaryFile.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BiweeklyStatu.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="BSPDoc.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ChainedSessionReport_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ChecklistEngine.cs" />
+    <Compile Include="CheckListItem.cs" />
+    <Compile Include="Class.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Client.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ClientReportProcedure_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Client_Dashboard_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="clvAsmtTool.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="clvRecChange.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="clvReinfoSur.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Color.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ContactPersonal.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CrntRecomendation.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataSheet.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiaganosesPA.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DimDateHour.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="District.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Document.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempHdr.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempParentStep.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempPrompt.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempRule.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempSet.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempSetCol.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempSetColCalc.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempSetStatu.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DSTempStep.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmergencyContactSchool.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EmergencyContacyPersonal_E_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Event.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EventLog.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GetEvents_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Goal.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GoalLevel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GoalLPRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GoalRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GoalRelType.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GoalType.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Goal_Lessons_Behavior_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Group.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEPPA1.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEPPA1Extension.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE10_Benchmark.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE11_SchoolPer.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE11_SDI.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE11_Service.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE12_DateOfRev.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE12_ESY.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE12_SupportService.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE2_Team.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE6_Edu.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE6_Goal.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE6_GoalsObj.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE6_Living.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="IEP_PE_Details.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Insurance.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LessonPlan.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LessonPlanGraphRelation.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LessonPlan_Report_Result.cs" />
+    <Compile Include="LetterEngine.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LetterEngineItem.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_ContentLesson.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_Domain.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_Lesson.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_LessonDetails.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_Media.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_Options.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_ReinforcementAssgn.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LE_SetStep.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LookUp.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LPAttribute.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LPDoc.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MedicalAndInsurance.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MelmarkDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MelmarkDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MelmarkDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="MelmarkDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MelmarkDB.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Object.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Parent.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Placement.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProcessChkLstRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt_Doc.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt_Doc1.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt_Doc2.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt_List.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt_RTF_M.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProgressRpt_RTF_Q.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Progress_Report.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Protocol_1_Assistive.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Protocol_2_Community.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Protocol_3_Family.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Protocol_4_Basic.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Protocol_5_Signature.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PrvsRecomendation.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Queue.cs" />
+    <Compile Include="QueueProcess.cs" />
+    <Compile Include="ReferralFundingVsNonFunded_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReferralReportProcedure_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Referral_Dashboard_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Referral_Notifications_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_CallLogs.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_Checklist.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_CheckListAssign.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ChecklistItemOther.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ChecklistOther.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_CheckListUsers.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ConsentMeeting.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ContractDetails.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_IntakeAssessment.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_LetterTrayAssign.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_LetterTrayValues.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_MatchOpening.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_Notes.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_Notification.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ParentScreening.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_PlacementMeeting.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_Queue.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_QueueStatus.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_Recipients.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ReviewComments.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_ReviewTeamDecision.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_TeamAssign.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_TeamReferrals.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ref_UserLogs.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ReviewTeam.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Role.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RoleGroup.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RoleGroupPerm.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="School.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SchoolCal.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SchoolHoliday.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SchoolsAttended.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SearchAllTables_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SelectStudentPersonalDetails_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Split_Result.cs" />
+    <Compile Include="sp_copyLessonPlanonRename_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sp_copyLessonPlan_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Sp_MultipleBehaviour_Result.cs" />
+    <Compile Include="StdtAcdSheet.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtAggScore.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtAggScoreSet.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtAggScoreSet_Backup.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtAggScores_Backup.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtCheckedIn.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtClass.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtClinicalCoverSheet.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtDSStat.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtDSStepStat.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtGoal.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtGoalSvc.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtGrandRoundCvrsheet.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEP.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEPExt1.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEPExt2.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEPExt3.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEPExt4.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEPExt5.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="stdtIEPUpdateStatu.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEP_PE.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEP_PE10_GoalsObj.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIEP_PEUpdateStatus.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtIntAsmnt.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtLessonPlan.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtLoadDate.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtLPSched.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtLPStg.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtScoreVw.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessColScore.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessEvent.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessionDtl.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessionHdr.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessionScore.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessionStep.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtSessStimuliActivity.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StdtStatu.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Student.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentAddresRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentBasicDetailsNE_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentContactRelationship.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentMoreDetailsNE_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentMoreDetailsPA_Result.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentOld.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentParentRel.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentPersonal.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="StudentPersonalPA.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="sysdiagram.cs" />
+    <Compile Include="TabDefinition.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tblLetterEngine.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TeamMember.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="User.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserClass.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="UserRoleGroup.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Visitation.cs">
+      <DependentUpon>MelmarkDB.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="MelmarkDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MelmarkDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="MelmarkDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MelmarkDB.edmx</DependentUpon>
+      <LastGenOutput>MelmarkDB.Context.cs</LastGenOutput>
+    </None>
+    <None Include="MelmarkDB.edmx.diagram">
+      <DependentUpon>MelmarkDB.edmx</DependentUpon>
+    </None>
+    <None Include="MelmarkDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>MelmarkDB.edmx</DependentUpon>
+      <LastGenOutput>MelmarkDB.cs</LastGenOutput>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

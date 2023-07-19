@@ -1,0 +1,228 @@
+﻿@model ReferalDB.Models.ConsentMeetingModel
+
+
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+</style>
+
+@*<script src="~/Scripts/jquery.form.js"></script>*@
+<script type="text/javascript">
+
+     @if (ViewBag.Flag == 0)
+     {
+         string load = "$(document).ready(function () { "
+           + "$('#dialog').dialog({"
+             + " autoOpen: false,"
+              + "modal: true"
+          + "});\n ActivateMenuSelection(); \n"
+
+          + "if ($('#isSubmit').val() == 'True') {\n"
+                    + "$('#btnsubmit').click(function (e) {"
+
+                  + "$('#dialog').dialog('open');"
+                  + "$('#dialog').dialog({"
+                    + "  buttons: {"
+                       + "   'Confirm': function () {"
+                       + "       $('#btnsubmit').attr('type', 'submit');"
+                       + "       $('#btnsubmit').trigger('click');"
+
+
+                        + "      $(this).dialog('close');"
+                      + "    },"
+                      + "    'Cancel': function () {"
+
+                     + "         $(this).dialog('close');"
+                    + "          return false;"
+                     + "     }"
+                 + "     }"
+                + "  });"
+
+            + "  });"
+         + " }"
+         + " else {"
+         + "     $('#btnsubmit').attr('type', 'submit');"
+
+                          + "}\n"
+
+              + "var options = {" +
+                  "success: showResponse  \n "
+              + "};"
+             + " $('#applicationForm').ajaxForm(options);"
+         + " });";
+       @MvcHtmlString.Create(load)
+     }
+
+    $(document).ready(function () {
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+        if ($('#isSubmit').val() == 'True') {
+            $("#btnsubmit").click(function (e) {
+                // e.preventDefault();
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#btnsubmit').attr('type', 'submit');
+                            $('#btnsubmit').trigger("click");;
+                            //$("#submitClinical").off('click');
+                            //$('#frnClinical').submit();
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#btnsubmit').attr('type', 'submit');
+            //   $('#submitClinical').trigger("click");
+        }
+    });
+    function downloadFn(id) {
+        window.open('../AcceptanceProcess/DownloadConsent?id=' + id + ' ', '_blank');
+    }
+
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        var msg = responseText.split('*');
+        if (msg[0] == "success") {
+            SubmitPage(msg[1]);
+        }
+        else {
+            // $('#LoadQueue').html(responseText);
+            var htmlObj = $(responseText);
+            $('#LoadQueue').load('../AcceptanceProcess/ConsentFormLists?msg=' + encodeURI($(htmlObj).find('#NotiMsg').html()));
+
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+
+    }
+
+</script>
+@using (Html.BeginForm("SaveConsent", "AcceptanceProcess", FormMethod.Post, new { enctype = "multipart/form-data", id = "applicationForm" }))
+{
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div id="NotiMsg" style="color: white !important;">@Html.Raw(ViewBag.Chkmsg)</div>
+    <table style="width: 100%" class="gridStyle">
+        <thead>
+            <tr class="HeaderStyle">
+                <td>Consent Forms</td>
+                <td align="center">Download</td>
+                <td align="center">Verified</td>
+            </tr>
+        </thead>
+
+
+        @for (int i = 0; i < Model.ConsentLists.Count; i++)
+        {
+            <tr>
+                <td>@Model.ConsentLists[i].IEPName</td>
+                <td align="center">
+                    @Html.HiddenFor(m => Model.ConsentLists[i].IEPId, Model.ConsentLists[i].IEPId)
+                    <img id="@Model.ConsentLists[i].IEPId" src="../Images/download.PNG" onclick="downloadFn(this.id);" /></td>
+                <td align="center">
+                    @* <input type="checkbox" id="chkVerify" />*@
+                    @Html.CheckBox("ConsentLists[" + i + "].Verified", (Model.ConsentLists[i].Verified == true) ? true : false, new { value = true })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <table style="width: 100%;">
+        <tr style="background-color: #DFE5EF;">
+            <td colspan="4" style="height: 29px;">Select Document</td>
+        </tr>
+        <tr>
+            <td>
+                <span class="lblSpan">Document Name</span>
+                <br />
+                @Html.TextBoxFor(name => Model.DocumentName, new { maxlength = "50", style = "width:90%;", id = "txtDocName" })</td>
+            <td>
+                <span class="lblSpan">Upload Document</span>
+                <br />
+                <input type="file" name="Upfile" id="file" /></td>
+            <td>
+                @*<input type="submit" value="Add" name="SaveConsent" style="width: 80px;" />*@
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                    <input type="submit" value="Add" name="SaveConsent" style="width: 80px;" />
+                    }
+                    else if (Model.flag == "N")
+                    {
+                    <input type="submit" value="Add" name="SaveConsent" style="width: 80px;" />
+                    }
+                }
+                else
+                {
+                    <input type="submit" value="Add" name="SaveConsent" style="width: 80px;" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <span class="lblSpan">Comments</span>
+                <br />
+            @Html.TextAreaFor(objCmts => Model.Comments, new { maxlength = "500", style = "width: 100%; height: 100px;", value = Model.Comments })</td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                    <input type="button" id="btnsubmit" name="SaveConsent" value="Submit" />
+                        }
+                    <input type="submit" name="SaveConsent" value="Save" />
+                    }
+                    else if (Model.flag == "N")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                    <input type="button" id="btnsubmit" name="SaveConsent" value="Submit" />
+                        }
+                    <input type="submit" name="SaveConsent" value="Save" />
+                    }
+                }
+                else
+                {
+                    if (ViewBag.permission == "true")
+                    {
+                    <input type="button" id="btnsubmit" name="SaveConsent" value="Submit" />
+                    }
+                    <input type="submit" name="SaveConsent" value="Save" />
+                }
+            </td>
+            <td>
+                @Html.HiddenFor(m => Model.isSubmit, Model.isSubmit)
+            </td>
+        </tr>
+    </table>
+    <div id="dialog" title="Confirmation Required">
+        This form is already submitted. Do you want to continue?
+    </div>
+        
+}

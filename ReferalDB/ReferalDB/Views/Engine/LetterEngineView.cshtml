@@ -1,0 +1,413 @@
+﻿@model ReferalDB.Models.EngineViewModels
+
+@{
+    ViewBag.Title = "Letter Engine";
+}
+<meta http-equiv="X-UA-Compatible" content="IE=10,9" />
+<link href="~/CSS/StyleBars.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+<link href="~/CSS/StyleEngine.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    tinyMCE.init({
+        // General options
+        mode: "textareas",
+        theme: "advanced",
+        plugins: "lists,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave,visualblocks,tabfocus",
+        auto_focus: "ItemContent",
+        // Theme options
+        theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+        theme_advanced_buttons2: "cut,copy,paste,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+        theme_advanced_buttons3: "hr,|,sub,sup,|,charmap,emotions,iespell,advhr,|del,ins,attribs,|restoredraft",
+
+        theme_advanced_toolbar_location: "top",
+        theme_advanced_toolbar_align: "left",
+        theme_advanced_statusbar_location: "bottom",
+        theme_advanced_resizing: true,
+
+
+        template_external_list_url: "lists/template_list.js",
+        external_link_list_url: "lists/link_list.js",
+        external_image_list_url: "lists/image_list.js",
+        media_external_list_url: "lists/media_list.js",
+
+        // Style formats
+        style_formats: [
+        { title: 'Bold text', inline: 'b' },
+        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+        { title: 'Example 1', inline: 'span', classes: 'example1' },
+        { title: 'Example 2', inline: 'span', classes: 'example2' },
+        { title: 'Table styles' },
+        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+
+        // Replace values for the template plugin
+
+    });
+
+</script>
+
+<style>
+a.selected {
+  background-color:#1F75CC;
+  color:white;
+  z-index:100;
+}
+.messagepop {
+  background-color:#FFFFFF;
+  border:1px solid #999999;
+  cursor:default;
+  display:none;
+  margin-top: 15px;
+  margin-left:15%;
+  position:absolute;
+  text-align:left;
+  width:255px;
+  z-index:50;
+  padding: 0px 0px 20px 20px;
+}
+label {
+  display: block;
+  margin-bottom: 3px;
+  padding-left: 15px;
+  text-indent: -15px;
+}
+.messagepop p, .messagepop.div {
+  border-bottom: 0px solid #EFEFEF;
+  margin: 8px 0;
+  padding-bottom: 8px;
+}
+</style>
+<script>
+    function deselect(e) {
+        $('.pop').slideFadeToggle(function () {
+            e.removeClass('selected');
+        });
+    }
+    $(function () {
+        $('#contact').on('click', function () {
+            if ($(this).hasClass('selected')) {
+                deselect($(this));
+            } else {
+                $(this).addClass('selected');
+                $('.pop').slideFadeToggle();
+            }
+            return false;
+        });
+        $('.close').on('click', function () {
+            deselect($('#contact'));
+            return false;
+        });
+    });
+    $.fn.slideFadeToggle = function (easing, callback) {
+        return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+    };
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        document.getElementById('StatDIV1').style.display = 'none';
+        document.getElementById('StatDIV2').style.display = 'none';
+        // document.getElementById('hidenDIV').style.display = 'none';
+        $("#btnSave").click(function () {
+            document.getElementById('tdMsg').innerHTML = '';
+            if (document.getElementById('LetterEngineName').value == "") {
+                document.getElementById('tdMsg').innerHTML = "<div class='warning_box'>Please enter letter template name</div>";
+                return false;
+            }
+            else if ($('#DdlType option:selected').attr('value') == "") {
+                document.getElementById('tdMsg').innerHTML = "<div class='warning_box'>Please select Letter Type</div>";
+                return false;
+            }
+            else if ($('#DdlType1 option:selected').attr('value') == "" && $('#DdlType option:selected').attr('value') == "Funding Verification") {
+                document.getElementById('tdMsg').innerHTML = "<div class='warning_box'>Please select Approve Status</div>";
+                return false;
+            }
+
+            //else {
+            //    var options = {
+            //        //target: '#output2',   // target element(s) to be updated with server response 
+            //        //beforeSubmit: showRequest,  // pre-submit callback 
+            //        success: showResponseLetterEngine  // post-submit callback 
+
+            //        // other available options: 
+            //        //url:       url         // override for form's 'action' attribute 
+            //        //type:      type        // 'get' or 'post', override for form's 'method' attribute 
+            //        //dataType:  null        // 'xml', 'script', or 'json' (expected server response type) 
+            //        //clearForm: true        // clear all form fields after successful submit 
+            //        //resetForm: true        // reset the form after successful submit 
+
+            //        // $.ajax options can be used here too, for example: 
+            //        //timeout:   3000 
+            //    };
+            //}
+
+        });
+
+        //function showResponseLetterEngine(responseText, statusText, xhr, $form) {
+        //    alert(responseText);
+        //    tinymce.get('ItemContent').setContent('');
+        //    document.getElementById('LetterEngineName').value = '';
+        //    document.getElementById('tdMsg').innerHTML = responseText;
+        //}
+
+        var buttons = document.getElementsByClassName('Templates');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function () {
+                insertYourContent(this.id);
+            });
+        }
+
+        function insertYourContent(id) {
+            tinyMCE.activeEditor.execCommand('mceInsertContent', false, ' <span id="editor" style="background-color: rgb(255, 255, 0);" > ' + id + '</span> ');
+        }
+
+    });
+
+    function handlemsg(data) {
+
+        //if (data=="S" ) {
+        if (data == "<div class='error_box'>Letter for this Template Type already available...</div>" || data == "<div class='valid_box'>Letter Template Updated Successfully...</div>")
+            return false;
+        window.location.href = "../AdminView/AdminView";
+
+        //}
+    }
+    
+    function Addtemptype() {            
+            var temptype = $('#emailtest').val();
+            if (temptype != null) {
+                $.get('../Engine/Addnewtemptype?LetterTempType=' + temptype + '   ', '_blank');
+                location.reload();
+            }
+    }
+</script>
+<script type="text/javascript">
+    function DropdownChangeFun(ddl) {
+        // alert('Hai');
+        // alert(ddl.selectedIndex);
+        if (ddl.selectedIndex == 4 || ddl.selectedIndex>9) {
+            $('#StatDIV1').css('display', 'none');
+            $('#StatDIV2').css('display', 'none');
+            $('#hidenDIV').show();
+
+        }
+        else if (ddl.selectedIndex == 1) {
+            $('#hidenDIV').css('display', 'none');
+            $('#StatDIV2').css('display', 'none');
+            $('#StatDIV1').show();
+            document.getElementById('ApproveSt').value = 1;
+        }
+        else {
+            $('#hidenDIV').css('display', 'none');
+            $('#StatDIV1').css('display', 'none');
+            $('#StatDIV2').show();
+            document.getElementById('ApproveSt').value = 0;
+        }
+
+    }
+</script>
+<style type="text/css">
+    .middleContainer label {
+        width: 200px;
+        float: left;
+        display: block;
+    }
+</style>
+<div id="SectionLetter">
+
+    @* @using (Html.BeginForm("SaveLetterEngine", "Engine", FormMethod.Post))
+    {
+    *@
+
+    @using (Ajax.BeginForm("SaveLetterEngine", "Engine", FormMethod.Post, new AjaxOptions { UpdateTargetId = "tdMsg", OnSuccess = "handlemsg" }, new { @name = "LetterEngine", @id = "LetterEngine" }))
+    {
+        
+    
+    
+        <div class="middleContainer">
+
+            <table style="width: 100%;">
+                <tr>
+                    <td class="bluebar">Letter Engine
+                    </td>
+                </tr>
+            </table>
+            <div id="tdMsg"></div>
+            <table style="width: 100%;">
+
+                <tr>
+                    <td style="width: 25%;">Letter Template Name</td>
+                    <td></td>
+                    <td><span style="color: red; width: 2%">*</span>@Html.TextBoxFor(m => Model.LetterEngineName, new { @style = "width:50%;margin-top:2%;" })</td>
+                </tr>
+                <tr><td colspan="3"><br /></td></tr>
+               
+                <tr>
+                    <td>Letter Template  Type</td>
+                    <td></td>
+                    <td><span style="color: red">*</span>@Html.DropDownListFor(m => Model.QueueTypeId, Model.QueueItems, "-----Select-----", new { @style = "width:53%;", @Id = "DdlType", onchange = "DropdownChangeFun(this)" })
+                        @{IList<SelectListItem> statusList = new List<SelectListItem>();
+
+
+                          statusList.Add(new SelectListItem()
+                          {
+                              Text = "Yes",
+                              Value = "1",
+                          });
+                          statusList.Add(new SelectListItem()
+                          {
+                              Text = "No",
+                              Value = "0",
+                              Selected = false
+                          });
+                        }
+                         <br />
+
+                    </td>
+                </tr>
+                <tr style="line-height: 20px;">
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @Html.HiddenFor(m => Model.LetterTempType, Model.LetterTempType)
+                        @*<a id= "@Model.LetterTempType"  href="#" onclick="Addtemptype()" ><small><b>&nbsp Create New Letter Template Type</b></small></a>*@
+                        <a id= "contact"  href="/contact" style="margin-left: 1%;">Create New Letter Template Type</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <div id="hidenDIV">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 25%;">Approve Status</td>
+                                    <td></td>
+                                    <td><span style="color: red; display: none">*</span>@Html.DropDownListFor(m => Model.ApproveStatusVal, statusList, "-----Select-----", new { @style = "width:54%;margin-top:2%;", @Id = "DdlType1" })</td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div id="StatDIV1">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 25%;">Approve Status</td>
+                                    <td></td>
+                                    <td>
+                                        <span style="color: red; display: none">*</span><input id="NewApp" type="text" value="Yes" style="width: 51%; margin-top: 2%; height: 20px;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="StatDIV2">
+
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 25%;">Approve Status</td>
+                                    <td><span style="color: red; display: none">*</span></td>
+                                    <td>
+                                       <span style="color: red; display: none">*</span> <input id="OtherQ" type="text" value="No" style="width: 51%; margin-top: 2%; height: 20px;" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>                        
+                    </td>
+                </tr>
+            </table>
+
+
+            <div class="messagepop pop">
+              <form method="post" id="new_message" action="/messages">                
+                <p><label for="email" style="margin-left: 5%;">Enter Template Name</label></p>
+                <p><input type="text" style="margin-left: 5%;width: 200px !important;" size="30" name="emailnew" id="emailtest" /></p>
+                <p><input type="button" class="close" value="Cancel" style="margin-right: 10%;" /><input type="submit" value="Create" name="commit" id="message_submit" onclick="Addtemptype();" style="float:left !important;margin-left: 5%;"/>
+              </form>
+            </div>
+
+
+
+
+            @* <label>Letter Template Name </label>
+            <span style="color: red">*</span>  @Html.TextBoxFor(m => Model.LetterEngineName, new { @style = "width:50%;margin-top:2%;" })<br />
+
+
+            <br />
+            <label>Letter Template  Type </label>
+            &nbsp;&nbsp;<span style="color: red">*</span>
+            @Html.DropDownListFor(m => Model.QueueTypeId, Model.QueueItems, "-----Select-----", new { @style = "width:52%;", @Id = "DdlType", onchange = "DropdownChangeFun(this)" })
+
+
+            @{IList<SelectListItem> statusList = new List<SelectListItem>();
+
+
+              statusList.Add(new SelectListItem()
+              {
+                  Text = "Yes",
+                  Value = "1",
+              });
+              statusList.Add(new SelectListItem()
+              {
+                  Text = "No",
+                  Value = "0",
+                  Selected = false
+              });
+            }
+
+            <br />*@
+
+            @Html.TextBoxFor(model => model.ApproveSt, new { @style = "visibility:hidden;" })
+            @* @{
+        var Bolst = Model.QueueList.Select(cl => new SelectListItem
+           {
+               Value = cl.QueueId.ToString(),
+               Text = cl.QueueName == null ? String.Empty : cl.QueueName
+           });
+                        }
+
+               @(Html.DropDownList("DdlType", Bolst, "-----Select-----", new { @style = "width:80%;margin-top:2%;" }))*@
+
+
+
+
+
+
+            <br />
+            <br />
+            @Html.TextAreaFor(m => Model.ItemContent, new { @style = "width:100%;margin-top:2%;height:370px;" })
+
+            <br />
+            <br />
+            @if (ViewBag.permission == "true")
+            {
+                <input id="btnSave" type="submit" value="Save" name="btnSave" class="NFButton" />
+            }
+            @Html.HiddenFor(m => Model.LetterEngineId)
+            <input id="letterid" type="hidden" name="letterid" value="" />
+
+        </div>
+
+        <div class="rightContainerAdmin">
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Referral Name]" value="Referral Name" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Father Name]" value="Father Name" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Mother Name]" value="Mother Name" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Date of birth]" value="Date of birth" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Application Date]" value="Application Date" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Recieve Letter Date]" value="Recieve Letter Date" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Address]" value="Address" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Mr/Ms]" value="Mr/Ms" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Recipient]" value="Recipient" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Day, Date]" value="Day, Date" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[School District]" value="School District" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Phone (Home/work)]" value="Phone (Home/work)" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Email]" value="Email" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Zip]" value="Zip" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[City]" value="City" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[State]" value="State" />
+            <input type="button" class="Templates" style="float: none; margin-top: 4px; width: 192px; text-align: left" id="[Fax Number]" value="Fax Number" />
+
+
+
+        </div>
+    }
+</div>
+

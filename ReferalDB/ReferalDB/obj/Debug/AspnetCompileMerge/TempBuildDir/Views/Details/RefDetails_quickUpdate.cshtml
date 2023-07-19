@@ -1,0 +1,631 @@
+﻿@model ReferalDB.Models.StdDetailsViewModel
+<script src="../Scripts/jquery.mask.js"></script>
+<style type="text/css">
+    .tblContactLogList th {
+        text-align: left;
+        background-color: #7EABBE;
+    }
+
+    .tblContactLogList1 hr {
+        border: 0;
+        height: 1px;
+        background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+        background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+        background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+        background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));
+    }
+
+    .longHr {
+        border: 0;
+        height: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+
+
+    .tableHeading {
+        /*background-color: white;*/
+        color: blue;
+    }
+
+    .popUpStylebtn {
+        background-color: #03507d;
+        background-position: 0 0;
+        border: medium none;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        float: right;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        height: 26px;
+        margin: 0 0 0 5px;
+        text-decoration: none;
+        width: 100px;
+        text-align: center;
+        padding-top: 2px;
+    }
+
+    .contactLogList {
+        border: 1px solid #03507d;
+        height: 150px;
+        overflow-y: auto;
+    }
+
+    .tabDiv {
+        float: left;
+        margin: 21px 0 0 15px;
+        width: 96%;
+    }
+
+    .contactLogs {
+        background-color: #03507d;
+        border: 1px solid #0054a8;
+        border-radius: 6px 6px 0 0;
+        color: white;
+        float: left;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 3px;
+        margin-top: 8px;
+        padding: 5px 15px;
+        text-align: center;
+        width: 10%;
+    }
+
+    .tabList li, .tabListCnt li {
+        background-color: #03507d;
+        border: 1px solid #0054a8;
+        border-radius: 6px 6px 0 0;
+        color: white;
+        float: left;
+        font-size: 12px;
+        font-weight: bold;
+        margin-right: 3px;
+        margin-top: 8px;
+        padding: 5px 15px;
+        text-align: center;
+        width: 10%;
+        cursor: pointer;
+    }
+
+    .contactLogs:hover, .contactLogs.current {
+        background-color: #2982b5;
+    }
+
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    .contactHeading {
+        text-decoration: underline;
+        font-size: 14px;
+        font-style: italic;
+        font-weight: bold;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<script type="text/javascript">
+    function PreventDef(e) {
+        e.preventDefault();
+    }
+
+    $(document).ready(function () {
+        GetNameFieldValidate();
+        $('.datepicker').datepicker(
+          {
+              dateFormat: "mm/dd/yy",
+              changeMonth: true,
+              changeYear: true,
+              showAnim: "fadeIn",
+              yearRange: 'c-100:c+100',
+              //minDate: date,
+              /* fix buggy IE focus functionality */
+              fixFocusIE: false,
+          });
+    });
+
+    function DeleteReferrals(ReferralId) {
+        var message = confirm('Are you sure want to delete the Referral?')
+        if (message.toString() == "true") {
+            $.get("../Dashboard/DeleteReferral?Id=" + ReferralId, function (data) {
+                if (data == "Success") {
+                    alert("Deleted Successfully");
+                    SelectHeader($('#hdnQueue').val());
+                    //$('#content').load('../Dashboard/GetLeftMenu');
+                    window.location = "../Dashboard/Dashboard";
+                }
+                else {
+                    alert("Error..");
+                }
+            });
+
+        }
+    }
+
+    function GetNameFieldValidate() {
+        $('.namefield').keypress(function (event) {
+            var inputValue = event.which;
+            if (((inputValue >= 65 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue == 32) || (inputValue == 39) || (inputValue == 45) || (inputValue == 8) || (inputValue == 0))) {
+            }
+            else {
+                event.preventDefault();
+            }
+        });
+    }
+
+    function fillRefDetail(data)
+    {
+        var RefId = data.split('*');
+        if (RefId[0] == 'Success') {
+            ReferalDetailsSelect(RefId[1]);
+        }
+    }
+
+    jQuery('#QuickUpdate').validationEngine();
+</script>
+
+@using (Ajax.BeginForm("QuickUpdateSave", "Details", FormMethod.Post, new AjaxOptions { UpdateTargetId = "UpdateMsg", OnSuccess = "fillRefDetail" }, new { id = "QuickUpdate" }))
+{
+    <div>
+        <fieldset>
+            <legend>Referral Details</legend>
+            <div>
+
+                <table class="auto-style1">
+
+                    <tr>
+                        <td colspan="5">
+                            <div id="UpdateMsg"></div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>
+                            <span class="lblSpan">Referral Id</span><br />
+                            @if (Model.StudentPersonalId == 0)
+                            {
+                                @Html.Label("Not defined")
+                            }
+                            else
+                            {
+                                @Html.Label(Model.StudentPersonalId.ToString())
+                            }
+                        </td>
+                        <td rowspan="10" style="width: 50px">&nbsp;</td>
+                        <td></td>
+                        <td rowspan="10" style="width: 50px">&nbsp;</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="lblSpan">First Name</span><span style="color: red; margin-left: 3px; margin-top: 3px; position: absolute;">*</span>
+                            <br />
+                            @Html.TextBoxFor(m => m.Firstname, Model.Firstname, new { @class = "validate[required] namefield", onpaste = "PreventDef(event)", @tabindex = "1" })</td>
+
+                        <td>
+                            <span class="lblSpan">Street Address</span><br />
+                            @Html.TextBoxFor(m => m.Street, Model.Street, new { @tabindex = "6" })
+                        </td>
+                        <td rowspan="9">
+
+                            <span class="lblSpan">Diagnosis</span><br />
+                            @Html.TextAreaFor(m => m.Diagnosis, new { @style = "width:255px !important; height:370px !important", @tabindex = "12" })
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <span class="lblSpan">Last Name</span><span style="color: red; margin-left: 3px; margin-top: 3px; position: absolute;">*</span>
+                            <br />
+                            @Html.TextBoxFor(m => m.Lastname, Model.Lastname, new { @class = "validate[required] namefield", onpaste = "PreventDef(event)", @tabindex = "2" })</td>
+
+                        <td>
+
+                            <span class="lblSpan">Apartment/Unit</span><br />
+                            @Html.TextBoxFor(m => m.Apartment, Model.Apartment, new { @tabindex = "7" })
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <span class="lblSpan">DOB</span><span style="color: red; margin-left: 3px; margin-top: 3px; position: absolute;">*</span>
+                            <br />
+                            @Html.TextBoxFor(m => m.BirthDate, new { @Value = (Model.BirthDate != null) ? Convert.ToDateTime(Model.BirthDate).ToString("MM'/'dd'/'yyyy") : null, @class = "validate[required] datepicker", onkeypress = "return false", onpaste = "PreventDef(event);", @tabindex = "3" })
+
+                            @*    , new { @class = "validate[required]" }*@
+                        </td>
+
+                        <td>
+                            <span class="lblSpan">City</span><br />
+                            @Html.TextBoxFor(m => m.City, Model.City, new { @tabindex = "8" })
+
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <span class="lblSpan">Gender</span><span style="color: red; margin-left: 3px; margin-top: 3px; position: absolute;">*</span>
+                            <br />
+                            @Html.DropDownListFor(m => m.GenderNum, Model.GenderList, "---------Select---------", new { @style = "width:72%;", @class = "validate[required]", @tabindex = "4" })
+                        </td>
+
+                        <td>
+                            <span class="lblSpan">State</span><br />
+                            @Html.DropDownListFor(m => m.State, Model.StateList, "---------Select---------", new { @style = "width:72%;", @tabindex = "9" })
+                        </td>
+                    </tr>
+                    <tr>
+
+                        <td>
+                            <span class="lblSpan">Date Of Referral</span><span style="color: red; margin-left: 3px; margin-top: 3px; position: absolute;">*</span>
+                            <br />
+                            @Html.TextBoxFor(m => m.AdmissionDate, new { @Value = (Model.AdmissionDate != null) ? Convert.ToDateTime(Model.AdmissionDate).ToString("MM'/'dd'/'yyyy") : null, @class = "validate[required] datepicker", onkeypress = "return false", onpaste = "PreventDef(event);", @tabindex = "5" })
+                        </td>
+
+                        <td>
+                            <span class="lblSpan">Zip</span><br />
+                            @Html.TextBoxFor(m => m.ZipCode, Model.ZipCode, new { maxlength = "5", @tabindex = "10" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="lblSpan">Status</span><br />
+                            @Html.Label((Model.Status != null) ? Model.Status : "New Applicant")</td>
+
+                        <td>
+                            <span class="lblSpan">Date of Ref. Recieve Letter</span><br />
+                            @Html.TextBoxFor(m => m.ApplicationDate, new { @Value = (Model.ApplicationDate != null) ? Model.ApplicationDate.Value.ToString("MM'/'dd'/'yyyy") : null, @class = "datepicker", onkeypress = "return false", onpaste = "PreventDef(event);", @tabindex = "11" })
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="lblSpan">Active</span><br />
+                            @if (Model.fl_AT == true)
+                            { 
+                                <span>No</span>
+                            }
+                            else
+                            {
+                                if (Model.StudentPersonalId == 0)
+                                {
+                                <span>No</span>
+                                }
+                                else
+                                {
+                                <span>Yes</span>
+                                }
+
+                            }
+
+                        </td>
+                        <td>
+                            <span class="lblSpan">Funding Approved</span><br />
+                            @if (Model.fl_FA == null)
+                            { Model.fl_FA = false; }
+                            @if (Model.fl_FA == true)
+                            {
+                                
+                            @Html.RadioButtonFor(m => m.fl_FA, Model.fl_FA==true ) @Html.Label("yes") 
+                            @Html.RadioButtonFor(m => m.fl_FA, Model.fl_FA==false) @Html.Label("No")
+                            }
+                            else if (Model.fl_FA == false)
+                            {
+                            @Html.RadioButtonFor(m => m.fl_FA, Model.fl_FA==false ) @Html.Label("Yes") 
+                            @Html.RadioButtonFor(m => m.fl_FA, Model.fl_FA==true) @Html.Label("No")
+                            }
+                            else
+                            {
+                             @Html.RadioButtonFor(m => m.fl_FA, Model.fl_FA==false ) @Html.Label("Yes") 
+                            @Html.RadioButtonFor(m => m.fl_FA, Model.fl_FA==true,new { Checked = "checked" }) @Html.Label("No")
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="5"></td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="lblSpan">Waiting List</span><br />
+                            @if (Model.fl_WL == true)
+                            { 
+                                <span>Yes</span>
+                            }
+                            else
+                            {
+                                <span>No</span>
+                            }
+                        </td>
+                        <td>
+                            <label class="lblSpan">Funding Source</label><span style="color:red"></span><br />
+                            @*@Html.DropDownListFor(m => Model.FundingSourceId, Model.FundingSourceList, new { @class = "validate[required] input", ID = "ddlFundSrc" })*@
+                            @Html.DropDownListFor(m => Model.FundingSourceId, Model.FundingSourceList, new { ID = "ddlFundSrc" })
+                        </td>
+                    </tr>
+
+                    <tr>
+
+                        <td colspan="5">
+
+                            @{
+                            if(ViewBag.permission == "true"){
+                            if (Model.StudentPersonalId == 0)
+                            {
+                   
+                                <input type="submit" value="Save" style="float: right;" />
+                    
+                            }
+                            else
+                            {
+                                <input type="submit" value="Update" style="float: right;" />
+                            }
+                            }
+                            }
+                        </td>
+
+                    </tr>
+                </table>
+
+            </div>
+        </fieldset>
+    </div>
+   
+}
+<div class="actionButtons" style="margin-top: 5px;">
+    @{
+        if(ViewBag.permission == "true"){
+        if (Model.StudentPersonalId > 0)
+        {
+
+            string submitid = Model.StudentPersonalId + "_-1";// +item.ActiveProcess;
+
+
+            if (Model.fl_AT == true)  //IF inactive flag is true - delete, activate
+            {                              
+        <input style="float:right" type="button" value="Delete" onclick="DeleteReferrals(@Model.StudentPersonalId);"/>
+        <input style="float:right" id="@submitid" type="button" value="Activate" onclick="actionButtons('MA',this.id)" />
+
+            }
+            if (Model.fl_WL == true) // if waitinglist flag is true - delete, remove from waitinglist
+            {
+        <input type="button" onclick="DeleteReferrals(@Model.StudentPersonalId);" value="Delete"/>
+           
+        <input style="float: right; width: 170px !important" name="changeRefStatus_Inactive" type="button" value="Remove from waiting List" onclick="actionButtons('RFW','')" />
+            }
+
+            if (Model.fl_WL != true && Model.fl_AT != true) // Normal referral - delete, make inactive, move to waitinglist
+            {
+       
+        <input type="button" onclick="DeleteReferrals(@Model.StudentPersonalId);" value="Delete"/>
+
+            
+            
+        <input style="float: right; width: 130px !important" name="changeRefStatus_Inactive" type="button" value="Make Inactive" onclick="actionButtons('MI','')" />
+        <input style="float: right; width: 130px !important" name="changeRefStatus_Waiting" type="button" value="Move To Waitinglist" onclick="actionButtons('MTW','')" />
+            }
+            
+            
+        <input style="float: left; width: 130px !important; background-color:#FE4D2D !important;" name="moveToClient" type="button" value="Move To Client" onclick="moveToClient()" />
+            
+        }
+        }
+    }
+</div>
+@{   
+    if (Model.fl_AT == true)// || Model.fl_WL == true)
+    {
+    }
+    else
+    {
+        if (Model.StudentPersonalId != 0)
+        {
+    
+    <div class="bottomConatainer">
+        <div class="tabDiv" style="float: left; width: 100%;">
+            <ul class="tabList">
+                <li class="contactLogs" style="background-color: #29adf9;">Contact Logs</li>
+                <li class="contacts">Contacts</li>
+                <li class="documents">Documents</li>
+                <li class="letterTray">Letter Tray</li>
+            </ul>
+        </div>
+        <div class="tabContent" style="float: left; width: 100%; border: 1px solid;">
+            <div class="contactLog">
+                <div class="contactLogEdit" style="float: left; width: 100%;">
+                </div>
+                <hr class="longHr" />
+                @if (Model.CallLists.Count != 0)
+                {
+                    <div class="contactLogList" style="height: 150px; overflow-y: auto;">
+                        <table style="width: 100%;">
+
+                            <tr class="HeaderStyle">
+                                <th class="tdLabel">Date</th>
+                                <th class="tdLabel">Content Type</th>
+                                <th class="tdLabel">Notes</th>
+                                <th class="tdLabel">Staff</th>
+                                <th class="tdLabel">Edit</th>
+                            </tr>
+
+
+
+                            @if (Model.CallLists != null)
+                            {
+                                for (int i = 0; i < Model.CallLists.Count; i++)
+                                {
+                                    int countshow = i + 1;
+
+                                    var contentType = Model.CallLists[i].Callflag;
+                                    var callDate = (Model.CallLists[i].Calltime != null) ? Model.CallLists[i].Calltime.Value.ToString("MM'/'dd'/'yyyy") : null;
+                                <tr class="RowStyle" style="background-color: rgb(243, 243, 243);">
+                                    <td style="width: 10%">@callDate
+                                    </td>
+                                    <td style="width: 10%">@contentType</td>
+                                    <td style="width: 55%">
+                                        @{
+                                    string text = Html.Encode(Model.CallLists[i].Conversation ?? "");
+                                    if (text.Length >= 150)
+                                    {
+                                        text = text.Substring(0, 150) + "...";
+                                    }    
+                                        }
+                                        @text</td>
+                                    <td style="width: 20%">@Model.CallLists[i].Staffname</td>
+                                    <td style="width: 5%">
+                                        <img src="../Images/editicon.PNG" style="cursor:pointer" onclick="EditCallLog(@Model.CallLists[i].CallLogId)" /></td>
+                                </tr>
+@*
+                                <tr>
+                                    <td colspan="5">
+                                        <hr />
+                                    </td>
+                                </tr>*@
+                                }
+                            }
+
+                        </table>
+                    </div>
+                }
+            </div>
+            <div class="contact">
+                <div class="contactTab2" style="float: left; width: 100%;"></div>
+                <div class="contactTab1" style="float: left; width: 100%;"></div>
+            </div>
+            <div class="documentDiv">
+            </div>
+            <div class="letterTrayDiv">
+            </div>
+        </div>
+    </div> 
+        }
+    }
+    
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+            
+            if(data=="Client")
+            {
+                $('.actionButtons').hide();
+            }
+            else
+                $('.actionButtons').show();
+        });
+        
+
+
+        $('.contactLogEdit').load('../CallLog/CallLog2');
+        $('.tabList li').click(function () {
+            var classClicked = $(this).attr('class');
+
+            $('.tabList li').css('background-color','#03507d');
+            $(this).css('background-color','#29adf9');
+
+
+            if (classClicked == "contacts") {
+                $('.contactLog').hide();
+                $('.contact').show();
+                $('.documentDiv').hide();
+                $('.letterTrayDiv').hide();
+
+                $('.contactTab1').load('../Contact/ListContactVendor/');
+                $('.contactTab2').load('../Contact/Index');
+            }
+            else if (classClicked == "contactLogs") {
+                $('.contactLog').show();
+                $('.contact').hide();
+                $('.documentDiv').hide();
+                $('.letterTrayDiv').hide();
+
+                $('.contactLogEdit').load('../CallLog/CallLog2');
+            }
+            else if (classClicked == "documents") {
+                $('.contactLog').hide();
+                $('.contact').hide();
+                $('.documentDiv').show();
+                $('.letterTrayDiv').hide();
+
+                OpenSublinks('docoument', 'New Applicant', 2);
+            }
+            else if (classClicked == "letterTray") {
+                $('.contactLog').hide();
+                $('.contact').hide();
+                $('.documentDiv').hide();
+                $('.letterTrayDiv').show();
+
+                OpenSublinks('letterTray', 'New Applicant', 2);
+            }
+
+
+
+        });
+
+
+        $('#ZipCode').blur(function () {
+            $('#ZipCode').mask('00000');
+            var textCont = $(this).val();
+            var preText = "";
+            if (textCont.length < 5) {
+                for (var i = 0; i < (5 - textCont.length) ; i++) {
+                    preText = preText + "0";
+                }
+            }
+            $(this).val(preText + textCont);               
+        });
+    });
+
+    function EditCallLog(id,value) {
+        $('.contactLogEdit').load('../CallLog/CallLog2?CallLogid=' + id);
+    }
+
+    function actionButtons(type,value){
+      
+        $.get("../Dashboard/changeRefQueuestatus?type="+type, function (data) {
+            location.reload();
+        });
+
+        if(type=='MA'){
+            SelectReferral(value, 'btn');
+        }
+    }
+
+    function moveToClient()
+    {
+        if (confirm("Warning! This will bypass the admission's workflow! Only use with approval from your Director. Continue?")) {
+            var stdId = getParameterByName('stdId');
+
+            stdIdSplit = stdId.split('^');
+            stdId = stdIdSplit[0];
+
+            if (stdId == "na") {
+                alert("na");
+            }
+            else {
+                $.get("../Dashboard/MakeClientImmediately?studId=" + stdId, function (Result) {
+                    if (Result == "Success") {
+                        alert("This Referral was successfully converted to Client. Click OK to go to home page.");
+                        window.location.href = "../Dashboard/Dashboard";
+                    }
+                    else if (Result == "isClient") {
+                        alert("This student is already a client");
+                    }
+                    else {
+                        alert("Operation Failed! Please try again. If the issue occurs frequently please contact the Administrator.");
+                    }
+                });
+            }
+        }
+    }
+    
+</script>

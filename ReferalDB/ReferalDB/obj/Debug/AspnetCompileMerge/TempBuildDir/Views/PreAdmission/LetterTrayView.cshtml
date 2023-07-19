@@ -1,0 +1,26 @@
+﻿@model ReferalDB.Models.AcademicReviewModel
+
+@using (Ajax.BeginForm("LetterTrayView","PreAdmission", FormMethod.Post, new AjaxOptions { UpdateTargetId = "" }))
+ {
+<div id="tray">
+    <table style="margin-top:20px">
+       
+       @foreach(var letterlists in Model.LetterList)
+           {
+            <tr>
+                <td><div>@letterlists.LetterName</div></td>
+
+            </tr>
+           <tr>
+                <td>
+                    <div>
+                         @Html.Raw(letterlists.LetterItem)
+                    </div>
+                </td>
+            </tr>
+            }
+    </table>
+</div>
+ 
+ }
+

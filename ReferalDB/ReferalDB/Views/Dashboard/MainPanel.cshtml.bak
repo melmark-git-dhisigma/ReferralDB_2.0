@@ -1,0 +1,855 @@
+﻿@model ReferalDB.Models.ReferralDashboardModel
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+
+<meta http-equiv="X-UA-Compatible" content="IE=10,9" />
+<script src="~/Scripts/jquery-2.0.3.js"></script>
+
+<link href="~/CSS/StyleBars.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StyleEngine.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StyleDashboard.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StyleCommon.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StyleLeftPanel.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StylePopup.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/validationEngine.jquery.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StyleReferral.css" rel="stylesheet" type="text/css" />
+<link href="../CSS/jquery.timeentry.css" rel="stylesheet" type="text/css" />
+
+<script src="~/Scripts/slides.min.jquery.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery-ui-1.11.2.js"></script>
+<script src="~/Scripts/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.timeentry.js" type="text/javascript"></script>
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>*@
+
+@*<script src="~/Scripts/jquery.validate.min.js"></script>*@
+<script src="~/Scripts/jquery.validationEngine.js"></script>
+<script src="~/Scripts/jquery.validationEngine-en.js"></script>
+
+
+<script src="~/Scripts/jquery.form.js"></script>
+
+<script type="text/javascript">
+    $(document).ajaxStart(function () {
+        $('#ajaxloader').fadeIn();
+    }).ajaxStop(function () {
+        $('#ajaxloader').fadeOut();
+
+
+        jQuery("#frm8").validationEngine();
+
+
+
+
+
+        if ($("#drpDocType").length) {
+            if ($('#txtOther').val() == "") {
+
+
+                $('#txtOther').hide();
+
+
+                var labelTd = $('#txtOther').parents('tr').find('td');
+                for (var i = 0; i < labelTd.length; i++) {
+
+                    if ($(labelTd[i]).html() == "OtherType (Specify)") {
+
+                        $(labelTd[i]).addClass('otherLabel');
+                    }
+
+                }
+
+
+
+                $('.otherLabel').html('');
+            }
+
+            $('#drpDocType').change(function () {
+                var val = $('#drpDocType').find('option:selected').text();
+                if (val == "Other") {
+                    $('#txtOther').show();
+
+
+                    $('.otherLabel').html('OtherType (Specify)');
+
+                }
+
+                else {
+
+                    $('.otherLabel').html('');
+                    $('#txtOther').hide();
+
+                }
+
+            });
+            $("#txtOther").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "../GeneralInfo/otherDocumentTypes",
+                        type: "POST",
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+                            //response(data.ReferralName);
+                            response($.map(data, function (item) {
+                                return { label: item.OtherDocumentType, value: item.OtherDocumentType };
+                            }))
+                        },
+                    })
+                },
+                messages: {
+                    noResults: '',
+                    results: function (resultsCount) { }
+                }
+            });
+        }
+
+
+    });
+
+</script>
+
+
+<style type="text/css">
+    #ajaxloader {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        /*left:20%;*/
+        background: rgba(255,255,255, .8 ) url('../Images/LoaderRound.gif') 50% 50% no-repeat;
+    }
+    #NotiMsg {
+        color:white !important;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //$.get("../Login/SessionExist", function (dataResult) {
+        //    $('#hdnSession').val(dataResult);
+        //    if ($('#hdnSession').val() == false) {
+        //        window.location="../../Login.aspx";
+        //    }
+        //});
+        $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details  
+
+        $(".accordion").click(function () {
+            if (document.getElementById("RightContent").style.display == "block") {
+                $(this).parent().children('.subContainer').slideToggle("fast");
+            }
+        });
+        GetNotification();
+        $('#content').load('../Dashboard/GetLeftMenu'); // To load Left Menu   
+        $.get("../Dashboard/ServerDetails", function (dataResult) {
+            $('#hdnServer').val(dataResult);
+        });
+
+
+        $("#divReferal").slideDown();
+    });
+
+
+    $(function () {
+        $('.MenuTooltip[title]').tooltip();
+    });
+
+    //******************** Bind Active Menu Selection ********************//
+    function ActivateMenuSelection() {
+        if ($('#hdnMenuActive').val() != "") {
+            SelectSubHeading();
+            var ActiveMenu = $('#hdnMenuActive').val();
+            $('#' + ActiveMenu).parent().css("display", "block");
+            $('#' + ActiveMenu).attr('class', 'SubHeadingSelect');
+        }
+    }
+
+
+    //******************** Bind Activity More ********************//
+    function MoreActivity() {
+        $('#hdnMenuActive').val("");
+        HidePopups();
+        SelectSubHeading();
+        $('.subContainer').css("display", "none");
+        document.getElementById('HeadingDiv').innerHTML = "More Activities";
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        $('#LoadQueue').html('');
+        $('#LoadQueue').load('../Details/ReferralData');
+    }
+
+    //******************** Bind Notification in default dashboard ********************//
+    function GetNotification() {
+        $('#hdnMenuActive').val("");
+        HidePopups();
+        SelectSubHeading();
+        $('.subContainer').css("display", "none");
+        document.getElementById('HeadingDiv').innerHTML = "Notifications";
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        $('#LoadQueue').html('');
+        $('#LoadQueue').load('../Dashboard/GetNotifications');
+    }
+    //******************** To Open each sub queue seperately ********************//
+
+    //******************** Bind Letter Tray in default dashboard ********************//
+    function GetLetterTray(val) {
+        $('#hdnMenuActive').val("");
+        HidePopups();
+        SelectSubHeading();
+        var refe = "";
+        $('#hdReferal').val("");
+        $('.subContainer').css("display", "none");
+        document.getElementById('HeadingDiv').innerHTML = "Letter Tray";
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        $('#LoadQueue').html('');
+
+        var namesearch = refe + '_' + val;
+
+        $('#LoadQueue').load('../PreAdmission/LetterGenerationView?Name=' + namesearch);
+
+    }
+    function DocumentTray() {
+        $('#hdnMenuActive').val("");
+        HidePopups();
+        SelectSubHeading();
+        var refe = "";
+        $('#hdReferal').val("");
+        $('.subContainer').css("display", "none");
+        document.getElementById('HeadingDiv').innerHTML = "Document Tray";
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        $('#LoadQueue').html('');
+        $('#LoadQueue').load("../GeneralInfo/UploadedFilesView", function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+            $('#LoadLetterTray').html(responseTxt);
+        });
+        //$('#LoadQueue').load('../PreAdmission/DocumentsView');
+
+    }
+
+    function CallLogView() {
+        $('#hdnMenuActive').val("");
+        HidePopups();
+        SelectSubHeading();
+        var refe = "";
+        $('#hdReferal').val("");
+        $('.subContainer').css("display", "none");
+        document.getElementById('HeadingDiv').innerHTML = "Contact Logs Tray";
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        $('#LoadQueue').html('');
+        $('#LoadQueue').load("../CallLog/CallLogView", function (responseTxt, statusTxt, xhr) {   // To load callLog details 
+            $('#LoadcallLogView').html(responseTxt);
+        });
+
+    }
+    //******************** To Open each sub queue seperately ********************//
+
+
+    function OpenSublinks(QueueType, Queuename, QueuId) {
+        HidePopups();
+
+        if (QueueType == "NA") { //NA stands for New Applicant
+            $('.subContainer').css("display", "none");
+            document.getElementById("RightContent").style.display = "none";
+            document.getElementById("MidContent").style.width = "76%";
+            document.getElementById('HeadingDiv').innerHTML = Queuename;
+            $('#DivRefDetails').css("display", "none");
+
+            $.get("../Dashboard/ResetReferralID", function (dataResult) {
+                if (dataResult == "true") {
+
+                    var Serverdata = $('#hdnServer').val();
+                    if (Serverdata == "NE") {
+                        jQuery.ajax({
+                            async: false,
+                            type: 'GET',
+                            url: '../GeneralInfo/ResetSessionTab',
+                            data: null,
+                            error: function (xhr, textStatus, errorThrown) {
+                                // Look at the `textStatus` and/or `errorThrown` properties.
+                            }
+                        });
+
+                        $('#LoadQueue').load('../GeneralInfo/Index');
+                    }
+                    else {
+                        jQuery.ajax({
+                            async: false,
+                            type: 'GET',
+                            url: '../RefferalApplicantPE/ResetSessionTab',
+                            data: null,
+                            error: function (xhr, textStatus, errorThrown) {
+                                // Look at the `textStatus` and/or `errorThrown` properties.
+                            }
+                        });
+                        $('#LoadQueue').load('../RefferalApplicantPE/RefferalApplicantPE');
+                    }
+
+                } else {
+                    alert("Error...");
+                }
+            });
+
+            $('#content').load('../Dashboard/GetLeftMenu');  // To Load Left Panel
+        }
+       else if (QueueType == "contactVend") //New client - load contact/vendor
+        {
+             $('#LoadQueue').load('../Contact/ListContactVendor/');
+        }
+       else if (QueueType == "letterTray") //New client - load letter tray
+        {
+           GetLetterTray('');
+        }
+       else if (QueueType == "docoument") //New client - load document
+        {
+            alert('Document under Construction');
+           // $('#LoadQueue').load('../Contact/ListContactVendor/');
+       }
+       else if (QueueType == "reffQuickUpt") //New client - Quick update details
+       {
+           alert('under Construction');
+           // $('#LoadQueue').load('../Contact/ListContactVendor/');
+       }
+        else {
+            $.get("../Dashboard/ProcessStatus?QueueId=" + QueuId, function (Result) {
+                if (Result == "NA") { //NA stands for not applicable
+                    $.get("../Dashboard/GetReferralName", function (Result) {
+                        document.getElementById('HeadingDiv').innerHTML = Queuename + " - " + Result;
+                    });
+                    //$('#content').load('../Dashboard/GetLeftMenu');  // To Load Left Panel
+                    SelectSubHeading();
+                    $('#' + QueuId).attr('class', 'SubHeadingSelect');
+                    SelSublink(QueueType);
+                    $('#hdnMenuActive').val(QueuId);
+                    ActivateMenuSelection();
+
+                }
+                else {
+                    //alert(Result);
+
+                }
+            });
+
+        }
+
+
+
+    }
+    //******************** To toggle referral details ********************//
+
+
+    function HidePopups() {
+        $("#divLetterTray").slideUp();
+        $("#divCheckList").slideUp();
+        $("#divReferal").slideUp();
+    }
+
+    //******************** Calls after each page submit ********************//
+    function SubmitPage(RefCurrentQueueId) {//Referralid_CurrentQueueId
+        HidePopups();
+        $('#StudDetails').load('../Details/StudentDetails'); // To load Referral details    
+
+        $('#Activitydiv').load('../Dashboard/BindActivity'); // To load activity list   
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+        $('#LoadLetterTray').load("../PreAdmission/LetterGenerationView"); // To load Letter tray
+        //$('#LoadLetterTray').load("../PreAdmission/LetterGenerationView", function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+        //    $('#LoadLetterTray').html(responseTxt);
+        //});
+        var CurrentQueueId = RefCurrentQueueId.split('_');
+
+        //alert('RefCurrentQueueId:' + RefCurrentQueueId + '/CurrentQueueId:' + CurrentQueueId);
+
+        $('#content').load('../Dashboard/GetLeftMenu', function () {
+            $('#' + CurrentQueueId[1]).parent().css("display", "block");
+            $('#' + CurrentQueueId[1]).attr('class', 'SubHeadingSelect');
+        }); // To load left menu
+
+        //$.get("/Dashboard/GetTabId?QueueId=" + CurrentQueueId[1], function (Tabresult) {
+        $.get("../Dashboard/SelectReferral?Refid=" + RefCurrentQueueId, function (data) {
+            var Qname = data.split('_');
+            //var CurrentTab = Tabresult.split(',');
+            //var TabId = CurrentTab[0];
+            if (Qname[3] == "false") {
+                $.get("../Dashboard/SelectQueueName?QueueId=" + Qname[2], function (result) {
+                    SelectHeader(Qname[2] + "," + result);
+                });
+            }
+            else {
+                // $('#content').load('../Dashboard/GetLeftMenu');  // To Load Left Panel
+                SelectSubHeading();
+                $('#' + Qname[2]).parent().css("display", "block");
+                $('#' + Qname[2]).attr('class', 'SubHeadingSelect');
+                $.get("../Dashboard/GetReferralName", function (Result) {
+                    document.getElementById('HeadingDiv').innerHTML = Qname[1] + " - " + Result;
+                });
+                SelSublink(Qname[0]);
+            }
+            $('#hdnMenuActive').val(Qname[2]);
+            ActivateMenuSelection();
+
+        });
+        //});
+
+    }
+
+
+    //******************** To load each page ********************//
+    function SelSublink(QueueType) {
+        $('#hdnQueue').val('');
+        $('#LoadQueue').html('');
+        document.getElementById("RightContent").style.display = "block";
+        $('#Activitydiv').load('../Dashboard/BindActivity');
+        $('#NoteSection').load('../Dashboard/BindNotes');
+        document.getElementById("MidContent").style.width = "60%";
+        $('#DivRefDetails').css("display", "block");
+        if (QueueType == "AR") {
+            $('#LoadQueue').load('../PreAdmission/AcademicReviews');
+        }
+        else if (QueueType == "CR") {
+            $('#LoadQueue').load('../PreAdmission/ClinicalReview');
+        }
+        else if (QueueType == "FV") {
+            $('#LoadQueue').load('../PreAdmission/FundingVerification');
+        }
+        else if (QueueType == "MO") {
+            $('#LoadQueue').load('../PreAdmission/MatchOpening');
+        }
+        else if (QueueType == "PT") {
+            $('#LoadQueue').load('../IntakeAssessment/ParantScreenShedule');
+        }
+        else if (QueueType == "PS") {
+            $('#LoadQueue').load('../IntakeAssessment/TourParentScreening');
+        }
+        else if (QueueType == "CA") {
+            $('#LoadQueue').load('../IntakeAssessment/AcademicReviewIntakeAssessment');
+        }
+        else if (QueueType == "SA") {
+            $('#LoadQueue').load('../IntakeAssessment/ScheduleAppointment');
+        }
+        else if (QueueType == "IE") {
+            $('#LoadQueue').load('../IntakeAssessment/ViewIntakeAssessment');
+        }
+        else if (QueueType == "AT") {
+            $('#LoadQueue').load('../IntakeAssessment/AdmissionReviewTeam');
+        }
+        else if (QueueType == "SI") {
+            $('#LoadQueue').load('../IntakeAssessment/ParantSheduleInteview');
+        }
+        else if (QueueType == "PI") {
+            $('#LoadQueue').load('../IntakeAssessment/ParentInterView');
+        }
+        else if (QueueType == "RS") {
+            $('#LoadQueue').load('../IntakeAssessment/ReferalSumaryView');
+        }
+        else if (QueueType == "SM") {
+            $('#LoadQueue').load('../IntakeAssessment/SchedulePreAdmissionMeeting');
+        }
+        else if (QueueType == "IP") {
+            $('#LoadQueue').load('../IntakeAssessment/IEPsignoff');
+        }
+        else if (QueueType == "PM") {
+
+            $('#LoadQueue').load('../AcceptanceProcess/PlacementAgreements');
+        }
+        else if (QueueType == "CM") {
+
+            $('#LoadQueue').load('../AcceptanceProcess/ConsentFormLists');
+        }
+        else if (QueueType == "CT") {
+
+            $('#LoadQueue').load('../IntakeAssessment/Contract');
+        }
+        else if (QueueType == "DC") {
+            $('#LoadQueue').load('../AcceptanceProcess/DocumentChecklist');
+        }
+        else if (QueueType == "RT") {
+            $('#LoadQueue').load('../PreAdmission/AssignTeam');
+        }
+
+    }
+
+    //******************** To load each main queue ********************//
+    function SelectHeader(Queuename) {
+        var Qname = Queuename.split(',');
+        HidePopups();
+        $('#hdnQueue').val('');
+        $('#hdnSortQueue').val('');
+        ClearSearch();
+        $('#hdnQueue').val(Queuename);
+        $('.SubHeadingSelect').parent().css("display", "none");
+        SelectSubHeading();
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        document.getElementById('HeadingDiv').innerHTML = Qname[1];
+
+        $('#LoadQueue').load("../Dashboard/DefaultDashboard?Name=" + Queuename, function (responseTxt, statusTxt, xhr) {
+            $('#LoadQueue').html(responseTxt);
+        });
+
+        if (Qname[1] == "Referral") {
+            $('#' + Qname[0]).parent().children('.subContainer').css("display", "block");
+        }
+        $('#hdnMenuActive').val("");
+        $('#content').load('../Dashboard/GetLeftMenu');  // To Load Left Panel
+    }
+
+    //******************** To clear searching conditions ********************//
+    function ClearSearch() {
+        $('#hdnAlphabet').val('');
+        $('#hdnWeek').val('');
+        $('#hdnMonth').val('');
+        $('#hdnAge').val('');
+        $('#hdnAppdate').val('');
+        $('#hdnSort').val('');
+        $('#hdnNotification').val('');
+        $('#hdSType').val('');
+    }
+
+
+    //******************** Calls when a referral is selected  ********************//
+    function SelectReferral(rowid, type) {  // rowid is a combination of Referralid_CurrentQueueId
+
+        HidePopups();
+        $.get("../Dashboard/SelectReferral?Refid=" + rowid, function (data) {
+            var Qname = data.split('_');
+
+            if ($('#hdnQueue').val() == "" && type == "btn") {
+                $('#hdnQueue').val('1, Referral');
+            }
+            var CurrentTab = $('#hdnQueue').val().split(',');
+
+            var nextTab = CurrentTab[0];
+            var coutPls = parseInt(nextTab);
+            coutPls = coutPls + 1;
+
+            var TabId = CurrentTab[0];
+
+            $('#divCheckList').slideUp("fast");
+
+            if (type == "chk") {
+                SelectSubHeading();
+                $('#' + Qname[2]).parent().css("display", "block");
+                $('#' + Qname[2]).attr('class', 'SubHeadingSelect');
+                $.get("../Dashboard/GetReferralName", function (Result) {
+                    document.getElementById('HeadingDiv').innerHTML = Qname[1] + " - " + Result;
+                });
+                SelSublink(Qname[0]);
+            }
+            else {
+
+                if (Qname[3] == "false") {
+                    $.get("../Dashboard/SelectQueueType?QueueId=" + TabId, function (result) {
+
+                        if (result == "RL") {
+                            OpenNewApplicant(CurrentTab[1]);
+                        }
+                        else if (result == "CL") {
+                            OpenNewApplicant(CurrentTab[1]);
+                        }
+                        else {
+                            $.get("../Dashboard/SelectQueueName?QueueId=" + Qname[2], function (result) {
+                                alert(Qname[2])
+                                SelectHeader(Qname[2] + "," + result);
+                            });
+                        }
+                    });
+                }
+                else {
+                    //$('#content').load('../Dashboard/GetLeftMenu'); // To load Left Menu
+                    SelectSubHeading();
+                    $.get("../Dashboard/SelectQueueType?QueueId=" + TabId, function (result) {
+                        if (result == "RL") {
+                            OpenNewApplicant(CurrentTab[1]);
+                        }
+                        else if (result == "CL") {
+                            OpenNewApplicant(CurrentTab[1]);
+                        }
+                        else {
+                            var selectedMasterId = parseInt(CurrentTab[0]);
+                            var currentMasterId = parseInt(Qname[4]);
+                            if (currentMasterId > selectedMasterId) {
+                                $('#' + coutPls).parent().css("display", "block");
+                                $('#' + coutPls).attr('class', 'SubHeadingSelect');
+                                $.get("../Dashboard/GetReferralName", function (Result) {
+                                    $.get("../Dashboard/SelectQueueName?QueueId=" + coutPls, function (result1) {
+                                        document.getElementById('HeadingDiv').innerHTML = result1 + " - " + Result;
+                                        Qname[2] = result1;
+                                    });
+
+                                });
+                                $.get("../Dashboard/SelectQueueType?QueueId=" + coutPls, function (result2) {
+                                    SelSublink(result2);
+                                });
+                            }
+                            else {
+                                $('#' + Qname[2]).parent().css("display", "block");
+                                $('#' + Qname[2]).attr('class', 'SubHeadingSelect');
+                                $.get("../Dashboard/GetReferralName", function (Result) {
+                                    document.getElementById('HeadingDiv').innerHTML = Qname[1] + " - " + Result;
+                                });
+                                SelSublink(Qname[0]);
+                            }
+                        }
+                    });
+                }
+            }
+            //$('#content').load('../Dashboard/GetLeftMenu');  //// To Load Left Panel
+            $('#hdnMenuActive').val(Qname[2]);
+            ActivateMenuSelection();
+        });
+
+        var elem = rowid.split('_');
+
+       // $('#sessionVal').html(elem[0]);
+        $('#StudDetails').load('../Details/StudentDetailsSelect?ReferralId=' + elem[0]); // To load Referral details    
+        //  $('#StudDetails').load('../Details/StudentDetails'); // To load Referral details   
+
+    }
+
+    //******************** To remove selection color of previously selected sub menu ********************//
+    function SelectSubHeading() {
+        if ($('.SubHeadingSelect').length > 0) {
+            $('.SubHeadingSelect').attr('class', 'SubHeading');
+        }
+    }
+
+    //******************** To save data from notes section ********************//
+    function handleKeyPress(e) {
+        HidePopups();
+        var key = e.keyCode || e.which;
+        if (key == 13) {
+            var dataitm = document.getElementById('Notes').value;
+            $('#NoteSection').load('../Dashboard/SaveNotes?id=' + encodeURIComponent(dataitm));
+            document.getElementById('Notes').value == "";
+        }
+    }
+
+    //******************** Fills and load filters and search conditions ********************//
+    function SearchAndFilter() {
+        var SearchArgs = "";
+        SearchArgs += $('#hdnQueue').val() + "_";
+        SearchArgs += $('#hdnAlphabet').val() + "_";
+        SearchArgs += $('#hdnWeek').val() + "_";
+        SearchArgs += $('#hdnMonth').val() + "_";
+        SearchArgs += $('#hdnAge').val() + "_";
+        SearchArgs += $('#hdnAppdate').val() + "_";
+        SearchArgs += $('#hdnSort').val() + "_";
+        SearchArgs += $('#hdnSortQueue').val() + "_";
+        SearchArgs += $('#hdnNotification').val() + "_";
+        SearchArgs += $('#hdSType').val();
+        $('#dialog').hide();
+        $('#overlay').fadeOut('slow');
+        $('#LoadQueue').load('../Dashboard/SearchAndFilterDashboard?Name=' + encodeURI(SearchArgs));
+        ClearSearch();
+    }
+
+    //******************** Loads the edit section of referrals ********************//
+    function OpenNewApplicant(heading) {
+
+        $.get("../Dashboard/SelectQueueID?QueueType=" + "NA", function (resultId) {
+            $('#' + resultId).parent().css("display", "block");
+            var CurrentTab = $('#hdnQueue').val().split(',');
+            if ((CurrentTab[1] == 'Client List') || (CurrentTab[1] == 'ClientList')) {
+                $('#' + CurrentTab[0]).attr('class', 'accordion');
+                $('#' + resultId).attr('class', 'SubHeadingSelect');
+            }
+            else {
+                $('#' + resultId).attr('class', 'SubHeadingSelect');
+            }
+        });
+        $.get("../Dashboard/GetReferralName", function (Result) {
+            document.getElementById('HeadingDiv').innerHTML = heading + " - " + Result;
+        });
+        document.getElementById("RightContent").style.display = "none";
+        document.getElementById("MidContent").style.width = "76%";
+        $('#DivRefDetails').css("display", "none");
+        var CurrentTab = $('#hdnQueue').val().split(',');
+        var TabId = CurrentTab[0];
+        var Serverdata = $('#hdnServer').val();
+        if (Serverdata == "NE") {
+            $('#LoadQueue').load('../GeneralInfo/Index');
+        }
+        else {
+            $('#LoadQueue').load('../RefferalApplicantPE/RefferalApplicantPE');
+        }
+
+        //$.get("/Dashboard/SelectQueueType?QueueId=" + TabId, function (result) {
+        //    if (result == "RL") {
+        //        $.get("/Dashboard/ResetReferralID", function (dataResult) {
+        //            if (dataResult == "true") {
+        //                $('#LoadQueue').load('../GeneralInfo/Index');
+        //            } else {
+        //                alert("Error...");
+        //            }
+        //        });
+        //    }
+        //});
+    }
+
+
+    //*************************** Load Referral Queue ******************************//
+
+    function LoadReferralQueue(refId, Type) {
+        $('#content').load('../Dashboard/GetLeftMenu'); // To load Left Menu 
+        $("#divReferal").slideToggle();
+
+        if (Type == "NA") { //NA stands for New Applicant
+            OpenNewApplicant("New Applicant");
+        }
+        //else if (Type != "Not Started") {
+        SelectReferral(refId, 'chk');
+        //}
+
+    }
+
+    ////*************************** Remove call log ******************************//
+    //function RemoveRow() {
+    //    var CallLogCnt = $('#CountVal').val();
+    //    if (CallLogCnt > 1) {
+    //        for (var i = 0; i < 4; i++) {
+    //            $('#tblCallLog tr:last').remove();
+    //        }
+    //        $('#CountVal').val(CallLogCnt - 1);
+    //    }
+    //    if ($('#CountVal').val() == 1) {
+    //        $('#RemoveCallLog').css("display", "none");
+    //    }
+    //}
+</script>
+
+<div class="leftContainer" style="width: 19%">
+    <div id="page">
+        <div id="content">
+        </div>
+    </div>
+
+</div>
+<div class="middleContainer" id="MidContent">
+
+
+
+    <table style="width: 100%; border-left: none; border-right: none;" cellpadding="0"
+        cellspacing="0">
+        <tr>
+            <td class="headingDivBar" style="width: 50%">
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 80%">
+                            <div id="HeadingDiv" style="float: left; width: 100%">
+                                Referral Dashboard
+                            </div>
+
+                        </td>
+                        <td>
+                            <div id="DivRefDetails" class="upReferalDetails"
+                                onclick="ReferalDetails();" style="display: none">
+                            </div>
+                        </td>
+                    </tr>
+
+                    @*            <tr>
+                        <td>
+                           @using (Html.BeginForm("TestDigitals", "Dashboard", FormMethod.Get))
+                                                        { 
+                    <input type="submit" value="TestDSig" name="edit" />
+                     } 
+                        </td>
+                    </tr>*@
+                </table>
+
+            </td>
+
+        </tr>
+        <tr style="height: 5px">
+            <td></td>
+        </tr>
+    </table>
+
+    <div id="LoadQueue" style="width: 100%">
+    </div>
+</div>
+<div class="rightContainer" style="width: 16%; display: none" id="RightContent">
+    <div>
+        <div class="HeadingGreen"><a>Activities</a> </div>
+
+        <div id="Activitydiv" style="height: 300px; overflow-x: hidden; overflow-y: auto">
+        </div>
+
+        <div id="NoteSection" style="width: 100%; margin-top: -25%;"></div>
+    </div>
+
+</div>
+<div>
+    <input type="hidden" id="hdnQueue" />
+    <input type="hidden" id="hdnAlphabet" />
+    <input type="hidden" id="hdnWeek" />
+    <input type="hidden" id="hdnMonth" />
+    <input type="hidden" id="hdnAge" />
+    <input type="hidden" id="hdnAppdate" />
+    <input type="hidden" id="hdnSort" />
+    <input type="hidden" id="hdnSortQueue" />
+    <input type="hidden" id="hdnNotification" />
+    <input type="hidden" id="hdSType" />
+    <input type="hidden" id="hdnServer" />
+    <input type="hidden" id="hdnMenuActive" />
+    <input type="hidden" id="hdnSession" />
+</div>
+
+<div id="ajaxloader"></div>
+<div id="divReferal" class="" style="position: absolute; height: 70%; top: 21%; display: block; left: 19%; z-index: 999;">
+    <img src="../Images/button_red_close.png" style="width: 20px; height: 20px; position: absolute; margin-top: 50px; right: 0px;" onclick="javascript:  $('#divReferal').slideUp();" />
+    <div id="StudDetails"></div>
+
+
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        DocTypeAutocomplete();
+
+    });
+
+    function DocTypeAutocomplete() {
+
+        $("#txtOther").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "../GeneralInfo/otherDocumentTypes",
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        //response(data.ReferralName);
+                        response($.map(data, function (item) {
+                            return { label: item.OtherDocumentType, value: item.OtherDocumentType };
+                        }))
+                    },
+                })
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            }
+        });
+    }
+</script>

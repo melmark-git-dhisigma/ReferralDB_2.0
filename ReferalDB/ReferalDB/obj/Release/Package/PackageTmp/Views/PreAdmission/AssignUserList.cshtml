@@ -1,0 +1,18 @@
+﻿@model ReferalDB.Models.userNames
+
+
+ <table style="width: 100%" id="UserTab">
+            <tr class="HeaderStyle">
+                <td style="width: 100%"><b>Team Members</b>
+                </td>                
+            </tr>
+       @foreach (var userlist in Model.UserNames)
+       { 
+             <tr >
+                <td style="width: 100%">@userlist
+                </td>                
+            </tr>
+       }
+        </table>
+
+

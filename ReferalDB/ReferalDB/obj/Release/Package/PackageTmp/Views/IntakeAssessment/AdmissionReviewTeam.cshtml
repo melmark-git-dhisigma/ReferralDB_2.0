@@ -1,0 +1,187 @@
+﻿@model ReferalDB.Models.AdmissionReviewViewModel
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+
+        ActivateMenuSelection();//isSubmit
+        if ($('#isSubmit').val() == 'True') {
+            $("#btnsubmit").click(function (e) {
+                // e.preventDefault();
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#btnsubmit').attr('type', 'submit');
+                            $('#btnsubmit').trigger("click");;
+                            //$("#submitClinical").off('click');
+                            //$('#frnClinical').submit();
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#btnsubmit').attr('type', 'submit');
+            //   $('#submitClinical').trigger("click");
+        }
+
+
+
+    });
+    function desableallbtns(data) {
+
+        var RefCurrentQueueId = data.split('*');
+        if (RefCurrentQueueId[0] == 'success') {
+            SubmitPage(RefCurrentQueueId[1]);
+            //$('#tdMsg').html('');
+            //$('#submitAcademic').attr('disabled', 'disabled');
+            //$('#saveAcademic').attr('disabled', 'disabled');
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+</script>
+
+
+@using (Ajax.BeginForm("SaveAdmission", "IntakeAssessment", FormMethod.Post, new AjaxOptions { UpdateTargetId = "tdMsg", OnSuccess = "desableallbtns(data);" }))
+{
+    
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div>
+        <table style="width: 100%">
+            <tr>
+
+                <td>
+                    <div id="tdMsg" style="color: white !important;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%;" class="gridStyle">
+            <tr>
+                <td>Send Notification to Admission Review Team  </td>
+                <td>
+                    <input type="submit" value="Send" name="SaveAdmsnReview" style="width: 80px;" /></td>
+            </tr>
+        </table>
+        <br />
+        <table style="width: 100%" class="gridStyle">
+            <thead>
+                <tr class="HeaderStyle">
+                    <td style="width: 200px;">Admission Review Team</td>
+                    <td align="left" style="width: 150px;">Decision</td>
+                    <td>Comments</td>
+                </tr>
+            </thead>
+            @if (Model.ListAdmsnReviewTeam != null)
+            {
+                for (int i = 0; i < Model.ListAdmsnReviewTeam.Count; i++)
+                {
+            
+                
+                <tr>
+                    <td style="width: 200px;">@Html.HiddenFor(obj => Model.ListAdmsnReviewTeam[i].Id, Model.ListAdmsnReviewTeam[i].Id)
+                        @Html.HiddenFor(obj => Model.ListAdmsnReviewTeam[i].TeamId, Model.ListAdmsnReviewTeam[i].TeamId)
+                        @Html.HiddenFor(obj => Model.ListAdmsnReviewTeam[i].Name, Model.ListAdmsnReviewTeam[i].Name)
+
+                        @* @Html.HiddenFor(obj => Model.ListAdmsnReviewTeam[i].AcceptInd, Model.ListAdmsnReviewTeam[i].AcceptInd)
+                    @Html.HiddenFor(obj => Model.ListAdmsnReviewTeam[i].Decision, Model.ListAdmsnReviewTeam[i].Decision)
+                   *@
+                        @Model.ListAdmsnReviewTeam[i].Name</td>
+                    <td align="left" style="width: 150px;">
+                        @if (Model.ListAdmsnReviewTeam[i].Decision == "Accept")
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Accept", new { Checked = "checked" }) <span>Accept</span>     
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Reject") <span>Reject</span>
+                        }
+                        else if (Model.ListAdmsnReviewTeam[i].Decision == "Reject")
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Accept") <span>Accept</span>     
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Reject", new { Checked = "checked" }) <span>Reject</span>
+                        }
+                        else if (Model.ListAdmsnReviewTeam[i].AcceptInd == false)
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Accept") <span>Accept</span>     
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Reject", new { Checked = "checked" }) <span>Reject</span>
+                        }
+                        else if (Model.ListAdmsnReviewTeam[i].AcceptInd == true)
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Accept", new { Checked = "checked" }) <span>Accept</span>     
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Reject") <span>Reject</span>
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Accept") <span>Accept</span>     
+                            @Html.RadioButtonFor(obj => Model.ListAdmsnReviewTeam[i].Decision, "Reject", new { Checked = "checked" }) <span>Reject</span>
+                        }
+                    </td>
+
+                    <td style="height: 50px !important">@Html.TextAreaFor(obj => Model.ListAdmsnReviewTeam[i].Comments, new { maxlength = "500", style = "width:95% !important;height:70px !important", value = Model.ListAdmsnReviewTeam[i].Comments })
+                    </td>
+                </tr>
+                }
+            }
+        </table>
+        <br />
+        <table style="width: 100%;">
+
+            <tr>
+                <td style="width: 80px;">Approved<span style="color: red">*</span></td>
+                @*<td>@Html.RadioButtonFor(obj => Model.Approved, true, new { @checked = "!checked" }) Yes     @Html.RadioButtonFor(obj => Model.Approved, false, new { @checked = "!checked" }) No</td>*@
+                <td>@if (Model.Approved == true)
+                    {
+                    @Html.RadioButtonFor(obj => Model.Approved, true, new { Checked = "checked" }) <span>Yes</span>     @Html.RadioButtonFor(obj => Model.Approved, false) <span>No</span>
+                    }
+                    else if (Model.Approved == false)
+                    {
+                    @Html.RadioButtonFor(obj => Model.Approved, true) <span>Yes</span>     @Html.RadioButtonFor(obj => Model.Approved, false, new { Checked = "checked" }) <span>No</span>   
+                    }
+                    else
+                    {
+                    @Html.RadioButtonFor(obj => Model.Approved, true) <span>Yes</span>     @Html.RadioButtonFor(obj => Model.Approved, false) <span>No</span>   
+                    }
+                </td>
+                <td>
+                    @Html.HiddenFor(m => Model.isSubmit, Model.isSubmit)
+                </td>
+            </tr>
+        </table>
+
+        @if (ViewBag.permission == "true")
+        {
+            <input type="button" value="Submit" id="btnsubmit" name="SaveAdmsnReview" style="width: 80px;" />
+        }
+
+        <input type="submit" value="Save" name="SaveAdmsnReview" style="width: 80px;" />
+
+    </div>
+    <div id="dialog" title="Confirmation Required">
+        This form is already submitted. Do you want to continue?
+    </div>
+
+   
+}
+

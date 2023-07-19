@@ -1,0 +1,366 @@
+﻿
+.slides_control {
+    height: 25px;
+    left: -111px !important;
+    position: relative;
+    margin-top: 6px;
+    width: 315px !important;
+}
+
+.slides_container {
+    width: 20%;
+    min-width: 100px;
+    font-size: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+    float: left;
+    /*padding: 0 0 0 2%;*/
+    margin: 4px 0 0 4%;
+}
+
+    .slides_container div.slide {
+        width: 105px;
+        height: 25px;
+        float: left;
+        /*margin: 0 1px;*/
+        display: block;
+    }
+
+.item {
+    float: left;
+    width: 15px;
+    height: 15px;
+    margin: 0 5px;
+}
+
+    .item a, .item a:link, .item a:visited {
+        background: none repeat scroll 0 0 #008000;
+        color: #FFFFFF;
+        display: block;
+        font-size: 13px;
+        font-weight: bold;
+        height: 18px;
+        padding-top: 3px;
+        text-align: center;
+        text-decoration: none;
+        width: 20px;
+        border-radius: 2px;
+    }
+
+        .item a:hover {
+            background: #0053a1;
+            color: #fff;
+        }
+
+.pagination {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 1px;
+    display: none;
+}
+
+    .pagination .current a {
+        color: red;
+        font-size: 1px;
+    }
+
+.next {
+    background: url("../Images/arro.png") no-repeat scroll left top rgba(0, 0, 0, 0);
+    color: #3375B4;
+    display: block;
+    float: left;
+    font-size: 1px;
+    height: 11px;
+    margin: 73px 40px 0 31px;
+    padding: 4px 0 0 1px;
+    position: absolute;
+    top: 116px;
+    width: 7px;
+    z-index: 2;
+}
+
+    .next:hover {
+        background-position: 0 -15px;
+        color: #a8a8a8;
+    }
+
+.topbarCo {
+    background-color: #fefcfc;
+    border-bottom: 2px solid #C3C0C0;
+    height: 43px;
+    padding-right: 25px;
+}
+
+.selContainer {
+    background-color: green;
+}
+
+.prev {
+    background: url("../Images/arro.png") no-repeat scroll -8px top rgba(0, 0, 0, 0);
+    color: #3375B4;
+    display: block;
+    float: right;
+    font-size: 1px;
+    height: 11px;
+    left: 24%;
+    margin: 73px 167px 0 135px;
+    padding: 4px 0 0 1px;
+    position: absolute;
+    top: 116px;
+    width: 7px;
+    z-index: 2;
+}
+
+    .prev:hover {
+        background-position: 0 -15px;
+        background: url("../Images/arro.png")-8px -15px no-repeat;
+        color: #a8a8a8;
+    }
+
+.HeadingGreen {
+    background: #0092b0; /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwOTJiMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUyJSIgc3RvcC1jb2xvcj0iIzAwNmViMiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDkyYjAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #0092b0 0%, #006eb2 52%, #0092b0 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0092b0), color-stop(52%,#006eb2), color-stop(100%,#0092b0)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0092b0', endColorstr='#0092b0',GradientType=0 ); /* IE6-8 */
+    border-bottom: 1px solid #B2CCCA;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 1px auto 0;
+    text-align: left;
+    width: 100%;
+}
+
+    .HeadingGreen a {
+        background: url("../../Images/lbtn.PNG") no-repeat scroll 6px 8px rgba(0, 0, 0, 0);
+        color: #FFF;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        height: 20px;
+        padding: 7px 0 1px 27px;
+        text-decoration: none;
+        z-index: 999;
+    }
+
+    .HeadingGreen:hover {
+        background-color: #f7b515;
+        color: #FFF;
+    }
+
+.SubHeading {
+    text-align: left;
+    font-size: 14px;
+   
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    height: 22px;
+    width: 100%;
+    padding-top: 5px;
+    cursor: pointer;
+    margin-bottom: 3px;
+    background: url("../Images/grayarro.PNG") no-repeat scroll 6px 8px #FFF;
+    border-bottom:1px solid #007BB1;
+}
+
+    .SubHeading:hover {
+        background-color: #F1F1F1 !important;
+    }
+
+
+.SubHeadingSelect {
+    background-color: #cbc9c9 ;
+    text-align: left;
+    font-size: 14px;
+    color: #FFF;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    height: 22px;
+    width: 100%;
+    padding-top: 5px;
+    cursor: pointer;
+    margin-bottom: 3px;
+    background: url("../Images/grayarro.PNG") no-repeat scroll 6px 8px #cbc9c9 !important;
+}
+
+    .SubHeadingSelect a {
+        background: url("../../Images/lbtn.PNG") no-repeat scroll 6px 2px rgba(0, 0, 0, 0);
+        color: #FFFFFF;
+        float: left;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 0 2px 28px;
+        text-decoration: none;
+        z-index: 999;
+    }
+
+
+
+.SubHeading a {
+   
+    color: #000;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 0 2px 28px;
+    text-decoration: none;
+    z-index: 999;
+}
+
+.Activitydiv {
+    background-color: #FFFFFF;
+    width: 99%;
+}
+
+.subContainer {
+    width: 100%;
+    margin-bottom: 4PX;
+}
+.subContainer1 {
+    width: 100%;
+    margin-bottom: 4PX;
+}
+
+.Activities {
+    width: 100%; font-size: 11px; border-bottom: 1px solid #B4B4B4;
+}
+
+
+
+table tr.ReferralRow {
+    background-color: #F1F1F1;
+    cursor: pointer;
+    border-bottom: 2px solid #C3C0C0;
+    color: black;
+    width: 100% !important;
+}
+
+.ReferralRow input[type=button] {
+    border: 1px solid #006000;
+    background-position: 0 -80px;
+    background-repeat: repeat-x;
+    border-radius: 5px 5px 5px 5px;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    height: 22px;
+    line-height: 20px;
+    margin: 0 5px 0 0;
+    padding: 0 7px 5px;
+    position: relative;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    background-color: #028302;
+    color: white;
+    top: 2px;
+    left: 4px;
+}
+
+.ReferralRow hr {
+    color: #C3C0C0;
+}
+
+.ReferralRow:hover {
+    background-color: #cbc9c9;
+}
+
+.selectedReferral {
+    background-color: #e8e8e8;
+}
+
+
+.LoadImage {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 800px;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    background-image: url("../Images/overlay.png");
+    /*background: repeat-x scroll center top transparent;*/
+}
+
+#FullContents {
+    display: block;
+}
+
+.innerLoading {
+    margin: auto;
+    height: 50px;
+    width: 250px;
+    text-align: center;
+    font-weight: bold;
+    font-size: large;
+}
+
+    .innerLoading img {
+        margin-top: 200px;
+        height: 10px;
+        width: 100px;
+    }
+
+.divActiveReferal {
+    background-color: #F1F1F1;
+    border: 1px solid #CCCCCC;
+    border-radius: 6px;
+    float: left;
+    height: 105px;
+    margin: 2px;
+    padding: 5px;
+    width: 47% !important;
+}
+
+    .divActiveReferal:hover {
+        background-color: #cbc9c9;
+    }
+
+    .divActiveReferal table {
+        width: 100%;
+    }
+
+        .divActiveReferal table img {
+            height: 99px;
+            width: 210px;
+        }
+
+#page_navigation {
+    width: auto;
+    margin: 0 auto;
+}
+
+    #page_navigation a {
+        padding: 3px;
+        border: 1px solid gray;
+        margin: 2px;
+        color: black;
+        text-decoration: none;
+        float: left;
+    }
+
+.active_page {
+    background: #008000;
+    color: white !important;
+}
+
+#DashbrdReferral {
+    width: 100%!important;
+}
+
+ img{
+    border:none;
+    outline:none;
+}
+
+.MenuTooltip {
+}

@@ -1,0 +1,129 @@
+﻿@model ReferalDB.Models.ReferralDashboardModel
+
+<div id="LeftMenuContents">
+    <ul>
+
+        @foreach (var dataitm in Model.QueueList)
+        {
+            string Qname = string.Concat("'", dataitm.QueueId) + "," + dataitm.QueueName + "'";
+            string Qunme = "";
+            string Qsubdisplay = "";
+            string H2Style = "";
+
+            if (dataitm.QueueName.Length >= 21)
+            {
+                Qunme = dataitm.QueueName.Substring(0, 21) + "..";
+            }
+            else
+            {
+                Qunme = dataitm.QueueName;
+            }
+            <div>
+                <li id="@dataitm.QueueId" class="accordion" style="position: static;" onclick="SelectHeader(@Qname);">
+
+                    @if (dataitm.QueueName == "Inactive List")
+                    {
+                        H2Style = "InactiveList";
+                    }
+                    else if (dataitm.QueueName == "Waiting List")
+                    {
+                        H2Style = "WaitList";
+                    }
+
+                    else if (dataitm.QueueName == "Active Referral")
+                    {
+                        H2Style = "ActiveRef";// "linear-gradient(to bottom, #66D671 0%, #16AD37 50%, #66D671 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !Important";
+                    }
+                    else
+                    {
+                        H2Style = "allexp";
+                    }
+                    <h2 class=@H2Style>
+
+                        @foreach (var datanot in Model.NotificationList)
+                        {
+                            if (dataitm.QueueId == datanot.QueueId)
+                            {
+
+                                string sty = "";
+                                //if (datanot.AttentionNeeded > 0)
+                                //{
+                                //    sty = "background:url('../Images/melmark-Inner-Tab1_03.PNG') no-repeat scroll left top rgba(0, 0, 0, 0);color:white";
+                                //}
+                            <span class="dd"></span>
+                            <a class="gray MenuTooltip" title="@dataitm.QueueName">@Qunme</a>
+                                if (dataitm.QueueName != "Referral")
+                                {
+                                    if (dataitm.QueueName == "Client List")
+                                    {
+                            <div class="container" style="float: right; margin-right: 4px; background: url('../Images/melmark-Inner-Tab1_03.PNG') no-repeat scroll left top rgba(0, 0, 0, 0); color: white">@datanot.Newqueue</div>
+                                    }
+                                    else
+                                    {
+                            <div class="container" style="background: url('../Images/melmark-Inner-Tab1_03.PNG') no-repeat scroll left top rgba(0, 0, 0, 0); color: white">@datanot.Newqueue</div>
+                                    }
+                                }
+                                if (dataitm.QueueName != "Client List")
+                                {
+
+                                    if (dataitm.QueueName == "Referral")
+                                    {
+                            <div class="container retext" style="float: right; margin-right: 4px;">@datanot.RefTotal</div>
+                                    }
+                                    else
+                                    {                                       
+                                    
+                            <div class="container retext">@datanot.RefTotal</div>
+                                    }
+                                }
+                            }
+                        }
+                    </h2>
+
+
+                </li>
+
+
+                @foreach (var queitm in Model.SubQueueList)
+                {
+                    if (queitm.MasterId == dataitm.QueueId)
+                    {
+                        if (queitm.QueueType == "NA")
+                        {
+                            Qsubdisplay = "block";
+                        }
+                        else
+                        {
+                            Qsubdisplay = "none";
+                        }
+                    }
+                }
+
+                <div style="display: @Qsubdisplay;" class="subContainer">
+                    @foreach (var queitm in Model.SubQueueList)
+                    {
+                        if (queitm.MasterId == dataitm.QueueId)
+                        {
+                            string Queuename = "";
+                            string queuetype = "'" + queitm.QueueType + "'";
+                            string Quname = "'" + queitm.QueueName + "'";
+                            if (queitm.QueueName.Length > 30)
+                            {
+                                Queuename = queitm.QueueName.Substring(0, 28) + "..";
+                            }
+                            else
+                            {
+                                Queuename = queitm.QueueName;
+                            }
+                        <div id="@queitm.QueueId" style="display:block;" class="SubHeading" onclick="OpenSublinks(@queuetype,@Quname,@queitm.QueueId);">
+                            <a href="#" title="@queitm.QueueName" class="MenuTooltip">@Queuename</a>
+                        </div>
+                                
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </ul>
+</div>
+

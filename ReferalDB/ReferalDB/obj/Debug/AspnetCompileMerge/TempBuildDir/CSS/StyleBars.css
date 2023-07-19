@@ -1,0 +1,275 @@
+﻿
+.headingDivBar {
+    background-color: #F1F1F1;
+    border-bottom: 2px solid #C3C0C0;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    height: 25px;
+    margin: 2px 0;
+    padding: 8px 0 0 5px;
+    width: 100%;
+}
+
+    .headingDivBar a {
+        background-color: #FFFFFF;
+        border-bottom: 5px solid #005005;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+        bottom: 197px;
+        font-family: Arial;
+        height: 25px;
+        position: absolute;
+        text-align: center;
+        top: 135px;
+        width: 110px;
+        cursor: pointer;
+    }
+
+
+.upReferalDetails {
+    background: url("../Images/Referal.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    float: right;
+    height: 30px;
+   
+    width: 40px;
+    cursor: pointer;
+    display: block;
+    
+}
+
+    .upReferalDetails:hover {
+        background: url("../Images/ReferalOver.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
+
+.filter {
+    background: url("../Images/filter.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    height: 30px;
+    width: 30px;
+    cursor: pointer;
+    
+}
+
+    .filter:hover {
+        background: url("../Images/filterOver.png") no-repeat scroll center center rgba(0, 0, 0, 0);
+    }
+
+
+
+
+.yellowbar {
+    width: 220px;
+    height: 25px;
+    background: url(../Images/yellow.png) repeat-x center;
+    border-radius: 3px;
+    color: #000000;
+    font-weight: bold;
+    margin: 2px 0;
+}
+
+    .yellowbar:hover {
+        background: #FF9900;
+    }
+
+    .yellowbar a {
+        background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+        border-radius: 3px 3px 3px 3px;
+        color: #FFFFFF;
+        display: block;
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: bold;
+        height: 31px;
+        padding: 4px 0 10px 26px;
+        text-decoration: none;
+    }
+
+
+.bluebar {
+    background-color: #F1F1F1;
+    border-bottom: 2px solid #C3C0C0;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    height: 32px;
+    margin: 2px 0;
+    padding: 8px 0 0 5px;
+    width: 100%;
+}
+
+.greenbar:hover {
+    background: #00CC66;
+}
+
+.greenbar a {
+    background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+    border-radius: 3px 3px 3px 3px;
+    color: #FFFFFF;
+    display: block;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: bold;
+    height: 31px;
+    padding: 4px 0 10px 26px;
+    text-decoration: none;
+}
+
+
+
+.greenbar {
+    width: 220px;
+    height: 25px;
+    background: url(../Images/green.png) left top repeat-x center;
+    font-weight: bold;
+    margin: 2px 0;
+    background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+    border-radius: 3px 3px 3px 3px;
+    color: #FFFFFF;
+    display: block;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 4px 0 10px 26px;
+    text-decoration: none;
+    text-align: left;
+    background-color: #07ca68;
+}
+
+    .greenbar:hover {
+        background-color: green;
+        background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+    }
+
+    .greenbar a {
+        background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+        border-radius: 3px 3px 3px 3px;
+        color: #FFFFFF;
+        display: block;
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: bold;
+        height: 31px;
+        padding: 4px 0 10px 26px;
+        text-decoration: none;
+    }
+
+
+
+.graybar {
+    width: 220px;
+    height: 25px;
+    background: url(../Images/gray.png) repeat-x center;
+    border-radius: 3px;
+    color: #000000;
+    font-weight: bold;
+    margin: 2px 0;
+}
+
+    .graybar:hover {
+        background: #CCCCCC;
+    }
+
+    .graybar a {
+        background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+        border-radius: 3px 3px 3px 3px;
+        color: #FFFFFF;
+        display: block;
+        font-family: Arial;
+        font-size: 11px;
+        font-weight: bold;
+        height: 31px;
+        padding: 4px 0 10px 26px;
+        text-decoration: none;
+    }
+
+
+.orangebar {
+    background: none repeat scroll 0 0 #1EB53A;
+    border-radius: 4px 4px 4px 4px;
+    color: #000000;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    height: 32px;
+    margin: 0 0 2px;
+    padding: 0;
+    width: 100%;
+}
+
+    .orangebar a {
+        background: url("../Images/lbtn.PNG") no-repeat scroll 6px 8px rgba(0, 0, 0, 0);
+        color: #FFFFFF;
+        float: left;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 9px 0 2px 28px;
+        text-decoration: none;
+        width: 70%;
+        z-index: 999;
+    }
+
+    .orangebar:hover {
+        background: #FF9900;
+    }
+
+.sublink {
+    background: url("../Images/grayarro.PNG") no-repeat scroll 6px 8px #3375B4 !important;
+    border-radius: 2px 2px 2px 2px;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    height: 22px;
+    margin-bottom: 1px;
+    padding-top: 5px;
+    text-align: left;
+    width: 100%;
+}
+
+    .sublink a {
+        background: url("../Images/lbtn.PNG") no-repeat scroll 6px 2px rgba(0, 0, 0, 0);
+        color: #FFFFFF;
+        float: left;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 0 2px 28px;
+        text-decoration: none;
+        z-index: 999;
+        width: 200px;
+    }
+
+.closeDiv {
+    float: left;
+    width: 10%;
+    height: 25px;
+}
+
+    .closeDiv a {
+        background: url("../Images/LetterEngine.png") no-repeat scroll 0 -1px rgba(0, 0, 0, 0);
+        cursor: pointer;
+        display: block;
+        height: 24px;
+        width: 16px;
+    }
+
+.refferalbar {
+    width: 195px;
+    height: 30px;
+    background: url(../Images/green.png) left top repeat-x center;
+    font-weight: bold;
+    margin: 2px 0;
+    background: url("../Images/arrow.png") no-repeat scroll 4px 4px rgba(0, 0, 0, 0);
+    border-radius: 3px 3px 3px 3px;
+    color: #FFFFFF;
+    display: block;
+    font-family: Arial;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 4px 0 10px 26px;
+    text-decoration: none;
+    text-align: left;
+    background-color: #07ca68;
+}

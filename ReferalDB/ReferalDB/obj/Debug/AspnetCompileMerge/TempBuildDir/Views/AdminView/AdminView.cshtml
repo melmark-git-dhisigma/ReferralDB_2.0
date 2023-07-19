@@ -1,0 +1,158 @@
+﻿@model ReferalDB.Models.EngineViewModels
+
+@{
+   
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<meta http-equiv="X-UA-Compatible" content="IE=10,9" />
+<link href="~/CSS/StyleBars.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+<link href="~/CSS/StyleEngine.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"  type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ajaxStart(function () {
+        $('#ajaxloader').fadeIn();
+    }).ajaxStop(function () {
+        $('#ajaxloader').fadeOut();
+    });
+
+  
+    $(document).ready(function () {
+        $("#letterTemplate").click(function () {
+            $("#WrapLetter").slideToggle("fast");
+        });
+       
+        $('#loadcon').load('../Engine/LetterEngine');
+        //var query = window.location.href.toString();
+       
+        //var arr = query.split('?');
+
+        //if (arr.length > 1) {
+        //    var mes = arr[1];
+        //    var ar = mes.split('=');
+          
+        //    $('#loadcon').load('../Engine/LetterEngine?Query=' + ar[1]);
+        //}
+        //else {
+        //    $('#loadcon').load('../Engine/LetterEngine');
+        //}
+
+        if ('@TempData["Letter"]' != "")
+        {
+            alert("Deletion Is Not Possible. Template Is Assigned.");
+              }
+    });
+    function LoadpartialView(type) {
+        if (type == "Letter") {
+            $("#btnSave").val("Save");
+            $('#loadcon').load('../Engine/LetterEngine');
+        }
+        else if (type == "Checklist") {
+            $('#loadcon').load('../Engine/ChecklistEngine');
+        }
+        else if (type == "Admission") {
+            $('#loadcon').load('../AdmissionReview/LoadUsers');
+        }
+        //else if (type == "TeamMember") {
+        //    $('#loadcon').load('../AdmissionReview/LoadTeam');
+        //}
+    }
+
+
+    function closeLetter(btnid) {
+        var message = confirm('Are you sure want to delete the letter template?')
+        if (message.toString() == "true") {
+            $('#' + btnid).remove();
+            window.location = "../Engine/DeleteLetter?Id=" + btnid;
+        }
+    }
+
+    function fillLetter(LetterId) {
+       
+        //$('#loadcon').load('../Engine/LetterEngine');
+        $("#loadcon").load("@Url.Action("fillLetter", "Engine")", { id: LetterId /*parameters*/ }, function (text, status, xhr) {
+            //Javascript logic to fire goes here
+            $("#btnSave").val("Update");
+            $("#DdlType").prop("disabled", true);
+            $("#DdlType1").prop("disabled", true);
+        });
+        
+    }
+
+    function NewLetter() {
+        document.getElementById('LetterEngineName').value = "";
+        tinymce.get('ItemContent').setContent('');
+        document.getElementById('btnSave').value = "Save";
+        document.getElementById('letterid').value = 0;
+    }
+</script>
+<div>
+    <div class="leftContainerAdmin">
+
+        <div class="orangebar" onclick="LoadpartialView('Letter');">
+            <div style="float: left; width: 85%; height: 25px; cursor: pointer;" id="letterTemplate"><a>Letter Engine</a></div>
+
+
+            <div style="float: left; width: 15%; height: 25px; margin-top: 5px; color: white;">New</div>
+
+
+        </div>
+        <div id="WrapLetter" style="float: left;">
+           
+            @foreach (var item in Model.listItem)
+            {
+                
+                if (@item.LetterEngineType == "Letter")
+                {        
+                <div id="@item.LetterEngineId" class="sublink">
+                    @{
+                    string Qname = "";
+                    if(item.QueueName !=null)
+                    {
+                    if (item.QueueName.Length > 20)
+                    {
+                        Qname = item.QueueName.Substring(0, 18) + "..";
+                    }
+                    else
+                    {
+                        Qname = item.QueueName;
+                    }
+                    }
+
+                    string aproveStatus = "";
+                    if (item.ApproveStatus == true)
+                    {
+                        aproveStatus = "Approved";
+                    }
+                    else
+                    {
+                        aproveStatus = "Rejected";
+                    }                
+                    }
+                    <a onclick="fillLetter(@item.LetterEngineId);">@Qname - @aproveStatus</a>
+                    <div class="closeDiv"><a class="imgbox"  onclick="closeLetter(@item.LetterEngineId)"></a></div>
+
+                </div>
+                }
+            }
+            
+        </div>
+        <div class="clear"></div>
+        <div class="orangebar" onclick="LoadpartialView('Checklist');">
+            <a>Checklist Engine</a>
+        </div>
+        <div class="clear"></div>
+        <div class="orangebar" onclick="LoadpartialView('Admission');">
+            <a>Admission Review Team</a>
+        </div>
+        <div class="clear"></div>
+        @*<div class="orangebar" onclick="LoadpartialView('TeamMember');">
+            <a>Review Team Referrals</a>
+        </div>*@
+    </div>
+    <div id="loadcon"></div>
+</div>
+<div id="ajaxloader"></div>

@@ -1,0 +1,289 @@
+﻿@model ReferalDB.Models.CommanUserViewModel
+
+<script type="text/javascript">
+
+    var date = new Date();
+    date.setDate(date.getDate());
+
+
+    $(".datepicker").datepicker(
+    {
+        changeMonth: true,
+        changeYear: true,
+        showAnim: "fadeIn",
+        yearRange: 'c-100:c+100',
+        minDate: date,
+        /* fix buggy IE focus functionality */
+        fixFocusIE: false,
+
+    });
+    function addAll(val) {
+        if (val == 'AddTo') {
+            var selectedOpts = $('#FromUsertxtBox option');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#ToUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+
+        }
+        else if (val == 'RemoveFrom') {
+            var selectedOpts = $('#ToUsertxtBox option');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#FromUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+        }
+    }
+    function addOneByOne(val) {
+        if (val == 'AddTo') {
+            var selectedOpts = $('#FromUsertxtBox option:selected');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#ToUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+        }
+        else if (val == 'RemoveFrom') {
+            var selectedOpts = $('#ToUsertxtBox option:selected');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#FromUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+        }
+    }
+
+
+    function submitVal() {
+        var chkCounti = $('#ChkCounti').val();
+        var chkCountj = $('#ChkCountj').val();
+        var selectedOpts = $('#ToUsertxtBox option');
+        var valToshow = "";
+        var valToshowId = "";
+        if (selectedOpts.length > 0) {
+            var i = 0;
+            selectedOpts.each(function () {
+
+                if (i == 0) {
+                    valToshow = this.text;
+                    valToshowId = this.value;
+                }
+                else {
+                    valToshow = valToshow + "<br/>" + this.text;
+                    valToshowId = valToshowId + "," + this.value;
+                }
+                i++;
+                // You can access `collection.length` here.
+            });
+
+        }
+        document.getElementById('userName_' + chkCounti + '_' + chkCountj).innerHTML = valToshow;
+        //ChkAll_0__chkList_0__AssignMultiId
+        $('#ChkAll_' + chkCounti + '__chkList_' + chkCountj + '__AssignMultiId').val(valToshowId);
+        $('#DueDate_' + chkCounti + chkCountj).html($('#duedateTxt').val());
+        $('#ChkAll_' + chkCounti + '__chkList_' + chkCountj + '__DueDateToShow').val($('#duedateTxt').val());
+        $('#viewUserList').hide();
+    }
+</script>
+
+
+@using (Ajax.BeginForm("AcademicReviews", "PreAdmission", FormMethod.Post, new AjaxOptions { UpdateTargetId = "" }))
+{
+    <div>
+        @*  <table>
+                <thead>
+                    <th>
+                        UserList
+                    </th>
+                </thead>
+                <tbody>
+                    @foreach (var userlist in Model.userList)
+                    {
+                        <tr>
+                            <td><div>@Html.CheckBox("checklist", false, new { @value =userlist.userId })@userlist.userFName,@userlist.UserLName</div></td>
+                        </tr>
+                    }
+                    <tr><td>
+                        <input type="submit" value="Submit" name="Actions"/>
+                        </td></tr>
+                 </tbody>
+            </table>*@
+        @*<table style="margin-top:20px">
+                <tr>
+                    <td colspan="3">
+                          @foreach (var userlist in Model.userList)
+                              {
+                                     <input type="hidden" id="hdTagsid+@userlist.userId" value="@userlist.userId"/>
+                                     <input type="hidden" id="hdTagstxt+@userlist.userId" value="@userlist.UserLName"/>
+                              }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                       <select id="FromUsertxtBox" name="sometext" multiple="multiple" style="width:200px;height:200px">
+
+                              @foreach (var userlist in Model.userList)
+                              {
+                                  String[] splitVal = Model.userIdz.Split(',');
+                                  if(splitVal.Length>0)
+                                  {
+                                  int k=0;
+                              if (k < splitVal.Length)
+                              {
+                                      int flg=0;
+                                  foreach(string sr in splitVal)
+                                  {
+                                      int splitCount=splitVal.Length;
+
+                                      if (int.Parse(sr) == userlist.userId)
+                                      {
+                                          flg = 0;
+                                          break;
+                                      }
+                                      else
+                                      {
+                                          flg = 1;
+                                      }
+                                  }
+                                  if (flg == 1)
+                                  {
+                                      <option value="@userlist.userId">@userlist.UserLName,@userlist.userFName</option>
+                                  }
+                              }
+                                  }
+                                  else
+                                  {
+                                      <option value="@userlist.userId">@userlist.UserLName,@userlist.userFName</option>
+                                  }
+                              }
+                        </select>
+                    </td>
+                    <td style="vertical-align:central">
+                        <input type="button" value=">" style="margin-top:5px" onclick="addOneByOne('AddTo')" /><br />
+                        <input type="button" value=">>" style="margin-top:5px" onclick="addAll('AddTo')" /><br />
+                        <input type="button" value="<" style="margin-top:5px" onclick="addOneByOne('RemoveFrom')" /><br />
+                        <input type="button" value="<<" style="margin-top:5px" onclick="addAll('RemoveFrom')" />
+                    </td>
+                    <td>
+                        <select id="ToUsertxtBox" name="sometext" multiple="multiple" style="width:200px;height:200px">
+                         @foreach (var userlist in Model.userList)
+                              {
+                                  String [] splitVal1 = Model.userIdz.Split(',');
+                                  foreach(string sr in splitVal1)
+                                  {
+                                      if (int.Parse(sr) == userlist.userId)
+                                      {
+                                     <option value="@userlist.userId">@userlist.UserLName</option>
+                              }
+
+                              }
+
+                              }
+                       </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="height:20px">
+                               @Html.HiddenFor(m => Model.userIdz, Model.userIdz)
+                              @Html.HiddenFor(m => Model.ChkCounti, Model.ChkCounti)
+                              @Html.HiddenFor(m => Model.ChkCountj, Model.ChkCountj)
+                    </td>
+                </tr>
+                 <tr><td colspan="2">Due Date <input id="duedateTxt" type="text" class="datepicker"  onkeypress="return false"/></td>
+                     <td colspan="3" style="text-align:right;"><input type="button" value="Done" name="Actions" style="float:none" onclick="submitVal()"/></td></tr>
+
+            </table>*@
+
+        <table style="margin-top:20px">
+            <tr>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="FromUsertxtBox" name="sometext" multiple="multiple" style="width:200px;height:200px">
+
+                        @foreach (var userlist in Model.userList)
+                        {
+                            String[] splitVal = Model.userIdz.Split(',');
+                            if (splitVal.Length > 0)
+                            {
+                                int k = 0;
+                                if (k < splitVal.Length)
+                                {
+                                    int flg = 0;
+                                    foreach (string sr in splitVal)
+                                    {
+                                        int splitCount = splitVal.Length;
+
+                                        if (int.Parse(sr) == userlist.userId)
+                                        {
+                                            flg = 0;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            flg = 1;
+                                        }
+                                    }
+                                    if (flg == 1)
+                                    {
+                                        <option value="@userlist.userId">@userlist.UserLName,@userlist.userFName</option>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <option value="@userlist.userId">@userlist.UserLName,@userlist.userFName</option>
+                            }
+                        }
+                    </select>
+                </td>
+                <td style="vertical-align:central; padding:40px;width:108px !important">
+                    <input type="button" value=">" style="margin-top:5px" onclick="addOneByOne('AddTo')" /><br />
+                    <input type="button" value=">>" style="margin-top:5px" onclick="addAll('AddTo')" /><br />
+                    <input type="button" value="<" style="margin-top:5px" onclick="addOneByOne('RemoveFrom')" /><br />
+                    <input type="button" value="<<" style="margin-top:5px" onclick="addAll('RemoveFrom')" />
+                </td>
+                <td>
+                    <select id="ToUsertxtBox" name="sometext" multiple="multiple" style="width:200px;height:200px">
+                        @foreach (var userlist in Model.userList)
+                        {
+                            String[] splitVal1 = Model.userIdz.Split(',');
+                            foreach (string sr in splitVal1)
+                            {
+                                if (int.Parse(sr) == userlist.userId)
+                                {
+                                    <option value="@userlist.userId">@userlist.UserLName,@userlist.userFName</option>
+                                }
+
+                            }
+
+                        }
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td style="height:20px">
+                    @Html.HiddenFor(m => Model.userIdz, Model.userIdz)
+                    @Html.HiddenFor(m => Model.ChkCounti, Model.ChkCounti)
+                    @Html.HiddenFor(m => Model.ChkCountj, Model.ChkCountj)
+                </td>
+            </tr>
+            <tr>
+                <td>Due Date</td>
+                <td colspan="2">
+                    <input id="duedateTxt" type="text" style="float:left;" class="datepicker" onkeypress="return false" />
+                    
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <input type="button" value="Done" name="Actions" style="float: right; display: block; margin: 5px 40px 0 0;" onclick="submitVal()" />
+                </td>
+            </tr>
+        </table>
+    </div>
+}

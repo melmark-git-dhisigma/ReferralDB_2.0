@@ -1,0 +1,43 @@
+﻿@model ReferalDB.Models.AcademicReviewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DocumentList</title>
+</head>
+<body>
+    <div>
+        @if (Model.DocList != null)
+            {
+                <table style="width: 100%" class="gridStyle">
+                    <tr class="HeaderStyle">
+                        <td colspan="2">Document Name</td>
+                        <td align="center">Download</td>
+                        <td align="center">Verified</td>
+                    </tr>
+
+
+                    @for (int i = 0; i < Model.DocList.Count; i++)
+                    {
+                        <tr>
+                            <td colspan="2">@Model.DocList[i].IEPName</td>
+                            <td align="center">
+                                @Html.HiddenFor(m => Model.DocList[i].IEPId, Model.DocList[i].IEPId)
+                                <img id="@Model.DocList[i].IEPId-@Model.DocList[i].IEPPath" src="../Images/download.PNG" onclick="downloadFn(this.id);" /></td>
+                            <td align="center">
+                                @* <input type="checkbox" id="chkVerify" />*@
+                                @Html.CheckBox("DocList[" + i + "].Verified", (Model.DocList[i].Verified == true) ? true : false, new { value = true })
+                            </td>
+                        </tr>
+                    }
+                </table>
+            }
+    </div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+﻿@model ReferalDB.Models.ReferralDashboardModel
+
+
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { @name = "NotesForm", @id = "NotesForm" }))
+{
+  
+    <div id="ActivitySect" style="overflow-y: auto; background-color: rgb(255, 255, 255); border: 1px solid rgb(0, 113, 178);">
+
+       
+
+         <marquee direction="up" scrollamount="2" behavior="scroll" onmouseover="this.stop();" onmouseout="this.start();">
+             <div>
+                
+        @foreach (var item in Model.ActivityList)
+        {
+            string Status = "";
+            string Created = ""; 
+            string createdtime = ""; 
+
+            if (item.Status == "Y")
+            {
+                Status = "Drafted By";
+                Created = Convert.ToDateTime(@item.CreatedOn).ToString("MM'/'dd'/'yyyy");
+                createdtime = Convert.ToDateTime(@item.CreatedOn).ToString("hh:mm tt"); 
+            }
+            else
+            {
+                Status = "Submitted By";
+                Created = Convert.ToDateTime(@item.ModifiedOn).ToString("MM'/'dd'/'yyyy");
+                createdtime = Convert.ToDateTime(@item.ModifiedOn).ToString("hh:mm tt"); 
+            }
+                 
+            <table class="Activities" >
+
+                <tr>
+                    <td>
+                        
+                        <table style="width: 100%">
+
+                            <tr>
+                                <td class="boxstyleCon" style="font-weight: bold;"  >@item.CurrentStep @Status @item.UserName 
+                                 <br />
+                                    (@Created @createdtime)
+                                    
+                                </td>
+
+
+                            </tr>
+
+
+                        </table>
+                            
+                    </td>
+                </tr>
+                <tr style="height: 2px">
+                    <td colspan="3"></td>
+                </tr>
+            </table>
+            
+        }
+                  </div>
+                 </marquee>
+       @*    @if (model.activecount > 5)
+        {
+            *@
+        <div style="width: 100%; text-align: right; color: blue">
+                <a href="#" onclick="MoreActivity();" id="moredata">More...</a>
+            </div>
+        @*}*@
+   
+        
+    </div>
+}
+

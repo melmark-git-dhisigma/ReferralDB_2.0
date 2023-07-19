@@ -1,0 +1,86 @@
+﻿@model ReferalDB.Models.NoteModel
+
+
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        //$("#btnpost").click(function () {
+        //    if (document.getElementById('Notes').value == "") {
+        //        document.getElementById('tdMsg').innerHTML = "<div class='warning_box'>Enter Notes Before Posting</div>";
+        //        return false;
+        //    }
+        //    else {
+                
+        //        var dataitm = document.getElementById('Notes').value.replace(" ", "#&$");
+        //        alert(dataitm);
+        //        $('#DivNotes').load('../Dashboard/SaveNotes?id=' + dataitm);
+        //    }
+
+        //});
+
+
+    });
+
+
+   
+
+    
+</script>
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { @name = "NotesForm", @id = "NotesForm" }))
+{<div class="HeadingGreen"><a> Notes</a> </div>
+    <div id="DivNotes" style="width: 100%;font-size:11px;">
+        
+
+        <div class="Activitydiv" id="LoadNotes" style="background-color: rgb(255, 255, 255); border: 1px solid rgb(0, 113, 178);">
+
+            <div style="height: 180px; overflow-y: auto;">
+
+                <table style="width: 100%; height: auto;" id="result">
+                    @foreach (var dataitm in Model.NoteList)
+                    {
+                        <tr>
+                            <td style="text-align: left;">
+                               <span style="font-weight:bold;"> @dataitm.RefName :</span> @dataitm.Notes
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                               
+                            </td>
+                        </tr>
+                        <tr>
+                            @{
+                        string created = Convert.ToDateTime(dataitm.CreatedOn).ToString("MM'/'dd'/'yyyy");
+                        string createdtime = Convert.ToDateTime(dataitm.CreatedOn).ToString("hh:mm tt");                  
+                            }
+                            <td style="text-align: left; font-weight:bold;">By @dataitm.UserName
+                                <br />
+                                (@created @createdtime)
+                            </td>
+                        </tr>
+                        <tr style="height: 2px">
+                            <td style="border-bottom:1px solid #B4B4B4;">
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div style="border: 0 none; clear: both; margin: 0; padding: 0;"></div>
+            <div style="width: 96%; background-color: #E5E5E5;">
+                <textarea name="keywords" id="Notes" rows="3" style="width:95% !important;height:40px;" onkeypress="handleKeyPress(event)"></textarea>
+              
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+}
+
+

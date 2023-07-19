@@ -1,0 +1,486 @@
+﻿@model ReferalDB.Models.StdDetailsViewModel
+<style>
+    .imgOver {
+        background: none !important;
+        height: 130px !important;
+        left: 25px !important;
+        top: 35px !important;
+        width: 130px !important;
+    }
+
+    .tdStyleInner {
+        color: #6B6B6B;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+    }
+
+    .CurrentQueue {
+        background: linear-gradient(to bottom, #66D671 0%, #16AD37 50%, #66D671 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+        border-radius: 4px;
+        color: #FFFFFF !important;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        height: 35px;
+        margin: 0 0 4px !important;
+        padding-top: 2px;
+        width: 100%;
+    }
+
+    .ui-menu {
+        z-index: 1000 !important;
+    }
+
+    .SubHeading {
+        height: 35px;
+        position:relative !important;
+    }
+    .qStaus {
+    font-size:10px;
+    margin:2px;
+    bottom:0;
+    right:0;
+    position:absolute;
+    padding:0 2px;
+    }
+</style>
+
+<div class="">
+    <div class="ClientOptions">
+        @*  
+        <div class="subContainer" style="display: block;">
+                        <div onclick="ReferalSearchLast();" class="SubHeading1 defHeading" style="display:block;">
+                            <a class="MenuTooltip" title="New Applicant" href="#">Referral Search</a>
+                        </div>
+                </div>
+        <div class="subContainer" style="display: block;">
+                        <div onclick="OpenSublinks('letterTray','New Applicant',2);" class="SubHeading1 defHeading" style="display:block;">
+                            <a class="MenuTooltip" title="New Applicant" href="#">Letter Tray</a>
+                        </div>
+                </div>
+        <div class="subContainer" style="display: block;">
+                        <div onclick="OpenSublinks('docoument','New Applicant',2);" class="SubHeading1 defHeading" style="display:block;">
+                            <a class="MenuTooltip" title="New Applicant" href="#">Documents</a>
+                        </div>
+                </div>
+        <div class="subContainer" style="display: block;">
+                        <div onclick="OpenSublinks('reffQuickUpt','New Applicant',2);" class="SubHeading1 defHeading" style="display:block;">
+                            <a class="MenuTooltip" title="New Applicant" href="#">Referral Quick Update</a>
+                        </div>
+                </div>*@
+
+
+        @if (Model.StudentPersonalId != null)
+        {
+            string Status = Model.StudentPersonalId.ToString() + "_999";
+          
+            <div style="display: block;" class="subContainer1">
+                <div  id="@Status" style="display:block;" class="SubHeading defHeading" onclick="SelectReferral(this.id, 'btn', this);">
+                    <a href="#" title="Admission Application" class="MenuTooltip">Admission Application</a>
+                </div>
+            </div>
+                                 
+        }
+
+
+    </div>
+    @if (Model.Search == "YES")
+    {
+        <div id="searchStudent" style="margin: 6% auto 0; width: 99%;">
+            <table style="width: 100%">
+                <tr>
+                    <td colspan="4" style="">
+                        <div>
+                            <h4>Referral Search</h4>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td>Search&nbsp;&nbsp;&nbsp; </td>
+                    <td>
+                        @Html.TextBoxFor(m => m.SearchName, Model.SearchName, new { @style = "width:81%;margin-top:2%;font-style:italic" })
+                    </td>
+                    <td>
+                        <input type="button" value="Search" onclick="ReferalSearch('Search');" /></td>
+                </tr>
+            </table>
+        </div>
+      
+    
+        if (Model.studentPersonalName == null)
+        {
+            if (ViewBag.SearchDetails != null)
+            {
+                IList<ReferalDB.CommonClass.StudentSearchDetails> Details = (IList<ReferalDB.CommonClass.StudentSearchDetails>)ViewBag.SearchDetails;
+
+
+                if (Details != null)
+                {
+                    if (Details.Count > 0)
+                    {
+                
+                
+        <table width="100%" border="0" cellpadding="0" class="gridStyle" cellspacing="0">
+            <tr class="HeaderStyle" style="color: white !Important">
+                <td style="color: white; font-weight: bold; padding-left: 2px;">Referral Name</td>
+                <td style="color: white; font-weight: bold;">Birth Date</td>
+                <td style="color: white; font-weight: bold;">Admission Date</td>
+                <td style="color: white; font-weight: bold;">Queue Level</td>
+                <td style="color: white; font-weight: bold;">More Details</td>
+            </tr>
+
+            @for (int i = 0; i < Details.Count; i++)
+            {
+                if (i < 40)
+                {   
+                <tr>
+                    <td style="padding-left: 2px;">@Details[i].ReferralName</td>
+                    <td>@Details[i].BirthDate</td>
+                    <td>@Details[i].AdmissionDate</td>
+                    <td>
+
+
+                        @if (Details[i].LastQueue.ToString() == "Active Referral" || Details[i].LastQueue.ToString() == "Waiting List" || Details[i].LastQueue.ToString() == "Inactive List" || Details[i].LastQueue.ToString() == "Client List")
+                        {
+                            string QueueId = Details[i].QueueId;
+                            string[] ar = QueueId.Split('_');
+                            string Queue = ar[1].ToString();
+                           
+                            <a href="#" onclick="SelectHeader('@Queue,@Details[i].LastQueue');" >@Details[i].LastQueue </a>
+                        }
+                        else
+                        {
+                            <a href="#" onclick="LoadReferralQueue('@Details[i].QueueId','','');" >@Details[i].LastQueue </a>
+                        }
+
+                    </td>
+                    @if (Details[i].LastQueue.ToString() == "Active Referral")
+                    {
+                        <td></td>
+                    }
+                    else if (Details[i].LastQueue.ToString() == "Waiting List")
+                    {
+                        <td></td>
+                    }
+                    else if (Details[i].LastQueue.ToString() == "Inactive List")
+                    {
+                        <td></td>
+                    }
+                    else if (Details[i].LastQueue.ToString() == "Client List")
+                    {
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td><a href="#" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+
+
+                </tr>
+                }
+
+            }
+
+        </table>
+                    }
+                    else
+                    {                
+        <div id="nodatafound" style="font-size: 15px; font-weight: bold; margin: 6% auto 0px; width: 100%; height: 50px; padding-top: 25px; text-align: center; background-color: rgb(126, 171, 190); color: ghostwhite;">Search details cannot found,try again...</div>
+                    }
+
+                }
+                else
+                {                
+        <div id="nodatafound" style="font-size: 15px; font-weight: bold; margin: 6% auto 0px; width: 100%; height: 50px; padding-top: 25px; text-align: center; background-color: rgb(126, 171, 190); color: ghostwhite;">Search details cannot found,try again...</div>
+                }
+            }
+        }
+
+    }
+
+    @if (Model.studentPersonalName != null)
+    {
+        if (Model.fl_AT == false)
+        { 
+        <div id="studentDet">
+
+
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inner">
+                <tr class="queueHeading">
+                    <td>
+                        @* <h2 class="allexp" style="width: 95%">Pre-Admission</h2>*@
+
+                        <div>
+                            <li style="position: static;" class="accordion">
+
+                                <h2 class="allexp">
+                                    <span class="dd"></span>
+                                    <a title="Pre-Admission" class="gray MenuTooltip">Pre-Admission</a>
+
+
+                                </h2>
+                            </li>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subQueueList">
+                    <td>
+                        <div class="queueSubList">
+                            @{
+            var Item = Model.QueueList.Where(objqueue => objqueue.QueueType == "PA").ToList();
+                            }
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr nomargine">
+
+                                @foreach (var refitem in Model.ReferralQueueList)
+                                {
+                                    for (int i = 0; i < Item.Count; i++)
+                                    {
+                                        if (Item[i].QueueId == refitem.QueueID)
+                                        {
+                                            string Id = refitem.ReferralId + "_" + refitem.QueueID;
+                                            string Styles1 = "";
+                                            string Styles2 = "";
+                                            string StatusValue = "";
+                                            if (refitem.QueueStatus == "Drafted")
+                                            {
+                                                Styles1 = "font-weight:bold;color:green;";
+                                                Styles2 = "border: 1px solid green; color: green;";
+                                                StatusValue = "D";
+                                            }
+                                            if (refitem.QueueStatus == "Submitted")
+                                            {
+                                                Styles2 = "border: 1px solid black; color: black; ";
+                                                StatusValue = "S";
+                                            }
+                                            if (refitem.QueueStatus == "Not Started")
+                                            {
+                                                Styles1 = "font-weight:bold;color:grey;";
+                                                Styles2 = "border: 1px solid grey; color: grey;";
+                                                StatusValue = "NS";
+                                            }
+                     
+                                    <tr>
+                                        <td>
+                                            <div style="display: block;" class="subContainer1">
+                                                <div style="display:block;" class="SubHeading defHeading" onclick="LoadReferralQueue('@Id','@refitem.QueueStatus',this);">
+                                                    <a href="#"  style="@Styles1" title="" class="MenuTooltip">@Item[i].QueueName</a>
+                                                    <div class="qStaus" style="@Styles2" title="@refitem.QueueStatus">@StatusValue</div>
+                                                </div>
+                                            </div>
+                                        </td>
+
+
+
+
+
+                                    </tr>
+                                        }
+                                    }
+                                }
+                            </table>
+                        </div>
+
+                    </td>
+                </tr>
+
+            </table>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inner">
+                <tr class="queueHeading">
+                    <td>
+
+                        <div>
+                            <li style="position: static;" class="accordion">
+
+                                <h2 class="allexp">
+                                    <span class="dd"></span>
+                                    <a title="Intake Assessment" class="gray MenuTooltip">Intake Assessment</a>
+
+
+                                </h2>
+                            </li>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subQueueList">
+                    <td>
+                        <div class="queueSubList">
+                            @{
+                                var Item1 = Model.QueueList.Where(objqueue => objqueue.QueueType == "IA").ToList();
+                            }
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr nomargine">
+
+                                @foreach (var refitem in Model.ReferralQueueList)
+                                {
+                                    for (int i = 0; i < Item1.Count; i++)
+                                    {
+                                        if (Item1[i].QueueId == refitem.QueueID)
+                                        {
+                                            string Id = refitem.ReferralId + "_" + refitem.QueueID;
+                                            string Styles1 = "";
+                                            string Styles2 = "";
+                                            string StatusValue = "";
+                                            if (refitem.QueueStatus == "Drafted")
+                                            {
+                                                Styles1 = "font-weight:bold;color:green;";
+                                                Styles2 = "border: 1px solid green; color: green;";
+                                                StatusValue = "D";
+                                            }
+                                            if (refitem.QueueStatus == "Submitted")
+                                            {
+                                                Styles2 = "border: 1px solid black; color: black; ";
+                                                StatusValue = "S";
+                                            }
+                                            if (refitem.QueueStatus == "Not Started")
+                                            {
+                                                Styles1 = "font-weight:bold;color:grey;";
+                                                Styles2 = "border: 1px solid grey; color: grey;";
+                                                StatusValue = "NS";
+                                            }
+                     
+                                    <tr>
+                                        <td>
+
+                                            <div style="display: block;" class="subContainer1">
+                                                <div style="display:block;" class="SubHeading defHeading" onclick="LoadReferralQueue('@Id','@refitem.QueueStatus',this);">
+                                                    <a href="#"  style="@Styles1" title="" class="MenuTooltip">@Item1[i].QueueName</a>
+                                                    <div class="qStaus" style="@Styles2" title="@refitem.QueueStatus">@StatusValue</div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                        }
+                                    }
+                                }
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inner">
+                <tr class="queueHeading">
+                    <td>
+                        <div>
+                            <li style="position: static;" class="accordion">
+
+                                <h2 class="allexp">
+                                    <span class="dd"></span>
+                                    <a title="Acceptance Procedure" class="gray MenuTooltip">Acceptance Procedure</a>
+
+
+                                </h2>
+                            </li>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="subQueueList">
+                    <td>
+                        <div class="queueSubList">
+                            @{
+                                var Item2 = Model.QueueList.Where(objqueue => objqueue.QueueType == "AP").ToList();
+                            }
+                            <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr nomargine">
+
+                                @foreach (var refitem in Model.ReferralQueueList)
+                                {
+                                    for (int i = 0; i < Item2.Count; i++)
+                                    {
+                                        if (Item2[i].QueueId == refitem.QueueID)
+                                        {
+                                            string Id = refitem.ReferralId + "_" + refitem.QueueID;
+                                            string Styles1 = "";
+                                            string Styles2 = "";
+                                            string StatusValue = "";
+                                            if (refitem.QueueStatus == "Drafted")
+                                            {
+                                                Styles1 = "font-weight:bold;color:green;";
+                                                Styles2 = "border: 1px solid green; color: green;";
+                                                StatusValue = "D";
+                                            }
+                                            if (refitem.QueueStatus == "Submitted")
+                                            {
+                                                Styles2 = "border: 1px solid black; color: black; ";
+                                                StatusValue = "S";
+                                            }
+                                            if (refitem.QueueStatus == "Not Started")
+                                            {
+                                                Styles1 = "font-weight:bold;color:grey;";
+                                                Styles2 = "border: 1px solid grey; color: grey;";
+                                                StatusValue = "NS";
+                                            }
+                     
+                                    <tr>
+                                        <td>
+                                            <div style="display: block;" class="subContainer1">
+                                                <div style="display:block;" class="SubHeading defHeading" onclick="LoadReferralQueue('@Id','@refitem.QueueStatus',this);">
+                                                    <a href="#"  style="@Styles1" title="" class="MenuTooltip">@Item2[i].QueueName</a>
+                                                    <div class="qStaus" style="@Styles2" title="@refitem.QueueStatus">@StatusValue</div>
+                                                </div>
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                        }
+                                    }
+                                }
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+        }
+    }
+</div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+          
+            //if (data == "Client") {
+            //    $('#studentDet').hide();
+            //}
+            //else
+            //$('#studentDet').show();
+        });
+
+
+        $("#SearchName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "../Dashboard/AutoCompleteCountry",
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        //response(data.ReferralName);
+                        response($.map(data, function (item) {
+                            return { label: item.ReferralName, value: item.ReferralName };
+                        }))
+                    },
+                })
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            }
+        });
+        $('.queueSubList').hide();
+        $('.queueHeading').click(function () {
+            //var currHeading = $(this);
+            //$('.queueSubList').slideUp('fast', function () {
+            //    currHeading.parent().find('.queueSubList').slideDown();
+            //});
+
+
+            var currHeading = $(this).parent().find('.queueSubList');
+            $('.queueSubList').not(currHeading).slideUp('fast');
+            $(currHeading).slideToggle();
+        });
+    });
+</script>

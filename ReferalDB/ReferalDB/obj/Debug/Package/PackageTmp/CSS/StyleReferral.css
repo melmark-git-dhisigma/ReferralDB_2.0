@@ -1,0 +1,93 @@
+﻿.popMainContainer {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 4px double #009AB6;
+    border-radius: 15px;
+    height: auto !important;
+    margin: 50px auto 0;
+    min-height: 350px;
+    min-width: 780px;
+    width: 80%;
+}
+
+ .photoContainer {
+    }
+    .photoContainer img {
+
+     background: none repeat scroll 0 0 rgba(0, 0, 0, 0) !Important;
+    border: 4px double #B9B9B9 !Important;
+    display: block !Important;
+    float: left !Important;
+    height: 110px !Important;
+    margin: 25px 0 10px 25px ;
+    padding: 10px !Important;
+    position: static !Important;
+    width: 100px !Important;
+    }
+
+.popMainContainer table tr td {
+    color: #666666;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    height: 25px;
+    text-align: left;
+    text-decoration: none;
+}
+.popMainContainer table tr td strong {
+    margin: 0 15px 0 0;
+}
+.popMainContainer table.inr {
+    line-height: 0;
+    margin: 15px 0 0;
+}
+.popMainContainer table.inr tr td {
+    border-bottom: 1px solid #E0DDDD;
+    border-right: 1px solid #E0DDDD;
+    padding: 0 0 0 15px;
+}
+.nobdr {
+    border-right: medium none !important;
+}
+.topbdr {
+    border-top: 1px solid #E0DDDD !important;
+}
+.popMainContainer table.inner {
+    border: 4px solid #B9B9B9;
+    height: auto !important;
+    margin: 0 auto 25px;
+    min-height: 200px;
+    min-width: 600px;
+}
+.popMainContainer table.inner h2 {
+    
+    background:url("../Images/Refarrow.PNG") no-repeat scroll 11px 7px rgba(47, 26, 12, 0.05);
+    color: #0154A0;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 10px 0 0 15px;
+    padding: 6px 0 7px 35px;
+    width: 93%;
+}
+    .popMainContainer table.inner h2:hover {
+         background:url("../Images/Refarrow.PNG") no-repeat scroll 11px 7px rgba(73, 167, 198, 0.22);
+        
+    }
+.popMainContainer table.inner a, .popMainContainer table.inner a:link, .popMainContainer table.inner a:visited {
+    background: url("../Images/blanbl%20arro.png") no-repeat scroll left 3px rgba(0, 0, 0, 0);
+    color: #666666;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    margin: 0 0 0 25px;
+    padding: 0 0 0 11px;
+    text-align: left;
+    text-decoration: none;
+}
+.popMainContainer table.inner a:hover {
+    background-position: 0 -11px;
+    color: #0154A0;
+}
+.nomargine {
+    margin: 0 !important;
+}

@@ -1,0 +1,583 @@
+﻿@model ReferalDB.Models.AddMatchOpeningViewModel
+
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+
+    .sd {
+        width: 80% !important;
+    }
+</style>
+
+<script type="text/javascript">
+    var Arr_Record = [];
+    var Arr_Ticker = [];
+
+
+    function ValidateDate() {
+
+
+        var fromDate = $('#StartDate').val();
+        var toDate = $('#EndDate').val();
+
+        var startDate = new Date(fromDate);
+        var endDate = new Date(toDate);
+        if (fromDate != '' && toDate != '' && startDate > endDate) {
+            alert("Start Date must be greater than or equal to  End Date.");
+            return false;
+        }
+
+        return true;
+    }
+
+    var date = new Date();
+    date.setDate(date.getDate());
+
+
+    $(document).ready(function () {
+
+        $("#StartDate").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showAnim: "fadeIn",
+            yearRange: 'c-80:c+80',
+            //minDate: date,
+            /* fix buggy IE focus functionality */
+            fixFocusIE: false,
+            onSelect: function (dateText, inst) {
+
+                var newValue = $(this).val();
+                var controlId = $(this).attr('id');
+                var labelText = $(this).siblings('.lblSpan').text();
+                var prevValue = Arr_Record[3];
+
+                //if (isInitialValue(controlId, newValue)) {
+
+                //    message = '[' + labelText + ']' + ' was changed from "' + prevValue + '" to "' + newValue + '".';
+
+                //    Arr_Record[4] = newValue;
+                //    Arr_Record[5] = message;
+                //    Arr_Ticker.push(Arr_Record);
+                //    Arr_Record = [];
+                //}
+
+                //writeToTickerBox(Arr_Ticker);
+            }
+
+
+        }).attr('readonly', 'true');
+        $('#EndDate').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showAnim: "fadeIn",
+            yearRange: 'c-80:c+80',
+            //minDate: date,
+            /* fix buggy IE focus functionality */
+            fixFocusIE: false,
+            onSelect: function (dateText, inst) {
+
+                var newValue = $(this).val();
+                var controlId = $(this).attr('id');
+                var labelText = $(this).siblings('.lblSpan').text();
+                var prevValue = Arr_Record[3];
+
+                //if (isInitialValue(controlId, newValue)) {
+
+                //    message = '[' + labelText + ']' + ' was changed from "' + prevValue + '" to "' + newValue + '".';
+
+                //    Arr_Record[4] = newValue;
+                //    Arr_Record[5] = message;
+                //    Arr_Ticker.push(Arr_Record);
+                //    Arr_Record = [];
+                //}
+
+                //writeToTickerBox(Arr_Ticker);
+            }
+        }).attr('readonly', 'true');
+    });
+    jQuery("#addPlacement").validationEngine();
+
+
+
+
+
+
+    function desableallbtns(data) {
+        var RefCurrentQueueId = data.split('*');
+        if (RefCurrentQueueId[0] == 'success') {
+            SubmitPage(RefCurrentQueueId[1]);
+            //$('#tdMsg').html('');
+            //$('#SaveMatchOpening').attr('disabled', 'disabled');
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+    $(document).ready(function () {
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+        ActivateMenuSelection();
+
+        if ($('#iSSubmitted').val() == 'True') {
+            $("#SaveMatchOpening").click(function (e) {
+                // e.preventDefault();
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#SaveMatchOpening').attr('type', 'submit');
+                            $('#SaveMatchOpening').trigger("click");;
+                            //$("#submitClinical").off('click');
+                            //$('#frnClinical').submit();
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#SaveMatchOpening').attr('type', 'submit');
+            //   $('#submitClinical').trigger("click");
+
+        }
+    });
+
+    function loadFunction(id, type) {
+
+        if (type == "Edit") {
+            $('#LoadQueue').html('');
+            $('#LoadQueue').load('../PreAdmission/MatchOpening?id=' + id);
+
+        }
+        if (type == "Delete") {
+            //alert(id + " " + type)
+            if (confirm('Are you sure you want to delete this placement?')) {
+                $('#LoadQueue').html('');
+                $('#LoadQueue').load('../PreAdmission/DeletePlacementDetails?id=' + id);
+            } else {
+                return false;
+            }
+
+        }
+    }
+
+    function SaveUpdatedValue(Id) {
+        var result = ValidateDate();
+        if (result == true) {
+            $('#LoadQueue').html('');
+            $('#LoadQueue').load('../PreAdmission/MatchOpeningUpdate?id=' + Id);
+        }
+    }
+    $.fn.getType = function () { return this[0].tagName == "INPUT" ? this[0].type.toLowerCase() : this[0].tagName.toLowerCase(); }
+    function AlertUnsave(e) {
+
+        var invalid = false;
+
+        var inputList = $('.input');
+        for (var i = 0; i < inputList.length; i++) {
+            var inputType = $(inputList[i]).getType();
+            switch (inputType.toLowerCase()) {
+                case "text":
+                    if ($(inputList[i]).val().length > 0) {
+                        invalid = true;
+                    }
+                    break;
+                case "select":
+                    if ($(inputList[i]).val().length > 0) {
+                        invalid = true;
+                    }
+                    break;
+                case "textarea":
+                    if ($(inputList[i]).val().length > 0) {
+                        invalid = true;
+                    }
+                    break;
+                case "checkbox":
+                    if ($(inputList[i]).prop("checked") == true) {
+                        invalid = true;
+                    }
+                    break;
+            }
+
+            if (invalid == true) {
+                break;
+            }
+        }
+
+        if (invalid) {
+            $("#addPlacement").validationEngine('attach');
+            var ConfirmResult = confirm("There are some unsaved changes. Any unsaved changes will be discarded. Do you want to continue?");
+            if (ConfirmResult == true) {
+                $("#addPlacement").validationEngine('detach');
+                $('#submitMatchOpening').trigger("click");
+            }
+        }
+        else {
+            $("#addPlacement").validationEngine('detach');
+            $('#submitMatchOpening').trigger("click");
+        }
+
+
+    }
+</script>
+
+@using (Ajax.BeginForm("MatchOpeningSave", "PreAdmission", FormMethod.Post, new AjaxOptions { UpdateTargetId = "LoadQueue", OnSuccess = "desableallbtns(data);" }, new { id = "addPlacement", enctype = "multipart/form-data" }))
+{
+
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div>
+        <table style="width: 100%">
+            <tr>
+
+                <td>
+                    <div id="tdMsg" style="color: white !important;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%;">
+            @Html.HiddenFor(m => m.Id, Model.Id)
+
+            <tr>
+                <td colspan="2" style="width: 30%;">
+                    <label class="lblSpan">Department</label><span style="color:red">*</span><br />
+                    @Html.DropDownListFor(m => m.PlacementDepartmentId, Model.PlacementDepartmentList, new { @class = "validate[required] input" })
+                </td>
+
+                <td colspan="2">
+                    <label class="lblSpan">Start Date</label><span style="color:red">*</span><br />
+                    @Html.TextBoxFor(m => m.StartDate, Model.StartDate, new { @class = "validate[required] datepicker input", ID = "StartDate" })
+                </td>
+                <td rowspan="7" colspan="4">
+                    <table>
+                        <tr>
+                            <th style="min-width: 83px; text-align: center !important;" colspan="2">
+                                Days
+                            </th>
+                            <th>
+                                Timings/Time Of the Day
+                            </th>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsMonday, new { @class = "input" })
+                                <label class="lblSpan">Monday</label><span class="nospan-align"></span>
+
+                            </td>
+                            <td colspan="1">
+                                @Html.TextBoxFor(m => m.MondayNote, Model.MondayNote, new { @class = "input" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsTuesday, new { @class = "input" })
+                                <label class="lblSpan">Tuesday</label><span class="nospan-align"></span>
+
+                            </td>
+                            <td style="min-width: 83px;" colspan="1">
+                                @Html.TextBoxFor(m => m.TuesdayNote, Model.TuesdayNote, new { @class = "input" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsWednesday, new { @class = "input" })
+
+                                <label class="lblSpan">Wednesday </label>
+                                <span class="nospan-align"></span>
+
+                            </td>
+                            <td colspan="1">
+                                @Html.TextBoxFor(m => m.WednesdayNote, Model.WednesdayNote, new { @class = "input" })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsThursday, new { @class = "input" })
+
+                                <label class="lblSpan">Thursday </label>
+                                <span class="nospan-align"></span>
+
+                            </td>
+                            <td colspan="1">
+                                @Html.TextBoxFor(m => m.ThursdayNote, Model.ThursdayNote, new { @class = "input" })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsFriday, new { @class = "input" })
+
+                                <label class="lblSpan">Friday  </label>
+                                <span class="nospan-align"></span>
+
+                            </td>
+                            <td colspan="1">
+                                @Html.TextBoxFor(m => m.FridayNote, Model.FridayNote, new { @class = "input" })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsSaturday, new { @class = "input" })
+
+                                <label class="lblSpan">Saturday</label><span class="nospan-align"></span>
+
+                            </td>
+                            <td colspan="1">
+                                @Html.TextBoxFor(m => m.SaturdayNote, Model.SaturdayNote, new { @class = "input" })
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="min-width: 83px;" colspan="2">
+                                @Html.CheckBoxFor(x => x.IsSunday, new { @class = "input" })
+
+                                <label class="lblSpan">Sunday </label>
+                                <span class="nospan-align"></span>
+
+                            </td>
+                            <td colspan="1">
+                                @Html.TextBoxFor(m => m.SundayNote, Model.SundayNote, new { @class = "input" })
+
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label class="lblSpan">Placement Type</label><span style="color:red">*</span><br />
+                    @Html.DropDownListFor(m => m.PlacementType, Model.PlacementTypeList, new { @class = "validate[required] input", ID = "ddlEventType" })
+                </td>
+
+                <td colspan="2">
+                    <label class="lblSpan">Location</label><span style="color:red">*</span><br />
+                    @Html.DropDownListFor(m => m.LocationId, Model.LocationList, new { @class = "validate[required] input", id = "ddlLocation" })
+
+                </td>
+
+
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <label class="lblSpan">Program</label><span style="color:red">*</span><br />
+                    @Html.DropDownListFor(m => m.Department, Model.DepartmentList, new { @class = "validate[required] input", ID = "ddlEventPgm" })
+
+                </td>
+
+                <td colspan="2">
+                    <label class="lblSpan">Placement Reason</label><span style="color:red">*</span><br />
+                    @Html.DropDownListFor(m => m.PlacementReason, Model.PlacementReasonList, new { @class = "validate[required] input", ID = "ddlPlcreason" })
+
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <label class="lblSpan">Placement Description/Reason</label><span class="nospan-align"></span><br />
+                    @Html.TextAreaFor(m => m.Reason, new { value = @Model.Reason, @class = "sd input", @rows = "3", @cols = "50" })
+                </td>
+                 <td colspan="2">
+                    <label class="lblSpan">Funding Source</label><span style="color:red"></span><br />                    
+                    @Html.DropDownListFor(m => m.FundingSourceId, Model.FundingSourceList, new { ID = "ddlFundSrc" })
+                </td>
+            </tr>
+
+            @if (ViewBag.school == "NE")
+            {
+
+
+            }
+            else
+            {
+
+                <tr style="display: none">
+                    <td colspan="2">
+                        <label class="lblSpan">Primary Nurse</label><span class="nospan-align">*</span><br />
+                        @Html.DropDownListFor(m => m.PrimaryNurse, Model.PrimaryNurseList, new { @class = " ", ID = "ddlEventType" })
+                    </td>
+                    <td colspan="2">
+                        <label class="lblSpan">Behavior Analyst</label><span class="nospan-align">*</span><br />
+                        @Html.DropDownListFor(m => m.BehaviorAnalyst, Model.BehaviorAnalystList, new { @class = " ", ID = "ddlEventType" })
+                    </td>
+                </tr>
+
+
+                <tr style="display: none">
+                    <td colspan="2">
+                        <label class="lblSpan">Unit Clerk</label><span class="nospan-align">*</span><br />
+                        @Html.DropDownListFor(m => m.UnitClerk, Model.UnitClerkList, new { @class = "", ID = "ddlEventType" })
+                    </td>
+                </tr>
+               
+            }
+
+            <tr>
+                <td>
+                    @if (ViewBag.permission == "true")
+                    {
+
+                        <input type="submit" class="cancel" value="Submit" name="ActionMatchOpening" id="submitMatchOpening" style="display:none" />
+                        <input type="button" class="cancel" value="Submit" onclick="return AlertUnsave(event);" />
+                    }
+                    @if (Model.Id > 0)
+                    {
+                        <input id="btnUpdatePlacement" type="submit" value="Update" name="ActionMatchOpening" />
+                    }
+                    else
+                    {
+                        <input id="btnAddPlacement" type="submit" value="Save" name="ActionMatchOpening" onclick="return ValidateDate();" />
+                    }
+
+                </td>
+            </tr>
+
+
+        </table>
+    </div>
+    <div>
+        @if (Model.listPlacement != null)
+        {
+            <table style="width: 100%" class="gridStyle">
+                <tr class="HeaderStyle">
+                    <th class="tdLabel" style="text-align:left">Placement</th>
+                    <th class="tdLabel" style="text-align:left">Program</th>
+                    <th class="tdLabel" style="text-align:left">Location</th>
+                    <th class="tdLabel" style="text-align:center">Mon</th>
+                    <th class="tdLabel" style="text-align:center">Tue</th>
+                    <th class="tdLabel" style="text-align:center">Wed</th>
+                    <th class="tdLabel" style="text-align:center">Thu</th>
+                    <th class="tdLabel" style="text-align:center">Fri</th>
+                    <th class="tdLabel" style="text-align:center">Sat</th>
+                    <th class="tdLabel" style="text-align:center">Sun</th>
+                    <th class="tdLabel" style="text-align:left">Start Date</th>
+                    <th class="tdLabel" style="text-align:left">End Date</th>
+                    <th class="tdLabel" style="text-align:center">Edit</th>
+                    <th class="tdLabel" style="text-align:center">Delete</th>
+                </tr>
+
+
+                @foreach (var item in Model.listPlacement)
+                {
+                    <tr class="RowStyle">
+                        <td style="text-align:left">@item.PlacementName</td>
+                        <td style="text-align:left">@item.Program</td>
+                        <td style="text-align:left">@item.LocationId </td>
+                        @if (item.IsMonday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+                        @if (item.IsTuesday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+                        @if (item.IsWednesday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+                        @if (item.IsThursday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+                        @if (item.IsFriday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+                        @if (item.IsSaturday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+                        @if (item.IsSunday == true)
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" checked="checked" /> </td>
+                        }
+                        else
+                        {
+                            <td style="text-align:center"><input type="checkbox" onclick="return false" /> </td>
+                        }
+
+
+                        <td style="text-align:left">
+                            @if (item.StartDate != null)
+                            {
+                                @item.startdatetime}
+
+                        </td>
+                        <td style="text-align:left">
+                            @if (item.EndDate != null)
+                            {
+                                @item.datetime}
+                        </td>
+                        <td style="text-align:center">
+                            <img src="../Images/editicon.png" onclick="loadFunction(@item.PlacementId ,'Edit');" style="cursor:pointer;" />
+                        </td>
+                        <td style="text-align:center">
+                            @if (ViewBag.permission == "true")
+                            {
+                                <img src="../Images/delete.PNG" onclick="loadFunction(@item.PlacementId,'Delete');" style="cursor:pointer;" />
+                            }
+                        </td>
+
+                    </tr>
+                }
+            </table>
+        }
+    </div>
+    <div id="dialog" title="Confirmation Required">
+        This form is already submitted. Do you want to continue?
+    </div>
+
+}
+
+
+
+

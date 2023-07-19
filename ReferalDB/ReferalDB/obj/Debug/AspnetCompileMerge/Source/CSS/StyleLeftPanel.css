@@ -1,0 +1,400 @@
+﻿.clear {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    clear: both;
+}
+
+
+.boxContainerContainer div.btContainerPart div.righMainContainer {
+    width: 20%;
+    min-height: 300px;
+    height: auto !important;
+    height: 300px;
+    float: left;
+    padding: 10px;.accordion h2 a, .accordion h3 a
+    background: #fff;
+    border: 5px solid #e4e4e4;
+    margin: 0 8px 0 0;
+    min-width: 250px;
+}
+
+    .boxContainerContainer div.btContainerPart div.righMainContainer h3 {
+        font-size: 12px;
+        font-weight: bold;
+        color: #0d668e;
+        margin: 5px 0 5px 0;
+    }
+
+
+/*-----------------------------------------------------------JQuery Start-------------------------------------------*/
+
+ul, li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    list-style: none;
+}
+
+h2 a {
+    padding: 7px 7px 7px 20px;
+}
+
+h3 a {
+    padding: 7px 7px 7px 30px;
+}
+
+h2 a, h3, a {
+    display: block;
+    text-decoration: none;
+}
+
+.accordion li, li.accordion {
+    border: none;
+}
+
+.accordion h2 a, .accordion h3 a {
+    background: url("../Images/lbtn.PNG") no-repeat scroll 6px 8px rgba(0, 0, 0, 0);
+    color: #fff;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 9px 0 2px 28px;
+    text-decoration: none;
+    width: 65%;
+    z-index: 999;
+}
+
+
+a.gray { /*background: url(../Images/grayarro.PNG) no-repeat scroll 6px 8px rgba(0, 0, 0, 0) !important; color:#272727 !important;*/
+}
+
+.accordion h2 a.kk, .accordion h3 a.kk {
+    text-decoration: none;
+    background: none !important;
+    z-index: 999;
+    padding: 2px 0 6px 0;
+    font-size: 12px;
+    font-weight: normal;
+    color: #444545;
+    width: 78%;
+    float: left;
+    border: none;
+    text-align: left;
+}
+
+.accordion .wrapper {
+    padding: 5px;
+    line-height: 18px;
+    width: 92%;
+}
+
+.accordion .nomar {
+    padding: 0px;
+    width: 100%;
+}
+
+
+.allexp {
+  background: #0092b0; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzAwOTJiMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUyJSIgc3RvcC1jb2xvcj0iIzAwNmViMiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDkyYjAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top, #0092b0 0%, #006eb2 52%, #0092b0 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0092b0), color-stop(52%,#006eb2), color-stop(100%,#0092b0)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* IE10+ */
+background: linear-gradient(to bottom, #0092b0 0%,#006eb2 52%,#0092b0 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0092b0', endColorstr='#0092b0',GradientType=0 ); /* IE6-8 */
+    border-radius: 4px;
+    color: #FFFFFF !Important;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    height: 35px;
+    margin: 0 0 4px !Important;
+    padding-top: 2px;
+    width: 100%;
+}
+
+.ActiveRef {
+    background: #66d671; /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzY2ZDY3MSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzE2YWQzNyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2NmQ2NzEiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #66d671 0%, #16ad37 50%, #66d671 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#66d671), color-stop(50%,#16ad37), color-stop(100%,#66d671)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #66d671 0%,#16ad37 50%,#66d671 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #66d671 0%,#16ad37 50%,#66d671 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #66d671 0%,#16ad37 50%,#66d671 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #66d671 0%,#16ad37 50%,#66d671 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#66d671', endColorstr='#66d671',GradientType=0 ); /* IE6-8 */
+    border-radius: 4px;
+    color: #FFFFFF !Important;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    height: 35px;
+    margin: 0 0 4px !Important;
+    padding-top: 2px;
+    width: 100%;
+}
+
+.WaitList {
+    background: #fbbe19; /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZiYmUxOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iI2VlYTUwZiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmYmJlMTkiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #fbbe19 0%, #eea50f 51%, #fbbe19 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fbbe19), color-stop(51%,#eea50f), color-stop(100%,#fbbe19)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #fbbe19 0%,#eea50f 51%,#fbbe19 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #fbbe19 0%,#eea50f 51%,#fbbe19 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #fbbe19 0%,#eea50f 51%,#fbbe19 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #fbbe19 0%,#eea50f 51%,#fbbe19 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fbbe19', endColorstr='#fbbe19',GradientType=0 ); /* IE6-8 */
+    border-radius: 4px;
+    color: #FFFFFF !Important;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    height: 35px;
+    margin: 0 0 4px !Important;
+    padding-top: 2px;
+    width: 100%;
+}
+
+.InactiveList {
+    background: #b7b7b7; /* Old browsers */
+    /* IE9 SVG, needs conditional override of 'filter' to 'none' */
+    background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2I3YjdiNyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iI2EyYTNhMiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNiN2I3YjciIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+    background: -moz-linear-gradient(top, #b7b7b7 0%, #a2a3a2 51%, #b7b7b7 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b7b7b7), color-stop(51%,#a2a3a2), color-stop(100%,#b7b7b7)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #b7b7b7 0%,#a2a3a2 51%,#b7b7b7 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #b7b7b7 0%,#a2a3a2 51%,#b7b7b7 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #b7b7b7 0%,#a2a3a2 51%,#b7b7b7 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #b7b7b7 0%,#a2a3a2 51%,#b7b7b7 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b7b7b7', endColorstr='#b7b7b7',GradientType=0 ); /* IE6-8 */
+    border-radius: 4px;
+    color: #FFFFFF !Important;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    height: 35px;
+    margin: 0 0 4px !Important;
+    padding-top: 2px;
+    width: 100%;
+}
+
+
+.accordion h2:hover,
+.accordion h3:hover {
+    color: green;
+}
+
+
+.accordion h2.BG,
+.accordion h3.BG {
+    height: 23px;
+    background: url(../Images/dwngrenbg.png) left top no-repeat;
+    width: 230px;
+    font-size: 12px;
+    font-weight: normal;
+    color: #444545;
+    margin: 0 0 3px 0;
+    padding: 6px 0 0 25px;
+    border: none;
+    background-position: 0 -0;
+}
+
+    .accordion h2.BG:hover,
+    .accordion h3.BG:hover {
+        background-position: 0 -32px;
+        color: #000 !important;
+    }
+
+
+
+.accordion h2 div.container, .accordion h3 div.container {
+    float: right;
+    width: 35%;
+    height: 20px;
+    margin: 9px 0 0 0;
+    padding: 0;
+    background: none;
+}
+
+    .accordion h2 div.container span, .accordion h3 div.container span {
+        float: left;
+        font-size: 12px;
+        font-weight: bold;
+        color: #1f1f1f;
+        display: block;
+        z-index: 999;
+        margin: 0 0 0 0;
+        width: 180px;
+    }
+
+        .accordion h2 div.container span input.rdo, .accordion h3 div.container span input.rdo {
+            float: left !important;
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: -2px 10px 0 0;
+            margin: -6px 10px 0 0 \9;
+        }
+
+    .accordion h2 div.container a.dlt, .accordion h3 div.container a.dlt {
+        float: right;
+        width: 20px;
+        height: 17px;
+        display: block;
+        margin: 0 15px 0 0;
+        padding: 0;
+        background: url(../Images/delet0_2.png) left top no-repeat !important;
+        background-position: 0 -0;
+        border-bottom: 0;
+    }
+
+        .accordion h2 div.container a.dlt:hover, .accordion h3 div.container a.dlt:hover {
+            background-position: 0 -21px !important;
+        }
+
+
+.accordion .wrapper div.ingrContainer {
+    margin: 5px 0 0 0;
+    min-height: 75px;
+    height: auto !important;
+    height: 75px;
+    width: 95%;
+    padding: 10px;
+    font-size: 12px;
+    font-weight: normal;
+    color: #1f1f1f;
+}
+
+
+.accordion .wrapper div.nobdrrcontainer {
+    margin: 1px 0 0 0;
+    min-height: 25px;
+    height: auto !important;
+    height: 25px;
+    width: 99%;
+    font-size: 12px;
+    font-weight: normal;
+    color: #1f1f1f;
+}
+
+.accordion .wrapper div.ingrContainer h3 {
+    font-size: 12px;
+    color: #0d668e;
+    font-weight: bold;
+    float: left;
+    background: none;
+    margin: 0;
+    padding: 0;
+    width: 60%;
+    float: left;
+}
+
+.accordion .wrapper div.ingrContainer p {
+    font-size: 12px;
+    font-weight: normal;
+    color: #1f1f1f;
+}
+
+.accordion .wrapper div.ingrContainer div.container {
+    float: right;
+    width: 35%;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+    .accordion .wrapper div.ingrContainer div.container span {
+        float: left;
+        font-size: 12px;
+        font-weight: bold;
+        color: #1f1f1f;
+        display: block;
+        margin: 0 0 0 0;
+        width: 180px;
+    }
+
+        .accordion .wrapper div.ingrContainer div.container span input.rdo {
+            float: left !important;
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: -2px 10px 0 0;
+            margin: -6px 10px 0 0 \9;
+        }
+
+
+    .accordion .wrapper div.ingrContainer div.container a.dlt {
+        float: right;
+        width: 20px;
+        height: 17px;
+        display: block;
+        margin: 0 15px 0 0;
+        padding: 0;
+        background: url(../Images/delet0_2.png) left top no-repeat;
+        background-position: 0 -0;
+        border-bottom: 0;
+    }
+
+        .accordion .wrapper div.ingrContainer div.container a.dlt:hover {
+            background-position: 0 -21px;
+        }
+
+
+
+
+
+.boxContainerContainer div.btContainerPart div.mBxContainer a.grmb div.grapgContainer {
+    width: 50px;
+    height: 18px;
+    border: 1px solid #9ba1a1;
+    border-radius: 3px;
+    float: right;
+    margin: -2px 28px 0 0;
+    font-size: 9px;
+    font-weight: normal;
+    color: #0d668e;
+}
+
+    .boxContainerContainer div.btContainerPart div.mBxContainer a.grmb div.grapgContainer span {
+        width: 16px;
+        height: 16px;
+        margin: 0 0 0 3px;
+        float: left;
+        background: url(../Images/loder.png) left top no-repeat;
+        background-position: -21px 0;
+    }
+
+    .boxContainerContainer div.btContainerPart div.mBxContainer a.grmb div.grapgContainer p {
+        margin: 2px 0 0 22px;
+        margin: 5px 0 0 22px\9;
+    }
+
+
+
+.accordion h2 div.container,
+.accordion h3 div.container {
+    background: url("../Images/transbg.PNG") no-repeat scroll left top rgba(0, 0, 0, 0);
+    color: #666666;
+    float: left;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: bold !important;
+    margin: 10px 0 0 3px;
+    padding: 0 0 4px 9px;
+    width: 17px;
+}
+
+.bltext {
+    color: #166CEC !important;
+}
+
+.retext {
+    color: #009E5A !important;
+}

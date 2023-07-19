@@ -1,0 +1,221 @@
+﻿@model ReferalDB.Models.EngineViewModels
+
+@{
+    ViewBag.Title = "Checklist Engine";
+}
+
+<meta http-equiv="X-UA-Compatible" content="IE=10,9" />
+<link href="~/CSS/StyleBars.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+<link href="~/CSS/StyleEngine.css" rel="stylesheet" type="text/css" />
+<link href="~/CSS/StyleControl.css" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#chkItems").html('');
+        $.get("../Engine/FillChecklistItem", function (data) {
+            $("#chkItems").html(data);
+        });
+    });
+
+
+    //$("#btnAdd").click(function () {
+    function postadd() {
+
+        document.getElementById('tdMsg1').innerHTML = "";
+        if ($('#DdlType option:selected').attr('value') == "") {
+            document.getElementById('tdMsg1').innerHTML = "<div class='warning_box'>Please select Checklist Type</div>";
+            return false;
+        }
+        else if (document.getElementById('OtherHeader').value == "") {
+            document.getElementById('tdMsg1').innerHTML = "<div class='warning_box'>Please enter Checklist header Name</div>";
+            return false;
+        }
+        else if (document.getElementById('ItemContent').value == "") {
+            document.getElementById('tdMsg1').innerHTML = "<div class='warning_box'>Please enter Checklist Item Name</div>";
+            return false;
+        }
+        else {
+
+            var ItemContent = document.getElementById('ItemContent').value;
+            var Type = $('#DdlType option:selected').attr('value');
+            var header = document.getElementById('OtherHeader').value;
+
+            $.get("../Engine/SaveChecklist?id=" + ItemContent + "," + Type + "," + header, function (data) {
+                document.getElementById('tdMsg1').innerHTML = data;
+                document.getElementById('ItemContent').value = "";
+                document.getElementById('OtherHeader').value = "";
+            });
+            $("#chkItems").html('');
+            $.get("../Engine/FillChecklistItem", function (data) {
+                $("#chkItems").html(data);
+            });
+        }
+
+    };
+    // });
+    function closeChecklistHeader(headerid, queueid) {
+        var message = confirm('Are you sure want to delete the checklist header?')
+        if (message.toString() == "true") {
+            $.get("../Engine/DeleteChecklistHeader?Id=" + headerid + "," + queueid, function (data) {
+                document.getElementById('tdMsg1').innerHTML = data;
+            });
+            $("#chkItems").html('');
+            $.get("../Engine/FillChecklistItem", function (data) {
+                $("#chkItems").html(data);
+            });
+        }
+    }
+
+    function closeChecklist(btnid) {
+        var message = confirm('Are you sure want to delete the checklist item?')
+        if (message.toString() == "true") {
+            $.get("../Engine/DeleteChecklist?Id=" + btnid, function (data) {
+                document.getElementById('tdMsg1').innerHTML = data;
+            });
+            $("#chkItems").html('');
+            $.get("../Engine/FillChecklistItem", function (data) {
+                $("#chkItems").html(data);
+            });
+        }
+    }
+
+    function DisplayNewRow(tableid, letterTempId) {
+       
+        var table = document.getElementById(tableid);
+        var rowid = tableid + (table.rows.length + 1);
+        var row = table.insertRow(-1);
+        var textid = "";
+        var rowsid = "";
+        var cell2Fn = "";
+        var cell3fn = "";
+        row.id = "tr" + rowid;
+        textid = 'txt' + rowid;
+        rowsid = "tr" + rowid;
+        cell2Fn = "AddChecklistRow(" + letterTempId + ",'" + textid + "');";
+        cell3fn = "RemoveChklistrow('" + rowsid.toString() + "');";
+        var cell1 = row.insertCell(0);
+        cell1.colspan = 2;
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        cell1.innerHTML = 'Checklist Item Name: <span style="color: red">*</span><input style="width:400px"  type="text" id="' + textid + '" value=""/> ';
+        cell3.innerHTML = "<input  type='button' id=" + rowid + " value='Add' onclick=" + cell2Fn + " /> ";
+        cell4.innerHTML = "<input style='float:left' type='button'  value='Cancel' onclick=" + cell3fn + " />";
+        $("#" + textid).focus();
+
+    }
+
+    function AddChecklistRow(lettertempid, textid) {
+        var chkItem = document.getElementById(textid).value;
+        if (chkItem == "") {
+            document.getElementById('tdMsg1').innerHTML = "<div class='warning_box'>Please enter Checklist Item Name</div>";
+            return false;
+        }
+        else {
+            $.get("../Engine/SaveChecklistitem?id=" + lettertempid + "," + chkItem, function (data) {
+                document.getElementById('tdMsg1').innerHTML = data;
+            });
+            $("#chkItems").html('');
+            $.get("../Engine/FillChecklistItem", function (data) {
+                $("#chkItems").html(data);
+            });
+        }
+    }
+
+    function RemoveChklistrow(rowid) {
+        var elem = document.getElementById(rowid);
+        elem.parentNode.removeChild(elem);
+    }
+
+
+    function ColapseQueue(tableid) {
+        $("#" + tableid).slideToggle('slow');
+    }
+</script>
+<div id="SectionChecklist" class="middleContainer" style="width: 78%;">
+
+
+    @using (Html.BeginForm("", "", FormMethod.Post))
+    {
+        <table style="width: 100%;">
+            <tr>
+                <td class="bluebar">Checklist Engine</td>
+            </tr>
+        </table>
+                
+        <div id="tdMsg1"></div>
+        <div>@Html.Raw(ViewData["Chkmsg"])</div>
+        <div>
+
+            <table id="tblchkList" style="width: 100%">
+                <tr>
+                    <td>Checklist Header</td>
+                    <td colspan="2">
+                        @{
+        var ChecklistHeader = Model.QueueList.Select(cl => new SelectListItem
+           {
+               Value = cl.QueueId.ToString(),
+               Text = cl.QueueName == null ? String.Empty : cl.QueueName
+           });
+                        }
+
+
+                        <span style="color: red">*</span>
+
+                        @* @Html.TextBoxFor(m => Model.ChecklistEngineName, new { @style = "width:80%;margin-top:2%;" })*@
+                        @(Html.DropDownList("DdlType", ChecklistHeader, "---------Select---------", new { @style = "width:72%;margin-top:2%;" }))
+
+                    </td>
+
+                    <td>
+
+                    <td></td>
+
+
+                </tr>
+                <tr>
+
+                    <td style="width: 19.7%">Checklist header name</td>
+                    <td style="width: 69%"><span style="color: red">*</span>
+                        <input type="text" style="width: 81%; margin-top: 2%;" id="OtherHeader" /></td>
+                    <td style="width: 11.3%"></td>
+
+
+                </tr>
+
+
+                <tr>
+
+
+                    <td style="width: 20%">Checklist Item Name</td>
+                    <td><span style="color: red">*</span> @Html.TextBoxFor(m => Model.ItemContent, new { @style = "width:81%;margin-top:2%;" })</td>
+
+                </tr>
+                <tr>
+                    <td colspan="4" style="text-align: center">
+                        @if (ViewBag.permission == "true")
+                        {
+                            <input id="btnAdd" type="button" value="Add" name="btnAdd" onclick="postadd();" class="NFButton" />
+                        }
+                    </td>
+
+                </tr>
+                @*<tr class="HeaderStyle">
+                            <th class="tdLabel">Item Name</th>
+                            <th class="tdLabel">New</th>
+                            <th class="tdLabel">Delete</th>
+                        </tr>*@
+
+            </table>
+
+            @* <div class="pager">@Html.RenderPartial("Pager", Model.pageModel)</div>*@
+        </div>
+        
+        
+        <div id="chkItems"></div>
+    }
+</div>

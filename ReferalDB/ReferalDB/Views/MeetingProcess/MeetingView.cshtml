@@ -1,0 +1,439 @@
+﻿@model ReferalDB.Models.MeetingModel
+
+
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+</style>
+<script type="text/javascript">
+   
+    @if (ViewBag.Flag == 0)
+    {
+        string load = "$(document).ready(function () { ActivateMenuSelection(); \n"
+
+
+            + "var options = {" +
+                "success: showResponse  \n "
+            + "};"
+           + " $('#applicationForm').ajaxForm(options);"
+       + " });";
+       @MvcHtmlString.Create(load)
+    }
+
+    $(document).ready(function () {
+       
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+    });
+
+    $(".datepicker").datepicker(
+        {
+            changeMonth: true,
+            changeYear: true,
+            showAnim: "fadeIn",
+            yearRange: 'c-100:c+100',
+            fixFocusIE: false,
+
+        });
+    function downloadFn1(id) {
+        window.open('../MeetingProcess/DownloadDoc?id=' + id + '   ', '_blank');
+    }
+
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        var msg = responseText.split('*');
+        if (msg[0] == "success") {
+            SubmitPage(msg[1]);
+        }
+        else
+        {            
+            var htmlObj = $(responseText);
+            $('#LoadQueue').load('../MeetingProcess/MeetingView?msg=' + encodeURI($(htmlObj).find('#NotiMsg').html()));
+
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+</script>
+<style>
+    #tblPlacement td {
+        width:25% !important;
+    }
+</style>
+
+
+<!---- -->
+
+<script type="text/javascript">
+
+     @if (ViewBag.Flag == 0)
+     {
+         string load = "$(document).ready(function () { "
+           + "$('#dialog').dialog({"
+             + " autoOpen: false,"
+              + "modal: true"
+          + "});\n ActivateMenuSelection(); \n"
+
+          + "if ($('#isSubmit').val() == 'True') {\n"
+                    + "$('#btnsubmit2').click(function (e) {"
+
+                  + "$('#dialog').dialog('open');"
+                  + "$('#dialog').dialog({"
+                    + "  buttons: {"
+                       + "   'Confirm': function () {"
+                       + "       $('#btnsubmit2').attr('type', 'submit');"
+                       + "       $('#btnsubmit2').trigger('click');"
+
+
+                        + "      $(this).dialog('close');"
+                      + "    },"
+                      + "    'Cancel': function () {"
+
+                     + "         $(this).dialog('close');"
+                    + "          return false;"
+                     + "     }"
+                 + "     }"
+                + "  });"
+
+            + "  });"
+         + " }"
+         + " else {"
+         + "     $('#btnsubmit').attr('type', 'submit');"
+
+                          + "}\n"
+
+              + "var options = {" +
+                  "success: showResponse  \n "
+              + "};"
+             + " $('#applicationForm').ajaxForm(options);"
+         + " });";
+       @MvcHtmlString.Create(load)
+     }
+
+    $(document).ready(function () {
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+        if ($('#isSubmit').val() == 'True') {
+            $("#btnsubmit2").click(function (e) {                
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#btnsubmit2').attr('type', 'submit');
+                            $('#btnsubmit2').trigger("click");;
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#btnsubmit2').attr('type', 'submit');            
+        }
+    });
+
+    function downloadFn2(id) {
+        window.open('../MeetingProcess/DownloadConsent?id=' + id + ' ', '_blank');
+    }
+
+
+    function showResponse(responseText, statusText, xhr, $form) {
+        var msg = responseText.split('*');
+        if (msg[0] == "success") {
+            SubmitPage(msg[1]);
+        }
+        else {            
+            var htmlObj = $(responseText);
+            $('#LoadQueue').load('../MeetingProcess/MeetingView?msg=' + encodeURI($(htmlObj).find('#NotiMsg').html()));
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+    function getmeting1() {
+        $("#hdn_cdntype").val("placement");
+        var test = $("#hdn_cdntype").val();
+        //alert("fine-" + test);
+    }
+
+    function getmeting2() {
+        $("#hdn_cdntype").val("consent");
+        var test = $("#hdn_cdntype").val();
+        //alert("fine-" + test);
+    }    
+
+</script>
+
+
+@using (Html.BeginForm("Save", "MeetingProcess", FormMethod.Post, new { enctype = "multipart/form-data", id = "applicationForm" }))
+{
+    <div id="overlay"  style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div id="NotiMsg" style=" color:white !important;">@Html.Raw(ViewBag.Chkmsg)</div>
+    <table>
+        <tr>
+            <td>
+                <span class="lblSpan">Start Date</span>
+                <br />
+            @Html.TextBoxFor(objdate => objdate.StartDate, Model.GetDate, new { style = "width:200px", id = "StartDate", @class = "datepicker", onkeypress = "return false" })</td>
+            <td>
+                <span class="lblSpan">Referral Ratio</span>
+                <br />
+            @Html.TextBoxFor(objRatio => objRatio.Ratio1, new { maxlength = "2", style = "width:20px !important;", value = Model.Ratio1, onkeypress = "return isNumber(event)" }):
+            @Html.TextBoxFor(objRatio => objRatio.Ratio2, new { maxlength = "2", style = "width:20px !important;", value = Model.Ratio2, onkeypress = "return isNumber(event)" })</td>
+        </tr>
+    </table>
+    <table style="width: 100%" class="gridStyle">
+        <thead>
+            <tr class="HeaderStyle">
+                <td>Placement Agreement</td>
+                <td align="center">Download</td>
+                <td align="center">Verified</td>
+            </tr>
+        </thead>
+
+       @for (int i = 0; i < Model.AgreementLists.Count; i++)
+       {
+            <tr>
+                <td>@Model.AgreementLists[i].IEPName</td>
+                <td align="center">
+                    @Html.HiddenFor(m => Model.AgreementLists[i].IEPId, Model.AgreementLists[i].IEPId)  
+                    <img id="@Model.AgreementLists[i].IEPId" src="../Images/download.PNG" onclick="downloadFn1(this.id);" /></td>
+                <td align="center">
+                   @* <input type="checkbox" id="chkVerify" />*@
+                    @Html.CheckBox("AgreementLists[" + i + "].Verified", (Model.AgreementLists[i].Verified == true) ? true : false, new { value = true })
+                </td>
+            </tr>
+       }
+    </table>
+@*<table style="width: 100%; background-color: #DFE5EF;">
+    <tr>
+        <td style="width: 79%;">Placement Agreement</td>
+        <td style="width: 10%;">
+            <input type="button" value="View" /></td>
+        <td style="width: 10%;">
+            <input type="button" value="Remove" /></td>
+    </tr>
+</table>*@
+    <br />
+    <table style="width: 100%;">
+        <tr style="background-color: #DFE5EF;">
+            <td colspan="4" style="height: 29px;">IEP Signed and Placement Page Signed</td>
+        </tr>
+        <tr>
+            <td>
+                <span class="lblSpan">Signed IEP and placement Document Name</span>
+                <br />
+                @Html.TextBoxFor(name => Model.DocumentName1, new { maxlength = "50", style = "width:90%;", id = "txtDocName1" })                
+                @Html.HiddenFor(mtyp => Model.getMeetingType, new { id = "hdn_cdntype" })
+            </td>
+            <td>
+                <span class="lblSpan">Upload signed IEP Document</span>
+                <br />
+                <input type="file" name="Upfile" id="file1" /></td>
+            <td>
+                @*<input type="submit" value="Add" name="SavePlacement" style="width: 80px;" />*@
+                 @if (Model.flag != null)
+                 {
+                     if (Model.flag == "Y")
+                     {
+                         <input type="submit" value="Add" name="SaveMeeting" style="width: 80px;" onclick="getmeting1();" />
+                     }
+                     else if (Model.flag == "N")
+                     {
+                         <input type="submit" value="Add" name="SaveMeeting" style="width: 80px;" onclick="getmeting1();"/>
+                     }
+                 }
+                 else
+                 {
+                     <input type="submit" value="Add" name="SaveMeeting" style="width: 80px;" onclick="getmeting1();"/>
+                 }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <span class="lblSpan">Comments</span>
+                <br />
+            @Html.TextAreaFor(objCmts => Model.Comments1, new { maxlength = "500", style = "width: 100%; height: 100px;", value = Model.Comments1 })</td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                        <input type="submit" id="btnsubmit" name="SaveMeeting" value="Submit" onclick="getmeting1();"/>
+                        }
+                        <input type="submit" name="SaveMeeting" value="Save" onclick="getmeting1();"/>
+                    }
+                    else if (Model.flag == "N")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                        <input type="submit" id="btnsubmit" name="SaveMeeting" value="Submit" onclick="getmeting1();"/>
+                        }
+                        <input type="submit" name="SaveMeeting" value="Save" onclick="getmeting1();" />
+                    }
+                }
+                else
+                {
+                    if (ViewBag.permission == "true")
+                    {
+                    <input type="submit" name="SaveMeeting" value="Submit" onclick="getmeting1();"/>
+                    }
+                    <input type="submit" name="SaveMeeting" value="Save" onclick="getmeting1();"/>
+                }
+            </td>
+        </tr>
+    </table>
+       
+    
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div id="NotiMsg" style="color: white !important;visibility:hidden">@Html.Raw(ViewBag.Chkmsg)</div>
+    <table style="width: 100%" class="gridStyle">
+        <thead>
+            <tr class="HeaderStyle">
+                <td>Consent Forms</td>
+                <td align="center">Download</td>
+                <td align="center">Verified</td>
+            </tr>
+        </thead>
+
+
+        <hr /><hr />
+
+        @for (int i = 0; i < Model.ConsentLists.Count; i++)
+        {
+            <tr>
+                <td>@Model.ConsentLists[i].IEPName</td>
+                <td align="center">
+                    @Html.HiddenFor(m => Model.ConsentLists[i].IEPId, Model.ConsentLists[i].IEPId)
+                    <img id="@Model.ConsentLists[i].IEPId" src="../Images/download.PNG" onclick="downloadFn2(this.id);" /></td>
+                <td align="center">
+                    @* <input type="checkbox" id="chkVerify" />*@
+                    @Html.CheckBox("ConsentLists[" + i + "].Verified", (Model.ConsentLists[i].Verified == true) ? true : false, new { value = true })
+                </td>
+            </tr>
+        }
+
+    </table>
+    <table style="width: 100%;">
+        <tr style="background-color: #DFE5EF;">
+            <td colspan="4" style="height: 29px;">Consent Forms Received</td>
+        </tr>
+        <tr>
+            <td>
+                <span class="lblSpan">Consent Form Name</span>
+                <br />
+                @Html.TextBoxFor(name => Model.DocumentName2, new { maxlength = "50", style = "width:90%;", id = "txtDocName2" })                               
+            </td>
+            <td>
+                <span class="lblSpan">Upload Consent Form</span>
+                <br />
+                <input type="file" name="Upfile" id="file2" /></td>
+            <td>
+                @*<input type="submit" value="Add" name="SaveConsent" style="width: 80px;" />*@
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                    <input type="submit" value="Add" name="SaveMeeting" style="width: 80px;" onclick="getmeting2();" />
+                    }
+                    else if (Model.flag == "N")
+                    {
+                    <input type="submit" value="Add" name="SaveMeeting" style="width: 80px;" onclick="getmeting2();"/>
+                    }
+                }
+                else
+                {
+                    <input type="submit" value="Add" name="SaveMeeting" style="width: 80px;" onclick="getmeting2();" />
+                }
+            </td>
+        </tr>
+        <tr>
+            <td colspan="4">
+                <span class="lblSpan">Comments</span>
+                <br />
+            @Html.TextAreaFor(objCmts2 => Model.Comments2, new { maxlength = "500", style = "width: 100%; height: 100px;", value = Model.Comments2 })</td>
+        </tr>
+        <tr>
+            <td colspan="4" align="right">
+                @if (Model.flag != null)
+                {
+                    if (Model.flag == "Y")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                    <input type="button" id="btnsubmit2" name="SaveMeeting" value="Submit" onclick="getmeting2();"/>
+                        }
+                    <input type="submit" name="SaveMeeting" value="Save" onclick="getmeting2();"/>
+                    }
+                    else if (Model.flag == "N")
+                    {
+                        if (ViewBag.permission == "true")
+                        {
+                    <input type="button" id="btnsubmit2" name="SaveMeeting" value="Submit" onclick="getmeting2();"/>
+                        }
+                    <input type="submit" name="SaveMeeting" value="Save" onclick="getmeting2();"/>
+                    }
+                }
+                else
+                {
+                    if (ViewBag.permission == "true")
+                    {
+                    <input type="button" id="btnsubmit2" name="SaveMeeting" value="Submit" onclick="getmeting2();"/>
+                    }
+                    <input type="submit" name="SaveMeeting" value="Save" onclick="getmeting2();"/>
+                }
+            </td>
+            <td>
+                @Html.HiddenFor(m => Model.isSubmit, Model.isSubmit)
+            </td>
+        </tr>
+    </table>
+    <div id="dialog" title="Confirmation Required">
+
+        This form is already submitted. Do you want to continue?
+
+    </div>
+}
+ @*include in project*@
+@*<hr />
+<span style="font-size: 14px;font-weight: bolder;padding-left: 10px;">Consent Meeting</span>
+<div id="Consent"  style="padding-top: 10px;"></div>*@

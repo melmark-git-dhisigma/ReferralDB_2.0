@@ -1,0 +1,634 @@
+﻿@model ReferalDB.Models.SchedulePrntInterviewViewModel
+
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+</style>
+
+
+
+
+<script type="text/javascript">
+
+
+    function ValidateDate(evt) {
+
+        var count = $('#CountVal').val();
+        for (var i = 0; i < count; i++) {
+            var fromDate = $('#CallLog_' + i + '__CallDateShow').val();
+            var toDate = $('#CallLog_' + i + '__AppntDateShow').val();
+
+            var startDate = new Date(fromDate);
+            var endDate = new Date(toDate);
+            if (fromDate != '' && toDate != '' && startDate > endDate) {
+                $('#tdMsg').html("<div class='warning_box'>Appointment Date/Time must be greater than or equal to  Date and Time of Call.</div>");
+                return false;
+            }
+        }
+
+        checkall(evt);
+
+        return true;
+    }
+
+
+    $(document).ready(function () {
+
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+        ActivateMenuSelection();
+
+        var count = $('#CountVal').val();
+        for (var i = 0; i < count; i++) {
+            $('#CallLog_' + i + '__CallTimeShow').timeEntry();
+            $('#CallLog_' + i + '__AppntTimeShow').timeEntry();
+        }
+
+
+        if ($('#Comment_AproveInt').val() == 'False') {
+            document.getElementById("radioNo").checked = true
+        }
+        else {
+            document.getElementById("radioYes").checked = true
+        }
+
+        //if ($('#Comment_iSSubmitted').val() == 'True') {
+        //    $("#SubmitScheduleParntInterview").click(function (e) {
+        //        // e.preventDefault();
+        //        $("#dialog").dialog("open");
+        //        $("#dialog").dialog({
+        //            buttons: {
+        //                "Confirm": function () {
+        //                    $('#SubmitScheduleParntInterview').attr('type', 'submit');
+        //                    $('#SubmitScheduleParntInterview').trigger("click");;
+        //                    //$("#submitClinical").off('click');
+        //                    //$('#frnClinical').submit();
+        //                    $(this).dialog("close");
+        //                },
+        //                "Cancel": function () {
+
+        //                    $(this).dialog("close");
+        //                    return false;
+        //                }
+        //            }
+        //        });
+
+        //    });
+        //}
+        //else {
+        //    $('#SubmitScheduleParntInterview').attr('type', 'submit');
+        //    //   $('#submitClinical').trigger("click");
+
+
+        //}
+
+        GetNameFieldValidate();
+        $('.namefield').bind('paste', function (e) {
+            e.preventDefault();
+        });
+    });
+
+
+    var DocheckSubmit = false;
+    var chekfailed = false;
+    var PageSubmit = false;
+    var message1 = "";
+    var message2 = "";
+    var msg = "";
+    //
+    function checkall(evt) {
+        chekfailed = false;
+        PageSubmit = false;
+        msg = "";
+        $("#dialog").text(msg);
+        var checks = $("input:checkbox:not(:checked)");
+        if (checks.length > 0) {
+            chekfailed = true;
+            msg = "Check Lists are not completed. Do you want to continue?";
+            if (!DocheckSubmit) {
+                evt.preventDefault();
+            }
+
+        }
+        if ($('#Comment_iSSubmitted').val() == 'True') {
+            PageSubmit = true;
+            msg = "This form is already submitted. Do you want to continue?";
+        }
+
+        if (chekfailed && PageSubmit) {
+            msg = "This form is already submitted and Check Lists are not completed. Do you want to continue?";
+        }
+        if (chekfailed || PageSubmit) {
+            $("#dialog").text(msg);
+            $("#dialog").dialog("open");
+            $("#dialog").dialog({
+                buttons: {
+                    "Confirm": function () {
+                        DocheckSubmit = true;
+                        $('#SubmitScheduleParntInterview').attr('type', 'submit');
+                        $('#SubmitScheduleParntInterview').trigger("click");;
+                        //$("#submitClinical").off('click');
+                        //$('#frnClinical').submit();
+                        $(this).dialog("close");
+                    },
+                    "Cancel": function () {
+
+                        $(this).dialog("close");
+                        return false;
+                    }
+                }
+            });
+
+
+        }
+        else {
+            $('#SubmitScheduleParntInterview').attr('type', 'submit');
+            //   $('#submitClinical').trigger("click");
+
+
+        }
+    }
+
+    function AutoCompleteNameOfContact() {
+        $('.nameofcontact').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "../Dashboard/AutoCompleteContactName",
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        //response(data.ReferralName);
+                        response($.map(data, function (item) {
+
+                            return { label: item.ContactName, value: item.ContactName, id: item.ContactId };
+
+                        }))
+                    },
+                })
+            },
+            select: function (event, ui) {
+
+                var id = ui.item.id;
+                // document.getElementById('StudentId2').value = id;
+
+                if (id == 0) {
+                    // alert('hello');
+                }
+
+
+                // "Nothing selected, input was " + this.value;
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            }
+        });
+    }
+
+    var date = new Date();
+    date.setDate(date.getDate());
+
+
+    $(".datepicker").datepicker(
+    {
+        changeMonth: true,
+        changeYear: true,
+        showAnim: "fadeIn",
+        yearRange: 'c-100:c+100',
+        minDate: date,
+        /* fix buggy IE focus functionality */
+        fixFocusIE: false,
+
+    });
+
+    function datepickerval(count) {
+
+        $('#CallLog_' + count + '__CallDateShow').datepicker(
+        {
+            changeMonth: true,
+            changeYear: true,
+            showAnim: "fadeIn",
+            yearRange: 'c-100:c+100',
+            minDate: date,
+            /* fix buggy IE focus functionality */
+            fixFocusIE: false,
+        });
+
+        $('#CallLog_' + count + '__AppntDateShow').datepicker(
+       {
+           changeMonth: true,
+           changeYear: true,
+           showAnim: "fadeIn",
+           yearRange: 'c-100:c+100',
+           minDate: date,
+           /* fix buggy IE focus functionality */
+           fixFocusIE: false,
+       });
+    }
+
+
+    function desableallbtns(data) {
+        var RefCurrentQueueId = data.split('*');
+        if (RefCurrentQueueId[0] == 'success') {
+            SubmitPage(RefCurrentQueueId[1]);
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+    function SetActiveInt(Val) {
+        if ($(Val).attr('id') == 'radioYes') {
+            $('#Comment_AproveInt').val(true);
+        }
+        else if ($(Val).attr('id') == 'radioNo') {
+            $('#Comment_AproveInt').val(false);
+        }
+    }
+    function deleteRow(cntrl) {
+        var confirmDel = confirm("Are you sure want to delete?");
+        if (confirmDel == true) {
+            var elem = "trCallLog" + cntrl;
+            var CallLogCnt = $('#CountVal').val();
+
+            if (CallLogCnt > 1) {
+                $('.' + elem).remove();
+                var total = cntrl + 1;
+                var elemVal = parseInt(CallLogCnt) + 1;
+                for (var i = cntrl; i < elemVal; i++) {
+
+                    var k = i - 1;
+                    var StaffName = "CallLog_" + i + "__StaffName";
+                    $("#" + StaffName).attr('name', 'CallLog[' + k + '].StaffName');
+                    $("#" + StaffName).attr('Id', 'CallLog_' + k + '__StaffName');
+
+                    var NameOfContact = "CallLog_" + i + "__NameOfContact";
+                    $("#" + NameOfContact).attr('name', 'CallLog[' + k + '].NameOfContact');
+                    $("#" + NameOfContact).attr('Id', 'CallLog_' + k + '__NameOfContact');
+
+
+                    var Conversation = "CallLog_" + i + "__Conversation";
+                    $("#" + Conversation).attr('name', 'CallLog[' + k + '].Conversation');
+                    $("#" + Conversation).attr('Id', 'CallLog_' + k + '__Conversation');
+
+                    var CallDateShow = "CallLog_" + i + "__CallDateShow";
+                    $("#" + CallDateShow).attr('name', 'CallLog[' + k + '].CallDateShow');
+                    $("#" + CallDateShow).attr('Id', 'CallLog_' + k + '__CallDateShow');
+
+                    var CallTimeShow = "CallLog_" + i + "__CallTimeShow";
+                    $("#" + CallTimeShow).attr('name', 'CallLog[' + k + '].CallTimeShow');
+                    $("#" + CallTimeShow).attr('Id', 'CallLog_' + k + '__CallTimeShow');
+
+                    var AppntDateShow = "CallLog_" + i + "__AppntDateShow";
+                    $("#" + AppntDateShow).attr('name', 'CallLog[' + k + '].AppntDateShow');
+                    $("#" + AppntDateShow).attr('Id', 'CallLog_' + k + '__AppntDateShow');
+
+                    var AppntTimeShow = "CallLog_" + i + "__AppntTimeShow";
+                    $("#" + AppntTimeShow).attr('name', 'CallLog[' + k + '].AppntTimeShow');
+                    $("#" + AppntTimeShow).attr('name', 'CallLog_' + k + '__AppntTimeShow');
+
+                    var h3 = "h_" + i;
+                    $("#" + h3).text("Call Log " + k);
+                    $("#" + h3).attr('Id', 'h_' + k);
+
+
+
+                }
+                $('#CountVal').val(CallLogCnt - 1);
+            }
+
+
+
+
+
+            var ExtraCallLogCnt = $('#ExtraCallLog').val();
+            var NewExtraCallLogCnt = ExtraCallLogCnt - 1;
+            $('#ExtraCallLog').val(NewExtraCallLogCnt);
+            if ($('#ExtraCallLog').val() == "0") {
+                $('#RemoveCallLog').css("display", "none");
+            }
+        }
+    }
+    function appndRw() {
+
+
+        var count = $('#CountVal').val();
+        var txtStaffName = "";
+        var txtContactName = "";
+        for (var i = 0; i < count; i++) {
+
+            txtStaffName = "CallLog_" + i + "__StaffName";
+            txtContactName = "CallLog_" + i + "__NameOfContact";
+            if ($('#' + txtStaffName) != null && $('#' + txtContactName) != null) {
+
+                if ($('#' + txtStaffName).val() == "" || $('#' + txtContactName).val() == "") {
+                    document.getElementById('tdMsg').innerHTML = "<div class='warning_box'>Please enter Contact Log Details</div>";
+                    return false;
+                }
+
+            }
+        }
+
+
+
+        var count = $('#CountVal').val();
+        var coutPls = parseInt(count);
+        coutPls = coutPls + 1;
+         @{
+             clsSession sess = (clsSession)HttpContext.Current.Session["UserSession"];   
+                                }
+
+        $('#tblCallLog').append("<tr class='trCallLog" + coutPls + "'> <td colspan='3'><div><h3 Id='h_" + coutPls + "'>Contact Log " + coutPls + "</h3></div></td><td style='text-align: right;'><img alt='Remove Contact Log 1' src='/Images/removeCalllog.png' onclick='deleteRow(" + coutPls + ");' style='cursor:pointer'></td></tr><tr  class='trCallLog" + coutPls + "'><td style='width:275px;'><span class='lblSpan'>Staff Name</span><br/><input class='staffName namefield'  id='CallLog_" + count + "__StaffName' type='text' value='@sess.UserName' style='width:200px' name='CallLog[" + count + "].StaffName'maxlength='50'></td><td style='width:275px;'><span class='lblSpan'>Date and Time of Call</span><br/><input id='CallLog_" + count + "__CallDateShow'  type='text' value='' style='width:150px' onkeypress='return false' name='CallLog[" + count + "].CallDateShow' class='datepicker' ><input id='CallLog_" + count + "__CallTimeShow'  type='text' value='' style='width:60px !important;margin:0;' onkeypress='return false' name='CallLog[" + count + "].CallTimeShow'></td></tr><tr  class='trCallLog" + coutPls + "'><td style='width:275px;'><span class='lblSpan'>Name Of Contact</span><br/><input id='CallLog_" + count + "__NameOfContact' type='text' value='' style='width:200px' name='CallLog[" + count + "].NameOfContact' class='namefield nameofcontact' maxlength='50'></td><td style='width:275px;'><span class='lblSpan'>Appointment Date/Time</span><br/><input id='CallLog_" + count + "__AppntDateShow' type='text' value='' style='width:150px' onkeypress='return false' name='CallLog[" + count + "].AppntDateShow'><input id='CallLog_" + count + "__AppntTimeShow'  type='text' value='' style='width:60px !important;margin:0;' onkeypress='return false' name='CallLog[" + count + "].AppntTimeShow'></td></tr><tr class='trCallLog" + coutPls + "'><td colspan='4' style='width:275px;'><span class='lblSpan'>Conversation Details</span><br/><textarea id='CallLog_" + count + "__Conversation' value='@sess.UserName' style='width:100%;height:100px' rows='2' name='CallLog[" + count + "].Conversation' maxlength='500' cols='20'></textarea></td></tr>");
+
+        staffNameAutocomplete();
+        AutoCompleteNameOfContact();
+        $('#CountVal').val(coutPls);
+        datepickerval(count);
+        $('#RemoveCallLog').css("display", "block");
+        $('#CallLog_' + count + '__CallTimeShow').timeEntry();
+        $('#CallLog_' + count + '__AppntTimeShow').timeEntry();
+        var ExtraCallLogCnt = $('#ExtraCallLog').val();
+        if (ExtraCallLogCnt == "")
+            ExtraCallLogCnt = "0";
+        var NewExtraCallLogCnt = parseInt(ExtraCallLogCnt) + 1;
+        $('#ExtraCallLog').val(NewExtraCallLogCnt);
+
+        GetNameFieldValidate();
+        $('.namefield').bind('paste', function (e) {
+            e.preventDefault();
+        });
+    }
+
+    function RemoveRow() {
+        var confirmDel = confirm("Are you sure want to delete?");
+        if (confirmDel == true) {
+        var CallLogCnt = $('#CountVal').val();
+        if (CallLogCnt > 1) {
+            for (var i = 0; i < 4; i++) {
+                $('#tblCallLog tr:last').remove();
+            }
+            $('#CountVal').val(CallLogCnt - 1);
+        }
+        var ExtraCallLogCnt = $('#ExtraCallLog').val();
+        var NewExtraCallLogCnt = ExtraCallLogCnt - 1;
+        $('#ExtraCallLog').val(NewExtraCallLogCnt);
+        if ($('#ExtraCallLog').val() == "0") {
+            $('#RemoveCallLog').css("display", "none");
+        }
+    }
+    }
+
+
+    function RemoveSingleCallLog(CalllogId) {
+        if (confirm('Are you sure you want to delete?')) {
+            var CallLog = parseInt(CalllogId);
+            if (CallLog != 0) {
+                $.get("../PreAdmission/RemoveCallLog?CallLogId=" + CallLog, function (data) {
+                    var CallLogCnt = $('#CountVal').val();
+                    if (CallLogCnt > 1) {
+                        for (var i = 0; i < 4; i++) {
+                            $('#tblCallLog tr:last').remove();
+                        }
+                        $('#CountVal').val(CallLogCnt - 1);
+                    }
+                    $.get("../IntakeAssessment/ParantSheduleInteview", function (result) {
+                        $('#LoadQueue').html(result);
+                    });
+                });
+            }
+        }
+    }
+
+
+</script>
+@*<h4>Schedule Parent Interview</h4>*@
+@using (Ajax.BeginForm("SavePrntScrminSubmit", "IntakeAssessment", FormMethod.Post, new AjaxOptions { UpdateTargetId = "tdMsg", OnSuccess = "desableallbtns(data);" }))
+{
+    <div id="overlay" style="width: 60%; position: absolute; background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div id="applicationForm">
+        <table style="width: 100%">
+            <tr>
+                <td>
+                    <div id="tdMsg" style="color: white !important;"></div>
+                </td>
+            </tr>
+        </table>
+
+        @for (int i = 0; i < Model.ChkAll.Count; i++)
+        { 
+            <table style="width: 100%" class="gridStyle">
+                <tr class="HeaderStyle">
+                    <td style="width: 30%"><b>@Model.ChkAll[i].ChkHeadName</b>
+                        @Html.HiddenFor(m => Model.ChkAll[i].ChkHeadId, Model.ChkAll[i].ChkHeadId)
+                        @Html.HiddenFor(m => Model.ChkAll[i].ChkHeadName, Model.ChkAll[i].ChkHeadName)
+                    </td>
+                    <td style="width: 17%"><b>Completed</b>
+                    </td>
+                </tr>
+                @for (int j = 0; j < Model.ChkAll[i].chkList.Count; j++)
+                { 
+                    <tr>
+                        <td>@Model.ChkAll[i].chkList[j].CheckListName
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].CheckListName, Model.ChkAll[i].chkList[j].CheckListName)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].IsPresent, Model.ChkAll[i].chkList[j].IsPresent)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].AssginId, Model.ChkAll[i].chkList[j].AssginId)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].checkListId, Model.ChkAll[i].chkList[j].checkListId)
+                            @Html.HiddenFor(m => Model.ChkAll[i].chkList[j].ChkHeadId, Model.ChkAll[i].chkList[j].AssginId)
+                        </td>
+                        <td>
+                            @Html.CheckBox("ChkAll[" + i + "].chkList[" + j + "].checkListval", (Model.ChkAll[i].chkList[j].Complete == true) ? true : false, new { value = true })
+                        </td>
+                    </tr>
+                }
+            </table>
+         
+        }
+        <div>
+            <table style="width: 100%">
+
+                <tr>
+                    <td colspan="4">
+                        <div>
+                            <h4>Contact Log</h4>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+
+                        <table style="width: 100%" id="tblCallLog">
+                            @for (int i = 0; i < Model.CallLog.Count; i++)
+                            {
+                                int countshow = i + 1;
+                            
+                                <tr>
+                                    <td colspan="4">
+                                        <div>
+                                            <table style="width: 100%">
+                                                <tr>
+                                                    <td style="text-align: left;">
+                                                        <h3>Contact Log @countshow</h3>
+                                                    </td>
+                                                    <td style="text-align: right;">
+                                                        @if (Model.CallLog[i].CallLogId != 0 && Model.CallLog[i].IsSubmit == false)
+                                                        {                                                        
+                                                            <img style="cursor:pointer"  onclick="RemoveSingleCallLog(@Model.CallLog[i].CallLogId);" src="~/Images/removeCalllog.png" alt="Remove Contact Log @countshow" />
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:275px;">
+                                        <span class="lblSpan">Staff Name</span>
+                                        <br />
+                                        @Html.TextBoxFor(m => Model.CallLog[i].StaffName, Model.CallLog[i].StaffName, new { maxlength = "50", style = "width:200px;margin-bottom:2%;", @class = "staffName namefield" }) </td>
+                                    <td>
+                                        <span class="lblSpan">Date and Time of Call</span>
+                                        <br />
+
+                                    @Html.TextBoxFor(m => Model.CallLog[i].CallDateShow, Model.CallLog[i].CallDateShow, new { style = "width:150px", @class = "datepicker", onkeypress = "return false" })
+                                        @if (Model.CallLog[i].CallTimeShow == "00:00")
+                                        {
+                                            Model.CallLog[i].CallTimeShow = null;
+                                        }
+                                       @Html.TextBoxFor(m => Model.CallLog[i].CallTimeShow, Model.CallLog[i].CallTimeShow, new { style = "width:60px !important;margin:0;", onkeypress = "return false" })</td>
+                                        @Html.HiddenFor(m => Model.CallLog[i].IsPresent, Model.CallLog[i].IsPresent)
+                                        @Html.HiddenFor(m => Model.CallLog[i].academicReviewId, Model.CallLog[i].academicReviewId)
+                                        @Html.HiddenFor(m => Model.CallLog[i].CallLogId, Model.CallLog[i].CallLogId)
+
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span class="lblSpan">Name Of Contact</span>
+                                        <br />
+                                        @Html.TextBoxFor(m => Model.CallLog[i].NameOfContact, Model.CallLog[i].NameOfContact, new { maxlength = "50", style = "width:200px;margin-bottom:2%;", @class = "namefield nameofcontact" })</td>
+                                    <td>
+                                        <span class="lblSpan">Appointment Date/Time</span>
+                                        <br />
+
+                                    @Html.TextBoxFor(m => Model.CallLog[i].AppntDateShow, Model.CallLog[i].AppntDateShow, new { style = "width:150px", @class = "datepicker", onkeypress = "return false" })
+                                        @if (Model.CallLog[i].AppntTimeShow == "00:00")
+                                        {
+                                            Model.CallLog[i].AppntTimeShow = null;
+                                        }
+                                        @Html.TextBoxFor(m => Model.CallLog[i].AppntTimeShow, Model.CallLog[i].AppntTimeShow, new { style = "width:60px !important;margin:0;", onkeypress = "return false" })
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <span class="lblSpan">Conversation Details</span>
+                                        <br />
+                                        @Html.TextAreaFor(m => Model.CallLog[i].Conversation, new { maxlength = "500", style = "width:100%;height:100px", value = Model.CallLog[i].Conversation }) </td>
+                                </tr>
+                            }
+
+                            <input id="CountVal" type="hidden" value="@Model.CallLog.Count"/>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <input type="button" name="AddCallLogList" value="Add Contact Log" id="AddCallLog" onclick="appndRw()" style="width: 110px;" />
+                        <input type="button" name="RemoveCallLogList" value="Remove Contact Log" id="RemoveCallLog" onclick="RemoveRow()" style="display: none; width: 132px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <hr />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 85px;">Scheduled</td>
+
+                    <td>
+                        <input id="radioYes" type="radio" name="yesNo" onclick="SetActiveInt(this)" />Yes
+                    <input id="radioNo" type="radio" name="yesNo" onclick="    SetActiveInt(this)" />No</td>
+
+                    <td>@Html.HiddenFor(m => Model.Comment.AproveInt, Model.Comment.AproveInt)
+                        @Html.HiddenFor(m => Model.Comment.academicReviewId, Model.Comment.academicReviewId)
+                        @Html.HiddenFor(m => Model.Comment.IsPresent, Model.Comment.IsPresent)
+                        @Html.HiddenFor(m => Model.Comment.iSSubmitted, Model.Comment.iSSubmitted)
+                    </td>
+                    <td>
+
+                        @if (ViewBag.permission == "true")
+                        {
+                            <input type="button" name="SaveScheduleParntInterview" onclick="return ValidateDate(event)" value="Submit" id="SubmitScheduleParntInterview" />
+                        }
+                        <input type="submit" name="SaveScheduleParntInterview" onclick="return ValidateDate(event)" value="Save" id="SaveScheduleParntInterviews" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <input type="hidden" id="ExtraCallLog" value="" />
+    </div>
+    
+    <div id="dialog" title="Confirmation Required">
+    </div>
+       
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        staffNameAutocomplete();
+        AutoCompleteNameOfContact();
+        GetNameFieldValidate();
+        $('.namefield').bind('paste', function (e) {
+            e.preventDefault();
+        });
+    });
+
+    function GetNameFieldValidate() {
+        $('.namefield').keypress(function (event) {
+            var inputValue = event.which;
+            if (((inputValue >= 65 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue == 32) || (inputValue == 39) || (inputValue == 45) || (inputValue == 8) || (inputValue == 0))) {
+            }
+            else {
+                event.preventDefault();
+            }
+        });
+    }
+
+    function staffNameAutocomplete() {
+
+        $(".staffName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "../Dashboard/AutoCompleteStaffName",
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term },
+                    success: function (data) {
+                        //response(data.ReferralName);
+                        response($.map(data, function (item) {
+                            return { label: item.UserName, value: item.UserName };
+                        }))
+                    },
+                })
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,167 @@
+﻿@model ReferalDB.Models.LetterGenerationViewModel
+
+
+<script>
+    $(document).ready(function () {
+        GetNameFieldValidate();
+        $('.namefield').bind('paste', function (e) {
+            e.preventDefault();
+        });
+    });
+
+    function GetNameFieldValidate() {
+        $('.namefield').keypress(function (event) {
+            var inputValue = event.which;
+            if (((inputValue >= 65 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue == 32) || (inputValue == 39) || (inputValue == 45) || (inputValue == 8) || (inputValue == 0))) {
+            }
+            else {
+                event.preventDefault();
+            }
+        });
+    }
+
+    //var blob = new Blob([csvString],{ type: "application/csv;charset=utf-8;"}); 
+//    navigator.msSaveBlob(blob, "title.csv");
+
+
+    function printdata(data) {
+
+        var mywindow = window.open('', 'Letter', 'height=600,width=600,scrollbars=yes,resizable=yes,fullscreen=no');
+        mywindow.document.write('<html><head><title>Letter</title><style type="text/css" media="print">.no-print {display:none;}</style>');
+        mywindow.document.write('<script type="text/javascript"> var letter="letter.doc"; var main="tray";var apptype="application/msword"; function downloadDoc(filename, elId, mimeType) { var elHtml = document.getElementById(elId).innerHTML; var blob = new Blob([elHtml],{ type: "application/csv;charset=utf-8;"}); navigator.msSaveBlob(blob, filename); }<\/script>');
+        mywindow.document.write('</head><body >');
+        mywindow.document.write(data);
+        mywindow.document.write('<input type="button" id="btnprint" class="no-print" value="Download" onclick="downloadDoc(letter, main,apptype);" />');
+        mywindow.document.write('</body></html>');
+        mywindow.document.close();
+        mywindow.print();
+        return true;
+    }
+    function LetterSearch() {
+
+        $('#hdReferal').val($('#txtRef').val());
+        var Refe = $('#hdReferal').val();
+        $('#LoadQueue').load('../PreAdmission/LetterGenerationView?Name=' + encodeURI(Refe));
+    }
+    function LetterAll() {
+
+        $('#hdReferal').val($('#txtRef').val());
+        var Refe = $('#hdReferal').val();
+        $('#LoadQueue').load('../PreAdmission/LetterGenerationAll');
+    }
+    function fn_success(data) {
+        OpenSublinks('letterTray', 'New Applicant', 2);
+    }
+</script>
+@using (Ajax.BeginForm("LetterGenerationViewSave", "PreAdmission", FormMethod.Post, new AjaxOptions { UpdateTargetId = "LetterTraytdMsg", OnSuccess = "fn_success" }))
+{
+   
+    <table style="width: 100%">
+        <tr>
+            <td>
+                <div id="LetterTraytdMsg"></div>
+            </td>
+        </tr>
+    </table>
+@*<table>
+            <tr>
+                <td>Referral Name</td>
+                <td>
+
+
+
+                    <input type="text" id="txtRef" class="namefield" /></td>
+                <td>
+                    <input type="button" value="Search" onclick="LetterSearch();" /></td>
+                <td>
+                    <input type="button" value="All" onclick="LetterAll();" /></td>
+                <td>
+                    @if (Model.LetterLists!=null)
+                    {
+                        for (int i = 0; i < 1; i++)
+                        {
+                            if (Model.refFlag != "Search")
+                            {
+                              <input style="width: 142px" type="button" value="Back To Referral" onclick="ReferalBack();" />
+                            }
+
+                        }}
+
+                </td>
+            </tr>
+        </table>*@
+    
+    <div style="overflow-y: auto; overflow-x: hidden; height: 250px;">
+        <table style="width: 100%" class="gridStyle">
+            <thead>
+                <tr class="HeaderStyle">
+                    <td style="width: 45%"><b>Letter Name</b>
+                    </td>
+                    <td style="width: 15%"><b>Referral Name</b>
+                    </td>
+                    <td style="width: 15%"><b>Recipient</b>
+                    </td>
+                    <td style="width: 10%"><b>Created On</b>
+                    </td>
+                    <td style="width: 10%"><b>Status</b>
+                    </td>
+                    <td style="width: 10%"><b>Sent On</b>
+                    </td>
+
+                </tr>
+            </thead>
+            @if (Model.LetterLists != null)
+            {
+                for (int i = 0; i < Model.LetterLists.Count; i++)
+                {
+                    if (i < 40)
+                    {
+                <tr>
+                    <td>
+                        @* <a id="@Model.LetterLists[i].LetterTrayId" onclick="ViewLetterTray(event,this.id)" href="#">@Model.LetterLists[i].LetterName</a>*@
+                        @Ajax.ActionLink(Model.LetterLists[i].LetterName, "LetterTrayView", new { LetterTrayId = Model.LetterLists[i].LetterTrayId }, new AjaxOptions { OnSuccess = "printdata" })
+                        @Html.HiddenFor(m => Model.LetterLists[i].LetterTrayId, Model.LetterLists[i].LetterTrayId)
+                    </td>
+                    <td>
+                        @Model.LetterLists[i].ReferralName
+                    </td>
+                    <td>
+                        @Model.LetterLists[i].RecipientName
+                    </td>
+                    <td>
+                        @Model.LetterLists[i].CreatedDate
+                    </td>
+                    <td>
+                        @Html.CheckBox("LetterLists[" + i + "].status", (Model.LetterLists[i].status == true) ? true : false, new { value = true })
+                    </td>
+                    <td>
+                        @Model.LetterLists[i].SentDate
+                        @Html.HiddenFor(m => Model.LetterLists[i].SentDate, Model.LetterLists[i].SentDate)
+                        @Html.HiddenFor(m => Model.LetterLists[i].SentOn, Model.LetterLists[i].SentOn)
+                    </td>
+
+                </tr>
+                    }
+                }
+            }
+
+        </table>
+    </div>
+            if (Model.LetterLists != null)
+            {
+    <table>
+        <tr>
+            <td>
+                @if(ViewBag.permission=="true"){
+                <input type="submit" value="Send" name="ActionLetterGeneration" id="saveLetter" style="float: right;" />
+                }
+            </td>
+        </tr>
+    </table>
+            }
+    <input id="hdReferal" type="hidden" />
+    
+      
+}
+
+

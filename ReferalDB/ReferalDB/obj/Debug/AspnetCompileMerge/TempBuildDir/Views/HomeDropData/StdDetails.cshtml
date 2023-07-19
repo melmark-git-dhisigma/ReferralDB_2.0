@@ -1,0 +1,31 @@
+﻿@model ReferalDB.Models.StdDetailsViewModel
+
+<div>
+    <table style="width:100%">
+        <tr>
+            <td>Refferal Name</td>
+            <td>@Model.studentPersonalName</td>
+            <td>Gender</td>
+            <td>@Model.Gender</td>
+        </tr>
+        <tr>
+            <td>Birth Date</td>
+            <td>@Model.BirthDate.Value.ToString("MM'-'dd'-'yyyy")</td>
+            <td>Place Of Birth</td>
+            <td>@Model.PlaceOfBirth</td>
+        </tr>       
+        <tr>
+            <td>Height</td>
+            <td>@Model.Height</td>
+            <td>Weight</td>
+            <td>@Model.Weight</td>
+        </tr>
+        <tr>
+            <td>>Primary Language</td>
+            <td>@Model.PrimaryLanguage</td>
+            <td></td>
+            <td></td>
+        </tr>
+        
+    </table>
+</div>

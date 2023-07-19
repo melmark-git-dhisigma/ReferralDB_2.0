@@ -1,0 +1,234 @@
+﻿@model ReferalDB.Models.ListIntakeAssessment
+
+
+<style type="text/css">
+    .lblSpan {
+        font-style: italic;
+        font-weight: bold;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $.get("../Dashboard/selectReferalStatus", function (data) {
+
+            if (data == "Client") {
+                $('#overlay').height($('#MidContent').height());
+                $("#overlay").show();
+            }
+            else {
+                $("#overlay").hide();
+            }
+        });
+        $("#dialog").dialog({
+            autoOpen: false,
+            modal: true
+        });
+        ActivateMenuSelection();
+
+       
+
+    });
+
+
+    $(document).ready(function () {
+
+        if ($('#isSubmit').val() == 'True') {
+            $("#btnsubmit").click(function (e) {
+                // e.preventDefault();
+                $("#dialog").dialog("open");
+                $("#dialog").dialog({
+                    buttons: {
+                        "Confirm": function () {
+                            $('#btnsubmit').attr('type', 'submit');
+                            $('#btnsubmit').trigger("click");;
+                            //$("#submitClinical").off('click');
+                            //$('#frnClinical').submit();
+                            $(this).dialog("close");
+                        },
+                        "Cancel": function () {
+
+                            $(this).dialog("close");
+                            return false;
+                        }
+                    }
+                });
+
+            });
+        }
+        else {
+            $('#btnsubmit').attr('type', 'submit');
+            //   $('#submitClinical').trigger("click");
+        }
+    });
+
+    $(".clstxtdates").datepicker(
+        {
+            changeMonth: true,
+            changeYear: true,
+            showAnim: "fadeIn",
+            yearRange: 'c-100:c+100',
+            // dateFormat: "dd-mm-yy",
+
+
+            /* fix buggy IE focus functionality */
+            fixFocusIE: false,
+
+        });
+
+    function desableallbtns(data) {
+
+        var RefCurrentQueueId = data.split('*');
+        if (RefCurrentQueueId[0] == 'success') {
+            SubmitPage(RefCurrentQueueId[1]);
+            //$('#tdMsg').html('');
+            //$('#submitAcademic').attr('disabled', 'disabled');
+            //$('#saveAcademic').attr('disabled', 'disabled');
+        }
+        $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+    }
+
+</script>
+@using (Ajax.BeginForm("SaveIntake", "IntakeAssessment", FormMethod.Post, new AjaxOptions { UpdateTargetId = "tdMsg", OnSuccess = "desableallbtns(data);" }))
+{
+    
+    <div id="overlay"  style="width: 60%; position: absolute;  background-color: #ccc; opacity: .3; z-index: 999;"></div>
+    <div>
+        <table style="width: 100%">
+            <tr>
+
+                <td>
+                    <div id="tdMsg" style=" color:white !important;"></div>
+                </td>
+            </tr>
+        </table>
+
+        <table style="width: 100%" class="gridStyle">
+
+            @if (Model.ListAssessments != null)
+            {
+                for (int i = 0; i < Model.ListAssessments.Count; i++)
+                {
+                <thead>
+                    <tr class="HeaderStyle">
+                        <td>@Model.ListAssessments[i].Name</td>
+                        <td align="center">Date</td>
+                        <td align="center">Present</td>
+                        <td align="center">Not Present</td>
+                        <td align="center">Emerging</td>
+                        <td>Comments</td>
+                    </tr>
+                </thead>
+                    if (Model.ListAssessments[i].chkLists != null)
+                    {
+                        for (int j = 0; j < Model.ListAssessments[i].chkLists.Count; j++)
+                        {
+                <tr>
+                    <td>@Html.HiddenFor(obj => Model.ListAssessments[i].chkLists[j].Id, Model.ListAssessments[i].chkLists[j].Id)
+                        @Html.HiddenFor(obj => Model.ListAssessments[i].chkLists[j].Name, Model.ListAssessments[i].chkLists[j].Name)
+                        @Model.ListAssessments[i].chkLists[j].Name</td>
+                    <td align="center">
+                        @Html.TextBoxFor(objdate => Model.ListAssessments[i].chkLists[j].Date, Convert.ToDateTime(Model.ListAssessments[i].chkLists[j].ReturnDate).ToString("MM'/'dd'/'yyyy"), new { style = "width:150px", @class = "clstxtdates", onkeypress = "return false" })</td>
+                    <td align="center">
+                        @if (Model.ListAssessments[i].chkLists[j].Prsnt == true)
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAssessments[i].chkLists[j].Present, "Present", new { Checked = "checked" })
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAssessments[i].chkLists[j].Present, "Present")
+                        }
+                    </td>
+                    <td align="center">
+                        @if (Model.ListAssessments[i].chkLists[j].NotPresent == true)
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAssessments[i].chkLists[j].Present, "NotPresent", new { Checked = "checked" })
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAssessments[i].chkLists[j].Present, "NotPresent")
+                        }
+                    </td>
+                    <td align="center">
+                        @if (Model.ListAssessments[i].chkLists[j].Emerging == true)
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAssessments[i].chkLists[j].Present, "Emerging", new { Checked = "checked" })
+                        }
+                        else
+                        {
+                            @Html.RadioButtonFor(obj => Model.ListAssessments[i].chkLists[j].Present, "Emerging")
+                        }
+                    </td>
+                    <td>@Html.TextAreaFor(obj => Model.ListAssessments[i].chkLists[j].Comment, new { maxlength = "500", value = Model.ListAssessments[i].chkLists[j].Comment })
+                    </td>
+                </tr>
+                        }
+                    }
+                }
+                if (Model.ListAssessments.Count == 0)
+                {
+                <tr>
+                    <td align="center">No data found !!!</td>
+                </tr>   
+                }
+            }
+            else
+            {
+                <tr>
+                    <td align="center">No data found !!!</td>
+                </tr>   
+            }
+        </table>
+        <br />
+        <table style="width: 100%;">
+            <tr>
+                <td colspan="4" >
+                    <span class="lblSpan">Comment</span>
+                    <br />
+                @Html.TextAreaFor(obj => Model.Comments, new { maxlength = "500",style = "width:100%;height:100px", value = Model.Comments })</td>
+            </tr>
+            <tr>
+                <td style="width:80px;">Approved<span style="color: red">*</span></td>
+                @*<td>@Html.RadioButtonFor(obj => Model.Approved, true, new { @checked = "!checked" }) Yes     @Html.RadioButtonFor(obj => Model.Approved, false, new { @checked = "!checked" }) No</td>*@
+                <td>@if (Model.Approved == true)
+                    {
+                    @Html.RadioButtonFor(obj => Model.Approved, true, new { Checked = "checked" }) <span>Yes</span>     @Html.RadioButtonFor(obj => Model.Approved, false) <span>No</span>
+                    }
+                    else if (Model.Approved == false)
+                    {
+                    @Html.RadioButtonFor(obj => Model.Approved, true) <span>Yes</span>     @Html.RadioButtonFor(obj => Model.Approved, false, new { Checked = "checked" }) <span>No</span>   
+                    }
+                    else
+                    {
+                    @Html.RadioButtonFor(obj => Model.Approved, true, new { Checked = "checked" }) <span>Yes</span>     @Html.RadioButtonFor(obj => Model.Approved, false) <span>No</span>   
+                    }
+                    @Html.HiddenFor(m => Model.isSubmit, Model.isSubmit)
+                </td>
+            </tr>
+        </table>
+        @if (Model.isSubmit == true)
+        {
+            if (ViewBag.permission == "true")
+            {
+            <input type="button" value="Submit"  id="btnsubmit" name="SaveIntakeAsmnt" style="width: 80px;" />
+            }
+            <input type="submit" value="Save" name="SaveIntakeAsmnt" style="width: 80px;" />  
+        }
+        else
+        {
+            if (ViewBag.permission == "true")
+            {
+                   
+            <input type="button" value="Submit"  id="btnsubmit" name="SaveIntakeAsmnt" style="width: 80px;" />
+            }
+                   
+            <input type="submit" value="Save" name="SaveIntakeAsmnt" style="width: 80px;" />      
+        }
+    </div>
+    <div id="dialog" title="Confirmation Required">
+        This form is already submitted. Do you want to continue?
+    </div>
+        
+}
+

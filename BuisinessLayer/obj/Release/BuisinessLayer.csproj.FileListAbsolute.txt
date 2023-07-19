@@ -1,0 +1,15 @@
+E:\ReferralDB\BuisinessLayer\bin\Release\BuisinessLayer.dll
+E:\ReferralDB\BuisinessLayer\bin\Release\BuisinessLayer.pdb
+E:\ReferralDB\BuisinessLayer\obj\Release\BuisinessLayer.csprojResolveAssemblyReference.cache
+E:\ReferralDB\BuisinessLayer\obj\Release\BuisinessLayer.dll
+E:\ReferralDB\BuisinessLayer\obj\Release\BuisinessLayer.pdb
+D:\ReferalDBs\ReferralDB14.04\BuisinessLayer\bin\Release\BuisinessLayer.dll
+D:\ReferalDBs\ReferralDB14.04\BuisinessLayer\bin\Release\BuisinessLayer.pdb
+D:\ReferalDBs\ReferralDB14.04\BuisinessLayer\obj\Release\BuisinessLayer.csprojResolveAssemblyReference.cache
+D:\ReferalDBs\ReferralDB14.04\BuisinessLayer\obj\Release\BuisinessLayer.dll
+D:\ReferalDBs\ReferralDB14.04\BuisinessLayer\obj\Release\BuisinessLayer.pdb
+G:\Referral-first commit\Referral[20141114]\BuisinessLayer\bin\Release\BuisinessLayer.dll
+G:\Referral-first commit\Referral[20141114]\BuisinessLayer\bin\Release\BuisinessLayer.pdb
+G:\Referral-first commit\Referral[20141114]\BuisinessLayer\obj\Release\BuisinessLayer.csprojResolveAssemblyReference.cache
+G:\Referral-first commit\Referral[20141114]\BuisinessLayer\obj\Release\BuisinessLayer.dll
+G:\Referral-first commit\Referral[20141114]\BuisinessLayer\obj\Release\BuisinessLayer.pdb

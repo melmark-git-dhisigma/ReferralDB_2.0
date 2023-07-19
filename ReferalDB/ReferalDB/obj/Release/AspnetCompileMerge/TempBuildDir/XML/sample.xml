@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Sections>
+  <Section name="General Family Background Information" id="1">
+    <rows>
+      <row>
+        <cell id="lblMother" type="lblBold" label="Mother" colspan="4"></cell>
+      </row>
+
+      <row>
+        <cell id="lblFather" type="lblBold" label="Father" colspan="4"></cell>
+      </row>
+
+      <row>
+        <cell id="lblMthrFirstName" type="label" label="First name" colspan="1"></cell>
+        <cell id="txtMthrFirstName" type="input[text]" label="First name" modelName="txtMthrFirstName" colspan="1"></cell>
+        <cell id="lblMthrMiddleName"  type="label" label="Middle name" colspan="1"></cell>
+        <cell id="txtMthrMiddleName"  type="input[text]" label="Middle name" colspan="1" modelName="txtMthrMiddleName"></cell>
+      </row>
+
+      <row>
+        <cell id="MaritalStatus|Maried|Seperated|Divorced|Remaried|Widowed|Single"  type="input[checkVt]" Count="7" label="MaritalStatus|Maried|Seperated|Divorced|Remaried|Widowed|Single" colspan="4"></cell>
+      </row>
+
+      <row>
+        <cell id="lblSpecificProb"  type="label" label="List specific problems/behavior presented by the Applicant" colspan="1"></cell>
+        <cell id="txtSpecificProb"  type="input[multitext]" Width="350px" label="SpecificProb" modelName="RefSpecificProb" colspan="3"></cell>
+      </row>
+      
+      <row>
+        <cell id="lblMaidenName" type="label" label="Maiden Name" colspan="1"></cell>
+        <cell id="txtMaidenName" type="input[text]" label="Maiden Name" modelName="RefMaidenName" colspan="1"></cell>
+        <cell id="lblDate"  type="label" label="Date" colspan="1"></cell>
+        <cell id="txtDate"  type="input[textDate]" label="Date" modelName="RefDate" colspan="1"></cell>
+      </row>
+
+      <row>
+        <cell id="lblGender"  type="label" label="Gender" colspan="1"></cell>
+        <cell id="drpGender"  type="input[drop]" label="Gender" modelName="RefGender" colspan="1"></cell>
+        <cell id="lblDOB" type="label" label="Date of Birth" colspan="1"></cell>
+        <cell id="txtDOB" type="input[textDate]" label="Date of Birth" colspan="1" modelName="RefDOB"></cell>
+      </row>
+
+      <row>
+        <cell id="lblMaritalStatus" type="label" label="Marital Status" colspan="1"></cell>
+        <cell id="chkMaritalStatus"  type="input[radio]" Count="7" label="MaritalStatus" colspan="3" modelName="objRelationMthr.txtMaritalStatus" ></cell>
+      </row>
+
+
+
+
+    </rows>
+  </Section>
+</Sections>

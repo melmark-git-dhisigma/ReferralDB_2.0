@@ -1,0 +1,691 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@ViewBag.Title</title>
+
+    <script src="~/Scripts/jquery-2.0.3.js" type="text/javascript"></script>
+    <link href="~/CSS/jquery-ui.css" rel="stylesheet" type="text/css" />
+    @* <script src="~/Scripts/jquery.unobtrusive-ajax.js" type="text/javascript"></script>*@
+    <link href="~/CSS/StyleMaster.css" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/StyleControl.css" rel="stylesheet" type="text/css" />
+    <link href="~/CSS/StyleCommon.css" rel="stylesheet" type="text/css" />
+    @*<script src="~/Scripts/jquery.validate.js" type="text/javascript"></script>*@
+    <script src="~/Scripts/jquery.validationEngine.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.validationEngine-en.js" type="text/javascript"></script>
+    <script src="~/CSS/ValidData.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#UserName').load('../Dashboard/GetUserName'); // To load User Name    
+            $('#LoadChecklist').load('../Details/CheckListData'); // To load Assigned Checklist
+
+            CallLogs();
+
+
+            $('#close_xchk').click(function () {
+
+                $('#divCheckList').hide();
+            });
+
+
+
+
+        });
+
+        function PreventDef(e) {
+            e.preventDefault();
+        }
+
+        var searchString = $('#SearchName').val();
+        if (typeof searchString === "undefined") {
+
+        } else {
+            searchString = encodeURIComponent(searchString);
+        }
+
+
+        function showSearch() {
+            $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + $('#SearchName').val()); // To load Referral details  
+
+            $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details  
+
+            if (type == "Search") {
+                $("#divReferal").slideDown();
+            } else {
+                $("#divReferal").slideToggle();
+            }
+            $("#divLetterTray").slideUp();
+            $("#divCheckList").slideUp();
+        }
+        function ReferalSearchLast() {
+            $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + searchString, function () {
+                $("#divReferal").slideToggle();
+                $("#divReferal").slideDown();
+            }); // To load Referral details
+        }
+        function ReferalBack() {
+            var ID = $('#sessionVal').html();
+            ReferalDetailsSelect(ID);
+        }
+        function CallLogs() {
+            $('#LoadcallLog').load('../CallLog/CallLog'); // To save callLog details  
+
+            //   $("#divLetterTray").slideUp();
+            $("#divcallLog").hide();
+        }
+
+
+        function CallLogsShow() {
+            resetCallLog();
+            //setDateTime();
+            $("#divcallLog").show();
+        }
+
+        function GoReferralMode() {
+
+            // code here;
+
+
+        }
+
+        function setDateTime() {
+            var date = new Date();
+            date.setDate(date.getDate());
+
+            $(document).ready(function () {
+                $('#CallDateShow').datepicker(
+                  {
+                      changeMonth: true,
+                      changeYear: true,
+                      showAnim: "fadeIn",
+                      yearRange: 'c-100:c+100',
+                      minDate: date,
+                      /* fix buggy IE focus functionality */
+                      fixFocusIE: false,
+                  });
+                $('.timer').timeEntry();
+            });
+        };
+
+
+        function resetCallLog() {
+
+            var inputCntrls = $('#divcallLog').find('input,select,textarea');
+            for (var i = 0; i < inputCntrls.length; i++) {
+
+
+                if ($(inputCntrls[i]).is("input")) {
+                    if ($(inputCntrls[i]).attr('type').toLowerCase() != 'button') {
+                        if ($(inputCntrls[i]).attr('id').toLowerCase() != 'calldateshow' && $(inputCntrls[i]).attr('id') != 'CallTimeShow' && $(inputCntrls[i]).attr('id') != 'StaffName') {
+                            $(inputCntrls[i]).val('');
+                        }
+                    }
+                    if ($(inputCntrls[i]).attr('id') == 'CallDateShow') {
+                        var date = new Date();
+                        $("#CallDateShow").val('');
+                        var year = date.getFullYear();
+                        var month = date.getMonth() + 1;
+                        var date = date.getDate();
+                        // alert(date);
+                        var currentDate = ((parseInt(month) < 10) ? "0" + month : month) + "/" + ((parseInt(date) < 10) ? "0" + date : date) + "/" + year;
+                        $("#CallDateShow").val(currentDate);
+                    }
+
+                    if ($(inputCntrls[i]).attr('id') == 'CallTimeShow') {
+                        // alert('hello');
+                        var date = new Date();
+                        $("#CallTimeShow").val('');
+
+                        var hour = date.getHours();
+                        var min = date.getMinutes();
+                        var amPm = 'AM';
+
+                        if (hour > 12) {
+
+                            amPm = "PM";
+                            hour = hour - 12;
+                        }
+
+                        var currentTime = ((parseInt(hour) < 10) ? "0" + hour : hour) + ":" + ((parseInt(min) < 10) ? "0" + min : min);
+
+                        // alert( $("#CallTimeShow").length);
+
+                        $("#CallTimeShow").val(currentTime + amPm);
+                    }
+
+                    if ($(inputCntrls[i]).attr('id') == 'ReferralName') {
+                        $("#ReferralName").val('');
+                        $.get("../Dashboard/GetReferralName", function (Result) {
+                            if (Result != "") {
+                                $("#ReferralName").val(Result);
+                            }
+                        });
+                    }
+
+                }
+                if ($(inputCntrls[i]).is("textarea")) {
+                    $(inputCntrls[i]).val('');
+                }
+                if ($(inputCntrls[i]).is("select")) {
+                    $(inputCntrls[i]).find('option:eq(0)').prop('selected', true);
+                }
+
+            }
+
+        }
+        function resetCallLog2() {
+
+            var inputCntrls = $('#divcallLog').find('input,select,textarea');
+            for (var i = 0; i < inputCntrls.length; i++) {
+
+
+                if ($(inputCntrls[i]).is("input")) {
+                    if ($(inputCntrls[i]).attr('type').toLowerCase() != 'button') {
+                        if ($(inputCntrls[i]).attr('id').toLowerCase() != 'calldateshow' && $(inputCntrls[i]).attr('id') != 'CallTimeShow' && $(inputCntrls[i]).attr('id') != 'StaffName') {
+                            $(inputCntrls[i]).val('');
+                        }
+                    }
+                    if ($(inputCntrls[i]).attr('id') == 'CallDateShow') {
+                        var date = new Date();
+                        $("#CallDateShow").val('');
+                        var year = date.getFullYear();
+                        var month = date.getMonth() + 1;
+                        var date = date.getDate();
+                        // alert(date);
+                        var currentDate = ((parseInt(month) < 10) ? "0" + month : month) + "/" + ((parseInt(date) < 10) ? "0" + date : date) + "/" + year;
+                        $("#CallDateShow").val(currentDate);
+                    }
+
+                    if ($(inputCntrls[i]).attr('id') == 'CallTimeShow') {
+                        // alert('hello');
+                        var date = new Date();
+                        $("#CallTimeShow").val('');
+
+                        var hour = date.getHours();
+                        var min = date.getMinutes();
+                        var amPm = 'AM';
+
+                        if (hour > 12) {
+
+                            amPm = "PM";
+                            hour = hour - 12;
+                        }
+
+                        var currentTime = ((parseInt(hour) < 10) ? "0" + hour : hour) + ":" + ((parseInt(min) < 10) ? "0" + min : min);
+
+                        // alert( $("#CallTimeShow").length);
+
+                        $("#CallTimeShow").val(currentTime + amPm);
+                    }
+
+                }
+                if ($(inputCntrls[i]).is("textarea")) {
+                    $(inputCntrls[i]).val('');
+                }
+                if ($(inputCntrls[i]).is("select")) {
+                    $(inputCntrls[i]).find('option:eq(0)').prop('selected', true);
+                }
+
+            }
+
+        }
+
+
+        function ReferalSearch(type) {
+            var searchString = $('#SearchName').val();
+            var ID = $('#sessionVal').html();
+            var val = $('#hdnradio').val();
+            searchString = searchString + '$' + val;
+            if (parseInt(ID, 10) > 0) {
+                var Val = "";
+                var url = "../Details/StudentStatus";
+                $.get(url, null, function (data) {
+                    Val = data;
+                    alert(Val);
+                    if (Val == "Expired") {
+                        $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details  
+                        $("#divReferal").slideDown();
+                    }
+                    else {
+                        ReferalDetailsSelect(ID);
+                    }
+                });
+
+
+
+            }
+            else {
+                searchString = encodeURIComponent(searchString);
+                if ($('#StudDetails').length) {
+                    $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details 
+                }
+                else {
+                    $('.ContentAreaContainer').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details 
+                }
+                if (type == "Search") {
+                    $("#divReferal").slideDown();
+                } else {
+                    $("#divReferal").slideToggle();
+                }
+
+
+                $("#divLetterTray").slideUp();
+                $("#divCheckList").slideUp();
+            }
+        }
+
+        function GetNameFieldValidate() {
+            $('.namefield').keypress(function (event) {
+                var inputValue = event.which;
+                if (((inputValue >= 65 && inputValue <= 90) || (inputValue >= 97 && inputValue <= 122) || (inputValue == 32) || (inputValue == 39) || (inputValue == 45) || (inputValue == 8) || (inputValue == 0))) {
+                }
+                else {
+                    event.preventDefault();
+                }
+            });
+        }
+
+        function ReferalDetails() {
+
+            $('#StudDetails').load('../Details/StudentDetails'); // To load Referral details    
+            $("#divReferal").slideToggle();
+            $("#divLetterTray").slideUp();
+            $("#divCheckList").slideUp();
+        }
+        function ReferalDetailsSelect(val) {
+           
+            window.location = self.location = '../Dashboard/Dashboard_refMode?stdId=' + val; //kumar
+        }
+        function ReferalDetailsSelect_RM() {
+
+            var stdId = getParameterByName('stdId');
+
+
+            stdIdSplit = stdId.split('^');
+            stdId = stdIdSplit[0];
+
+            if (stdId == "na") {
+                $.get("../Dashboard/ResetReferralID", function (dataResult) {
+                    if (dataResult == "true") {
+
+                        var Serverdata = $('#hdnServer').val();
+                        if (Serverdata == "NE") {
+                            jQuery.ajax({
+                                async: false,
+                                type: 'GET',
+                                url: '../GeneralInfo/ResetSessionTab',
+                                data: null,
+                                error: function (xhr, textStatus, errorThrown) {
+                                    // Look at the `textStatus` and/or `errorThrown` properties.
+                                }
+                            });
+
+                            // $('#LoadQueue').load('../GeneralInfo/Index');
+                            OpenSublinks('reffQuickUpt', 'New Applicant', 0);
+                        }
+                        else {
+                            jQuery.ajax({
+                                async: false,
+                                type: 'GET',
+                                url: '../RefferalApplicantPE/ResetSessionTab',
+                                data: null,
+                                error: function (xhr, textStatus, errorThrown) {
+                                    // Look at the `textStatus` and/or `errorThrown` properties.
+                                }
+                            });
+                            //$('#LoadQueue').load('../RefferalApplicantPE/RefferalApplicantPE');
+                            OpenSublinks('reffQuickUpt', 'New Applicant', 0);
+                        }
+
+                    } else {
+                        alert("Error...");
+                    }
+                });
+
+                $('.optDefMenu').hide();
+            }
+            else {
+                $("#divLetterTray").slideUp();
+                $("#divCheckList").slideUp();
+                // $("#divReferal").show();
+                $('#content').load('../Details/StudentDetailsSelect_refMode?ReferralId=' + stdId); // To load Referral details 
+
+
+                if (stdIdSplit.length > 1) {
+
+                    var rowid = stdIdSplit[1];
+                    var type = stdIdSplit[2];
+
+                    HidePopups();//AR_Academic Review_4_true_0..............rowid, type
+
+                    $.get("../Dashboard/SelectReferral?Refid=" + rowid, function (data) {
+
+                        var Qname = data.split('_');
+
+                        if ($('#hdnQueue').val() == "" && type == "btn") {
+                            $('#hdnQueue').val('1, Referral');
+                        }
+                        var CurrentTab = $('#hdnQueue').val().split(',');
+
+                        var nextTab = CurrentTab[0];
+                        var coutPls = parseInt(nextTab);
+                        coutPls = coutPls + 1;
+
+                        var TabId = CurrentTab[0];
+
+                        $('#divCheckList').slideUp("fast");
+
+                        if (type == "chk") {
+                            SelectSubHeading();
+                            $('#' + Qname[2]).parent().css("display", "block");
+                            $('#' + Qname[2]).attr('class', 'SubHeadingSelect');
+                            $.get("../Dashboard/GetReferralName", function (Result) {
+                                document.getElementById('HeadingDiv').innerHTML = Qname[1] + " - " + Result;
+                            });
+                            SelSublink(Qname[0]);
+                        }
+                        else {
+
+                            if (Qname[3] == "false") {
+                                $.get("../Dashboard/SelectQueueType?QueueId=" + TabId, function (result) {
+
+                                    if (result == "RL") {
+                                        OpenNewApplicant(CurrentTab[1]);
+                                    }
+                                    else if (result == "CL") {
+                                        OpenNewApplicant(CurrentTab[1]);
+                                    }
+                                    else {
+                                        $.get("../Dashboard/SelectQueueName?QueueId=" + Qname[2], function (result) {
+                                            // alert(Qname[2])
+                                            SelectHeader(Qname[2] + "," + result);
+                                        });
+                                    }
+                                });
+                            }
+                            else {
+
+                                //$('#content').load('../Dashboard/GetLeftMenu'); // To load Left Menu
+                                SelectSubHeading();
+                                $.get("../Dashboard/SelectQueueType?QueueId=" + TabId, function (result) {
+                                    if (result == "RL") {
+                                        OpenNewApplicant(CurrentTab[1]);
+                                    }
+                                    else if (result == "CL") {
+                                        OpenNewApplicant(CurrentTab[1]);
+                                    }
+                                    else {
+                                        var selectedMasterId = parseInt(CurrentTab[0]);
+                                        var currentMasterId = parseInt(Qname[4]);
+                                        if (currentMasterId > selectedMasterId) {
+                                            $('#' + coutPls).parent().css("display", "block");
+                                            $('#' + coutPls).attr('class', 'SubHeadingSelect');
+                                            $.get("../Dashboard/GetReferralName", function (Result) {
+                                                $.get("../Dashboard/SelectQueueName?QueueId=" + coutPls, function (result1) {
+                                                    document.getElementById('HeadingDiv').innerHTML = result1 + " - " + Result;
+                                                    Qname[2] = result1;
+                                                });
+
+                                            });
+                                            $.get("../Dashboard/SelectQueueType?QueueId=" + coutPls, function (result2) {
+                                                SelSublink(result2);
+                                            });
+                                        }
+                                        else {
+                                            $('#' + Qname[2]).parent().css("display", "block");
+                                            $('#' + Qname[2]).attr('class', 'SubHeadingSelect');
+                                            $.get("../Dashboard/GetReferralName", function (Result) {
+                                                document.getElementById('HeadingDiv').innerHTML = Qname[1] + " - " + Result;
+                                            });
+                                            SelSublink(Qname[0]);
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        //$('#content').load('../Dashboard/GetLeftMenu');  //// To Load Left Panel
+                        $('#hdnMenuActive').val(Qname[2]);
+                        ActivateMenuSelection();
+                    });//pramod
+
+                    var elem = rowid.split('_');
+
+                    $('#StudDetails').load('../Details/StudentDetailsSelect?ReferralId=' + elem[0]); // To load Referral details    
+
+
+
+                }
+                else {
+                   
+                    OpenSublinks('reffQuickUpt', 'New Applicant', 2);
+                }
+            }
+        }
+
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function CallLogDetailsSelect(val) {
+            $('#LoadcallLogViewdetails').load('../CallLog/callDetailsSelect?CallLogId=' + val); // To load call log conversation details    
+            $("#divLetterTray").slideUp();
+            $("#divCheckList").slideUp();
+            $("#divReferal").slideUp();
+            $("#divcallLogViewdetails").slideDown();
+
+        }
+        function checklistAssigned() {
+            $('#LoadChecklist').load('../Details/CheckListData');
+            $("#divLetterTray").slideUp();
+            $("#divCheckList").slideToggle();
+            $("#divReferal").slideUp();
+        }
+        //function LetterTray() {
+        //    $('#LoadLetterTray').load("../PreAdmission/LetterGenerationView", function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+        //        $('#LoadLetterTray').html(responseTxt);
+        //    });
+        //    $("#divLetterTray").slideToggle();
+        //    $("#divCheckList").slideUp();
+        //    $("#divReferal").slideUp();
+        //}
+        function closeDiv(obj) {
+            //alert('obj:' + obj + '// ' + $('#' + obj).length);
+            $('#' + obj).hide();
+        }
+        //function loadmaster() {
+
+        //    $.post("../Dashboard/loadMaster");
+
+
+        //}
+        function LoadClient() {
+            var text = "CL,Client List";
+            $('#MidContent').load("../Dashboard/DefaultDashboard?Name=" + encodeURI(text));
+        }
+
+
+
+    </script>
+    <style type="text/css">
+        .ui-dialog {
+            z-index: 9999 !important;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div class="mainContainer">
+
+        <div class="topHead">
+            <a class="admin" href="#">
+                <div id="UserName"></div>
+                <div id="sessionVal" style="visibility: hidden;"></div>
+                <input type="hidden" id="hdnradio" />
+            </a>
+            <a class="logout" href="../Login/Logout">Logout</a>
+            <a class="checkList" href="#" onclick="checklistAssigned();">Assigned CheckList</a>
+            <a class="checkList" href="#" onclick="GetLetterTray1('Search');" style="width: 6%; background: url(../Images/LetterTray.png) left 5px no-repeat; padding-left: 23px;">Letter Tray</a>
+            <a class="checkList" style="width: 6%; background: url(../Images/notifications.PNG) left 5px no-repeat; padding-left: 23px;" href="#" onclick="GetNotification();">Notifications</a>
+            <a class="checkList" href="../../LoginContinue.aspx" style="width: 8%; background: url(../Images/hm.PNG) left 5px no-repeat; padding-left: 23px;">Landing Portal</a>
+          
+        </div>
+
+        <div class="Dashboard-logo"></div>
+        <div class="contentPart">
+            <div class="logoContainer">
+                <div class="imgcorner">
+                </div>
+                <ul> 
+                    @if (ViewBag.permission == "true")
+                    {
+                    <li onclick="ReferalDetailsSelect('na')"><a>
+                       
+                        <img src="~/Images/Reports.png" width="26" height="23" alt="" /><br>
+                        New Applicant</a></li>
+                    
+                    <li onclick="CallLogsShow()"><a>
+                        <img src="~/Images/phone.png" width="26" height="23" alt="" /><br>
+                        Contact Log</a></li>
+                    
+                    <li onclick=""><a href="../AdminView/AdminView">
+                        <img src="~/Images/visual.png" width="26" height="23" alt="" /><br>
+                        Admin</a></li>
+                    }
+                    <li onclick=""><a href="../Dashboard/Dashboard">
+                        <img src="~/Images/home.png" width="26" height="23" alt="" /><br>
+                        Home</a></li>
+                    <li onclick=""><a href="../Reports/ReferralReports.aspx">
+                        <img src="~/Images/Reports.png" width="26" height="23" alt="" /><br>
+                        Reports</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+
+            <div class="ContentAreaContainer">
+
+
+                @RenderBody()
+
+                <div class="clear"></div>
+            </div>
+
+            <div class="clear"></div>
+        </div>
+
+        <div class="clear"></div>
+        <div class="footer">
+            <img src="~/Images/smllogo.JPG" width="109" height="18" />
+
+            <div class="copyright">&copy; Copyright 2015, Melmark, Inc. All rights reserved.</div>
+
+        </div>
+
+
+        <div class="clear"></div>
+    </div>
+
+    <div class="popUpStyle" id="divCheckList" style="width: 1000px; height: 400px; left: 11%; top: 15%;">
+        <a id="close_xchk" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 5px; margin-top: 0px; z-index: 300" /></a>
+
+        <div>
+
+            <br />
+            <hr style="margin-top: 25px;" />
+            <div>
+                <h4>Assigned CheckList</h4>
+            </div>
+            <div id="LoadChecklist" style="overflow-y: auto; overflow-x: hidden; height: 290px;"></div>
+
+        </div>
+    </div>
+
+    <div id="divLetterTray" class="popUpStyle" style="width: 76%; height: 70%; left: 11%; top: 15%; overflow-y: auto; overflow-x: hidden">
+        <a id="close_x" onclick="closeDiv('divLetterTray')" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 22px; margin-top: 16px; z-index: 300" /></a>
+
+        <br />
+        <hr />
+
+        <div id="LoadLetterTray"></div>
+
+    </div>
+
+    <div id="divcallLog" class="popUpStyle" style="width: 63%; height: 70%; left: 11%; top: 15%; overflow-y: auto; overflow-x: hidden; z-index: 1000 !important">
+        <a id="close_x1" onclick="javascript: $('#divcallLog').hide();" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 22px; margin-top: 16px; z-index: 300" /></a>
+
+        <br />
+        <hr />
+        <div class="messageDiv" style="color: red;"></div>
+        <div id="LoadcallLog"></div>
+
+    </div>
+    <div id="divcallLogView" class="popUpStyle" style="width: 63%; height: 70%; left: 11%; top: 15%; overflow-y: auto; overflow-x: hidden; z-index: 100 !important">
+        <a id="close_x2" onclick="javascript: $('#divcallLogView').hide();" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 22px; margin-top: 16px; z-index: 300" /></a>
+
+        <br />
+        <hr />
+
+        <div id="LoadcallLogView"></div>
+
+    </div>
+
+    <div id="divcallLogViewdetails" class="popUpStyle" style="width: 63%; height: 70%; left: 11%; top: 15%; overflow-y: auto; overflow-x: hidden; z-index: 100 !important">
+        <a id="close_x3" onclick="javascript: $('#divcallLogViewdetails').hide();" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 22px; margin-top: 16px; z-index: 300" /></a>
+
+        <br />
+        <hr />
+
+        <div id="LoadcallLogViewdetails"></div>
+
+    </div>
+    <div id="divNotify" class="popUpStyle" style="width: 800px; height: 400px; left: 11%; top: 15%; z-index: 1000;">
+        <a onclick="javascript: $('#divNotify').hide();" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 5px; margin-top: 0px; z-index: 300" /></a>
+
+        <div>
+
+
+            <br />
+            <hr />
+            <div>
+                <h4>Notifications</h4>
+            </div>
+            <div class="messageDiv" style="color: red;"></div>
+            <div id="LoadNotification" style="overflow-y: auto; overflow-x: hidden; height: 300px;"></div>
+
+        </div>
+    </div>
+
+    <div id="divLetter" class="popUpStyle" style="width: 800px; height: 400px; left: 11%; top: 15%; z-index: 1000;">
+        <a onclick="javascript: $('#divLetter').hide();" class="close sprited1" href="#" style="">
+            <img src="../Images/button_red_close.png" height="18" width="18" alt="" style="float: right; margin-right: 5px; margin-top: 0px; z-index: 300" /></a>
+
+        <div>
+
+            <br />
+            <hr />
+            <div>
+                <h4>Letter Tray</h4>
+            </div>
+            <div class="messageDiv" style="color: red;"></div>
+            <div id="LoadLetter"></div>
+
+        </div>
+    </div>
+
+</body>
+</html>
+

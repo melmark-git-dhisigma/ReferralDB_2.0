@@ -1,0 +1,311 @@
+﻿@model ReferalDB.Models.EngineViewModels
+
+@{
+    ViewBag.Title = "Letter Engine";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<meta http-equiv="X-UA-Compatible" content="IE=10,9" />
+<link href="~/CSS/StyleBars.css" rel="stylesheet" type="text/css" />
+<script src="~/Scripts/tiny_mce/tiny_mce.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+<link href="~/CSS/StyleEngine.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+    tinyMCE.init({
+        // General options
+        mode: "textareas",
+        theme: "advanced",
+        plugins: "lists,style,layer,table,save,advhr,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,searchreplace,contextmenu,paste,directionality,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist,autosave,visualblocks,tabfocus",
+        auto_focus: "ItemContent",
+        // Theme options
+        theme_advanced_buttons1: "bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+        theme_advanced_buttons2: "cut,copy,paste,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+        theme_advanced_buttons3: "hr,|,sub,sup,|,charmap,emotions,iespell,advhr,|del,ins,attribs,|restoredraft",
+
+        theme_advanced_toolbar_location: "top",
+        theme_advanced_toolbar_align: "left",
+        theme_advanced_statusbar_location: "bottom",
+        theme_advanced_resizing: true,
+
+
+        template_external_list_url: "lists/template_list.js",
+        external_link_list_url: "lists/link_list.js",
+        external_image_list_url: "lists/image_list.js",
+        media_external_list_url: "lists/media_list.js",
+
+        // Style formats
+        style_formats: [
+        { title: 'Bold text', inline: 'b' },
+        { title: 'Red text', inline: 'span', styles: { color: '#ff0000' } },
+        { title: 'Red header', block: 'h1', styles: { color: '#ff0000' } },
+        { title: 'Example 1', inline: 'span', classes: 'example1' },
+        { title: 'Example 2', inline: 'span', classes: 'example2' },
+        { title: 'Table styles' },
+        { title: 'Table row 1', selector: 'tr', classes: 'tablerow1' }
+        ],
+
+        // Replace values for the template plugin
+
+    });
+
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            if (document.getElementById('LetterEngineName').value == "") {
+                document.getElementById('tdMsg').innerHTML = "<div class='warning_box'>Please enter letter template name</div>";
+                return false;
+            }
+            return true;
+        });
+
+        $("#btnAdd").click(function () {
+            if (document.getElementById('ChecklistEngineName').value == "") {
+                document.getElementById('tdMsg1').innerHTML = "<div class='warning_box'>Please enter checklist header</div>";
+                return false;
+            }
+            return true;
+        });
+
+
+        $("#letterTemplate").click(function () {
+
+            $("#WrapLetter").slideToggle("fast");
+        });
+
+        function insertYourContent(id) {
+            tinyMCE.activeEditor.execCommand('mceInsertContent', false, ' ' + id + ' ');
+        }
+
+        var buttons = document.getElementsByClassName('greenbar');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener('click', function () {
+                insertYourContent(this.id);
+            });
+        }
+
+
+
+    });
+
+    function ShowChecklist() {
+        document.getElementById('SectionLetter').style.display = "none";
+        document.getElementById('SectionChecklist').style.display = "block";
+    }
+    function ShowLetterlist() {
+        document.getElementById('SectionLetter').style.display = "block";
+        document.getElementById('SectionChecklist').style.display = "none";
+    }
+    function bindEvent(target, eventName, fun) {
+        if (target.addEventListener) {
+            target.removeEventListener(eventName, fun, false);
+            target.addEventListener(eventName, fun, false);
+        } else {
+            var name = "on" + eventName;
+            target.detachEvent(name);
+            target.attachEvent(name, function () { fun(eventName); });
+        }
+    }
+
+    function closeLetter(btnid) {
+        var message = confirm('Are you sure want to delete the letter template?')
+        if (message.toString() == "true") {
+            $('#' + btnid).remove();
+            window.location = "/Engine/DeleteLetter?Id=" + btnid;
+
+        }
+    }
+
+    function closeChecklist(btnid, QueueId) {
+        var message = confirm('Are you sure want to delete the checklist item?')
+        if (message.toString() == "true") {
+            window.location = "/Engine/DeleteChecklist?Id=" + btnid + "," + QueueId;
+
+        }
+    }
+
+    function fillLetter(LetterId) {
+        document.getElementById('letterid').value = LetterId;
+       
+        $.get("/Engine/fillLetter?id=" + LetterId, function (data) {
+            tinymce.get('ItemContent').setContent('');
+            document.getElementById('LetterEngineName').value = data.LetterEngineName;
+            tinymce.get('ItemContent').setContent(data.ItemContent);
+           // document.getElementById('btnSave').value = "Update";
+           
+           
+           
+        });
+    }
+
+    function NewLetter() {
+        document.getElementById('LetterEngineName').value = "";
+        tinymce.get('ItemContent').setContent('');
+        document.getElementById('btnSave').value = "Save";
+        document.getElementById('letterid').value = 0;
+    }
+
+    function DisplayNewRow(tableid, letterTempId) {
+        var table = document.getElementById(tableid);
+        var rowid = tableid + (table.rows.length + 1);
+        var row = table.insertRow(-1);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var textid = 'txt' + rowid;
+        cell1.innerHTML = 'Checklist Item Name: <input type="text" id="txt' + rowid + '" value="" />';
+        cell2.innerHTML = ' <input type="button" id="btn' + rowid + '" value="Add" onclick="AddChecklistRow(' + letterTempId + ',"' + textid + '");" />';
+    }
+
+    function AddChecklistRow(lettertempid, textid) {
+        var chkItem = document.getElementById(textid).value;
+    }
+</script>
+<h2>LetterEngine</h2>
+<body>
+    <div>
+        @using (Html.BeginForm("SaveLetterEngine", "Engine", FormMethod.Post))
+        {
+            <div class="leftContainer">
+
+                <div class="orangebar" onclick="ShowLetterlist();">
+                    <div style="float: left; width: 85%; height: 25px; cursor: pointer;" id="letterTemplate"><a>Letter Engine</a></div>
+
+
+                    <div style="float: left; width: 15%; height: 25px; margin-top: 5px; color: white;" onclick="NewLetter();">New</div>
+
+
+                </div>
+                <div id="WrapLetter">
+                    @foreach (var item in Model.listItem)
+                    {
+                        if (@item.LetterEngineType == "Letter")
+                        {        
+                        <div id="@item.LetterEngineId" class="sublink">
+
+                            <div style="float:left;width:90%;height:25px;cursor:pointer; " onclick="fillLetter(@item.LetterEngineId);">@item.LetterEngineName</div>
+                            <div style="float: left; width: 10%; height: 25px;"><a class="imgbox" onclick="closeLetter(@item.LetterEngineId)"></a></div>
+
+                        </div>
+                        }
+                    }
+                </div>
+
+                <div class="orangebar" onclick="ShowChecklist();">
+                    <a>Checklist Engine</a>
+                </div>
+            </div>
+            
+            <div id="SectionLetter">
+
+                <div class="middleContainer">
+                    <div id="tdMsg"></div>
+                    <div>@Html.Raw(ViewData["Message"])</div>
+                    Letter Template Name  <span style="color: red">*</span>  @Html.TextBoxFor(m => Model.LetterEngineName, new { @style = "width:80%;margin-top:2%;" })<br />
+                    <br />
+                    <br />
+                    @Html.TextAreaFor(m => Model.ItemContent, new { @style = "width:100%;margin-top:2%;height:370px;" })
+
+                    <br />
+                    <br />
+                    @if (ViewBag.permission == "true")
+                    {
+                        <input id="btnSave" type="submit" value="Save" name="btnSave" class="NFButton" />
+                    }
+                    <input id="letterid" type="hidden" name="letterid" value="" />
+
+                </div>
+
+                <div class="rightContainer">
+
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[Refferal Name]" value="Refferal Name" />
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[First Name]" value="First Name" />
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[Last Name]" value="Last Name" />
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[Date of birth]" value="Date of birth" />
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[Date]" value="Date" />
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[Address]" value="Address" />
+                    <input type="button" style="float: none; margin-top: 4px; width: 232px" id="[Application Name]" value="Application Name" />
+
+                </div>
+
+            </div>
+        }
+
+        <div id="SectionChecklist" class="middleContainer" style="width: 78%; display: none">
+
+            @using (Html.BeginForm("SaveChecklist", "Engine", FormMethod.Post))
+            {
+                <div style="background-color: #1EB53A; height: 25px; font-size: 18px; font-weight: bold; color: #FFFFFF;">Parent Interview Checklist</div>
+                <div id="tdMsg1"></div>
+                <div>@Html.Raw(ViewData["Chkmsg"])</div>
+                <div>
+
+                    <table id="tblchkList" style="width: 100%">
+                        <tr>
+                            <td>Checklist Item Header</td>
+                            <td><span style="color: red">*</span> @Html.TextBoxFor(m => Model.ChecklistEngineName, new { @style = "width:80%;margin-top:2%;" })</td>
+                            <td>Checklist Item Name</td>
+                            <td>@Html.TextBoxFor(m => Model.ItemContent, new { @style = "width:80%;margin-top:2%;" })</td>
+                            <td>
+                                @if (ViewBag.permission == "true")
+                                {
+                                    <input id="btnAdd" type="submit" value="Add" name="btnAdd" class="NFButton" />
+                                }
+                            </td>
+                        </tr>
+                        @*<tr class="HeaderStyle">
+                            <th class="tdLabel">Item Name</th>
+                            <th class="tdLabel">New</th>
+                            <th class="tdLabel">Delete</th>
+                        </tr>*@
+                        <tr class="RowStyle">
+                            <td colspan="5">
+                                @foreach (var itemlist in Model.listItem)
+                                {
+                                    if (itemlist.LetterEngineType == "Check")
+                                    {
+                                    <table style="width: 100%">
+                                        <tr style="background-color: #1EB53A; color: white; height: 35px; font-size: 15px; font-weight: bold">
+                                            <td style="width: 80%">
+                                                @itemlist.LetterEngineName
+                                            </td>
+                                            <td style="float:right;width:20%" onclick="DisplayNewRow('@string.Concat(itemlist.LetterEngineId, "chk")',@itemlist.LetterEngineId);">
+                                                <div style="cursor: pointer;">New</div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td colspan="2">
+
+                                                <table style="width:100%" id='@string.Concat(itemlist.LetterEngineId, "chk")'>
+
+                                                    @foreach (var item in Model.ContentlistItem)
+                                                    {
+                                                        if (@item.chkEngineId == @itemlist.LetterEngineId)
+                                                        {
+                                                        <tr style="height: 30px">
+                                                            <td style="width: 80%">@item.ChecklistContent</td>
+                                                            <td style="float: right; width: 20%;">
+                                                                @if (ViewBag.permission == "true")
+                                                                {
+                                                                    <img src="~/Images/Delete.png" onclick="closeChecklist(@item.chkEngineitemId,@itemlist.QueueId)" />
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        }
+
+                                                    }
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    </table>
+
+                    @* <div class="pager">@Html.RenderPartial("Pager", Model.pageModel)</div>*@
+                </div>
+            }
+        </div>
+    </div>
+</body>

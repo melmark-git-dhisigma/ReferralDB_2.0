@@ -1,0 +1,67 @@
+﻿<%@ Master Language="C#" Inherits="System.Web.Mvc.ViewMasterPage" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <script src="../../Documents/JS/jquery-1.8.0.min.js"></script>
+    <script src="../../Documents/JS/jquery.form.js"></script>
+    <%-- <script src="../../Documents/JS/jquery-ui-1.10.3.custom.js"></script>--%>
+    <link href="../../Documents/CSS/jquery-ui-1.10.3.custom.css" rel="stylesheet" />
+    <script src="../../Documents/JS/jquery.validationEngine-en.js"></script>
+    <script src="../../Documents/JS/jquery.validationEngine.js"></script>
+    <script src="../../Documents/JS/jquery.unobtrusive-ajax.js"></script>
+    <link href="../../Documents/CSS/jquery-ui.css" rel="stylesheet" />
+    <script src="../../Documents/JS/jquery-ui-1.11.2.js"></script>
+    <link href="../../Documents/CSS/validationEngine.jquery.css" rel="stylesheet" />
+    <link href="../../Documents/CSS/style.css" rel="stylesheet" />
+
+    <title>
+        <asp:ContentPlaceHolder ID="TitleContent" runat="server" />
+    </title>
+    <style type="text/css">
+        .selectbg11 {
+            border: medium none !important;
+            font-size: 9px;
+            margin-right: 8px;
+            margin-top: 10px;
+            width: 165px;
+        }
+    </style>
+    <style type="text/css">
+        #ajaxloader {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255,255,255, .8 ) url('../Documents/images/loading.gif') 50% 50% no-repeat;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ajaxStart(function () {
+            $('#ajaxloader').fadeIn();
+        }).ajaxStop(function () {
+            $('#ajaxloader').fadeOut();
+        });
+        $(function () {
+            $('.home').click(function () {
+                window.location.href = "../Client/ListClients?argument=*&bSort=false";
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <div id="loadcontiner"></div>
+    <div>
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </div>
+    <div id="ajaxloader"></div>
+</body>
+</html>

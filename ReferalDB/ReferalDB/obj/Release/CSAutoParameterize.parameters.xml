@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="dbConnectionString-Web.config Connection String" description="dbConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=DHILP007\DHILP007;Initial Catalog=MelmarkNE;User ID=sa;Password=sqladmin" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="G:\\Referral-first\ commit\\Referral\[20141114]\\ReferalDB\\ReferalDB\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='dbConnectionString']/@connectionString" />
+  </parameter>
+  <parameter name="MelmarkDBEntities-Web.config Connection String" description="MelmarkDBEntities Connection String used in web.config by the application to access the database." defaultValue="metadata=res://*/MelmarkDB.csdl|res://*/MelmarkDB.ssdl|res://*/MelmarkDB.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=DHILP007\DHILP007;initial catalog=MelmarkNE;user id=sa;password=sqladmin;MultipleActiveResultSets=True;App=EntityFramework&quot;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="G:\\Referral-first\ commit\\Referral\[20141114]\\ReferalDB\\ReferalDB\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='MelmarkDBEntities']/@connectionString" />
+  </parameter>
+</parameters>

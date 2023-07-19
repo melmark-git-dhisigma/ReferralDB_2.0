@@ -1,0 +1,617 @@
+﻿@model ReferalDB.Models.StdDetailsViewModel
+<style>
+    .imgOver {
+        background: none !important;
+        height: 130px !important;
+        left: 25px !important;
+        top: 35px !important;
+        width: 130px !important;
+    }
+
+    .tdStyleInner {
+        color: #6B6B6B;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 12px;
+    }
+
+    .CurrentQueue {
+        background: linear-gradient(to bottom, #66D671 0%, #16AD37 50%, #66D671 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
+        border-radius: 4px;
+        color: #FFFFFF !important;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        height: 35px;
+        margin: 0 0 4px !important;
+        padding-top: 2px;
+        width: 100%;
+    }
+    .ui-menu {
+        z-index: 1000 !important;
+    }
+</style>
+
+<div class="popMainContainer">
+
+
+    @if (Model.Search == "YES")
+    {
+        <div id="searchStudent" style="width: 99%;">
+            <table style="width: 100%">
+                <tr>
+                    <td colspan="4" style="">
+                        <div>
+                            <h4>Referral Search</h4>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+      
+        <div class="searchDiv" style="width: 600px;">
+            @{
+        string yescheck = "";
+        string nocheck = "";
+        if (ViewBag.type != null)
+        {
+            if (ViewBag.type == "1")
+            {
+                yescheck = "checked";
+            }
+            else
+            {
+                nocheck = "checked";
+            }
+        }
+        else
+        {
+
+            yescheck = "checked";
+        }
+        
+            
+            }
+            <table>
+                <tr>
+                    <td>@Html.TextBoxFor(m => m.SearchName, Model.SearchName, new { @class = "txtEnter", @style = "width:250px !important;margin:0px !important;font-style:italic;" })
+                        
+
+
+                    </td>
+                    <td>
+                        <input type="button" id="btnSearch" value="Search" onclick="ReferalSearch('Search');" /></td>
+                    <td>
+                        <input id="radioCheckYes" type="radio" @MvcHtmlString.Create(yescheck) name="approvedStatus" onclick="SelectReferrals('Yes');"  value="1"/>Referral List</td>
+                    <td>
+                        <input id="radioCheckNo" type="radio" @MvcHtmlString.Create(nocheck) name="approvedStatus" onclick="SelectReferrals('No');" value="2"/>Client List</td>
+                </tr>
+            </table>
+
+
+
+
+
+
+
+        </div>
+     
+        if (Model.studentPersonalName == null)
+        {
+            if (ViewBag.SearchDetails != null)
+            {
+                IList<ReferalDB.CommonClass.StudentSearchDetails> Details = (IList<ReferalDB.CommonClass.StudentSearchDetails>)ViewBag.SearchDetails;
+
+
+                if (Details != null)
+                {
+                    if (Details.Count > 0)
+                    {
+                
+                
+        <table width="100%" border="0" cellpadding="0" class="gridStyle" cellspacing="0">
+            <tr class="HeaderStyle" style="color: white !Important">
+                <td style="color: white; font-weight: bold; padding-left: 2px;">Referral Id</td>
+                <td style="color: white; font-weight: bold;">Referral Name</td>
+                <td style="color: white; font-weight: bold;">Birth Date</td>
+                <td style="color: white; font-weight: bold;">Admission Date</td>
+                <td style="color: white; font-weight: bold;">Funding Verification</td>
+                <td style="color: white; font-weight: bold;">Referral Status</td>
+                <td style="color: white; font-weight: bold;">More Details</td>
+            </tr>
+
+            @*@for (int i = 0; i < Details.Count; i++)
+            {
+                if(i<40)
+                {   
+                *@
+
+
+            @if (Details.Count > 40)
+            {
+                for (int i = (Details.Count - 1); i > 0; i--)
+                {
+                    int cnt = Details.Count;
+                    if (cnt > 40)
+                    {
+                        cnt = Details.Count - 40;
+                    }
+                    if (i >= cnt)
+                    { 
+                <tr>
+                    <td style="padding-left: 2px;">@Details[i].ReferralId</td>
+                    <td>@Details[i].ReferralName</td>
+                    <td>@Details[i].BirthDate</td>
+                    <td>@Details[i].AdmissionDate</td>
+                    <td>@{
+                        if (Details[i].FundingVerification == true)
+                        {
+                        <span>Yes</span>
+                        }
+                        else
+                        {
+                        <span>No</span>
+                        }
+                    
+                    }</td>
+                    <td>
+
+
+                        @{
+                        if (Details[i].WaitingList == true)
+                        { 
+                            <span>Waiting List</span>
+                        }
+
+                        if (Details[i].InactiveList == true)
+                        {
+                            <span>Inactive</span>
+                        }
+
+                        if (Details[i].WaitingList == false && Details[i].InactiveList == false)
+                        {
+                            <span>Active</span>
+                        }
+                        }
+
+                    </td>
+                    @if (Details[i].WaitingList == true)
+                    {
+                        <td><a href="#" style="color:orange;" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+                    else if (Details[i].InactiveList == true)
+                    {
+                        <td><a href="#" style="color:red;" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+
+                    else
+                    {
+                        <td><a href="#" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+
+
+                </tr>
+                    }
+
+                }
+            }
+            else
+            {
+                for (int i = (Details.Count - 1); i >= 0; i--)
+                {
+                
+                <tr>
+                    <td style="padding-left: 2px;">@Details[i].ReferralId</td>
+                    <td>@Details[i].ReferralName</td>
+                    <td>@Details[i].BirthDate</td>
+                    <td>@Details[i].AdmissionDate</td>
+                    <td>@{
+                    if (Details[i].FundingVerification == true)
+                    {
+                        <span>Yes</span>
+                    }
+                    else
+                    {
+                        <span>No</span>
+                    }
+                    
+                    }</td>
+                    <td>
+
+
+                        @{
+                    if (Details[i].WaitingList == true)
+                    { 
+                            <span>Waiting List</span>
+                    }
+
+                    if (Details[i].InactiveList == true)
+                    {
+                            <span>Inactive</span>
+                    }
+
+                    if (Details[i].WaitingList == false && Details[i].InactiveList == false)
+                    {
+                            <span>Active</span>
+                    }
+                        }
+
+                    </td>
+                    @if (Details[i].WaitingList == true)
+                    {
+                        <td><a href="#" style="color:orange;" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+                    else if (Details[i].InactiveList == true)
+                    {
+                        <td><a href="#" style="color:red;" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+
+                    else
+                    {
+                        <td><a href="#" onclick="ReferalDetailsSelect(@Details[i].ReferralId)" >Details</a> </td>
+                    }
+                     
+
+                </tr>
+                
+                
+                }
+            }
+
+        </table>
+                    }
+                    else
+                    {                
+        <div id="nodatafound" style="font-size: 15px; font-weight: bold; margin: 6% auto 0px; width: 100%; height: 50px; padding-top: 25px; text-align: center; background-color: rgb(126, 171, 190); color: ghostwhite;">Search details cannot found,try again...</div>
+                    }
+
+                }
+                else
+                {                
+        <div id="nodatafound" style="font-size: 15px; font-weight: bold; margin: 6% auto 0px; width: 100%; height: 50px; padding-top: 25px; text-align: center; background-color: rgb(126, 171, 190); color: ghostwhite;">Search details cannot found,try again...</div>
+                }
+            }
+        }
+    }
+    @if (Model.studentPersonalName != null)
+    {
+        <div id="studentDet">
+
+            <table width="98%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td rowspan="4" b width="20%">
+                        <div class="photoContainer">
+
+                            @if (Model.ImageUrl == "" || Model.ImageUrl == "/Images/Male.png" || Model.ImageUrl == "/Images/Female.png")
+                            {
+                                if (Model.Gender == "Male")
+                                {
+                                <img src="~/Images/Male.png" style="width: 67px; height: 67px;" />
+                                }
+                                else
+                                { 
+                                <img src="~/Images/Female.png" style="width: 67px; height: 67px;" />
+                                }
+                            }
+                            else
+                            {
+                                string URL = Model.ImageUrl;
+                                <img src="data:image/gif;base64,@URL" class="photo" width="109" height="125" />}
+                        </div>
+                    </td>
+                    <td width="80%" colspan="2">
+
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr">
+                            <tr>
+                                <td width="50%" class="topbdr">
+
+                                    <p><strong>ID:-</strong> @Model.StudentPersonalId </p>
+
+                                </td>
+                                <td width="50%" class=" topbdr nobdr">
+                                    <p><strong>Referral Name :-</strong> @Model.studentPersonalName </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>
+                                        <strong>Birth Date :-</strong> @if (Model.BirthDate != null)
+                                                                       { Model.BirthDate = Convert.ToDateTime(Model.BirthDate).ToString("MM'/'dd'/'yyyy"); }
+                                        @Model.BirthDate
+                                    </p>
+                                </td>
+                                <td class="nobdr">
+                                    <p><strong>Gender :-</strong> @Model.Gender </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>
+                                        <strong>Status:-</strong>@Model.currentQueue
+
+                                    </p>
+                                </td>
+                                <td class="nobdr">
+                                    @if (Model.FVqueueStatus == true)
+                                    {
+                                        <p><strong>Funding Approved :-</strong> Yes </p>
+                                    }
+                                    else
+                                    {
+                                        <p><strong>Funding Approved :-</strong> No </p>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                @*<td>
+                            <p><strong>Primary Language :-</strong> @Model.PrimaryLanguage </p>
+                        </td>*@
+                                <td>
+                                    @{
+                                    string AppDate = "";
+                                    }
+                                    @if (Model.ApplicationDate != null)
+                                    {
+                                        AppDate = Convert.ToDateTime(Model.ApplicationDate).ToString("MM'/'dd'/'yyyy");
+                                    }
+                                    <p><strong>Date of Referral :-</strong> @AppDate </p>
+                                </td>
+                                <td class="nobdr">
+                                    <p>
+                                        <strong>Address :-</strong>
+                                        @if (Model.Address != null)
+                                        {                                              
+                                            @Model.Address}
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <p>
+                                        <strong>Date Ref Rec'd Letter :-</strong>@Model.LetterDateString</td>
+                                <td class="nobdr">
+                                    @if (Model.StudentPersonalId != null)
+                                    {
+                                        string Status = Model.StudentPersonalId.ToString() + "_999";
+                                        <input type="button" style="font-size:14px;width:150px;" value="General Information" class="NFButton" id="@Status" onclick="SelectReferral(this.id, 'btn');"/>
+                                 
+                                    }
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </td>
+                </tr>
+
+            </table>
+            <br clear="all" />
+            <table width="95%" border="0" cellpadding="0" cellspacing="0" class="inner" style="border: 1px solid rgb(185, 185, 185); min-height: 25px !important;">
+                <tr>
+                    <td style="background-color: #cbcbfa; font-weight: bold; color: white; height: 25px !important;">
+                        <a style="width: 35%; text-decoration: underline; background: url(../Images/LetterTray.png) left -1px no-repeat; padding-left: 23px;" onclick="GetLetterTray('');" href="#" class="checkList">Letter Tray</a>
+                    </td>
+                    <td style="background-color: rgb(137, 189, 245); font-weight: bold; color: white;">
+                        <a style="width: 25%; text-decoration: underline; background: url(../Images/DocSearch.png) left -1px no-repeat; padding-left: 23px;" onclick="DocumentTray();" href="#" class="checkList">Documents</a>
+                    </td>
+                    <td style="background-color: #cbcbfa; font-weight: bold; color: white;">
+                        <a style="width: 50%; text-decoration: underline; background: url(../Images/zoom.png) left -1px no-repeat; padding-left: 23px;" onclick="ReferalSearchLast();" href="#" class="checkList">Goto Referral Search</a>
+                    </td>
+                    <td style="background-color: rgb(137, 189, 245); font-weight: bold; color: white;">
+                        <a style="width: 40%; text-decoration: underline; padding-left: 23px;" onclick="CallLogView();" href="#" class="checkList">Contact Logs</a>
+                    </td>
+                </tr>
+
+            </table>
+
+            <table width="95%" border="0" cellpadding="0" cellspacing="0" class="inner">
+                <tr>
+                    <td>
+                        <h2 style="width: 95%">Pre-Admission</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @{
+                                    var Item = Model.QueueList.Where(objqueue => objqueue.QueueType == "PA").ToList();
+                        }
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr nomargine">
+
+                            @foreach (var refitem in Model.ReferralQueueList)
+                            {
+                                for (int i = 0; i < Item.Count; i++)
+                                {
+                                    if (Item[i].QueueId == refitem.QueueID)
+                                    {
+                                        string Id = refitem.ReferralId + "_" + refitem.QueueID;
+                                        string Styles = "";
+                                        if (refitem.QueueStatus == "Drafted")
+                                        {
+                                            Styles = "font-weight:bold;color:green";
+                                        }
+                     
+                                <tr>
+                                    <td width="50%" class="topbdr"><a href="#" onclick="LoadReferralQueue('@Id','@refitem.QueueStatus');"  style="@Styles">@Item[i].QueueName </a></td>
+                                    <td width="50%" class=" topbdr nobdr">
+                                        <p><strong>Status :-</strong> @refitem.QueueStatus </p>
+                                    </td>
+                                </tr>
+                                    }
+                                }
+                            }
+                        </table>
+
+
+                    </td>
+                </tr>
+
+            </table>
+            <br clear="all" />
+            <table width="95%" border="0" cellpadding="0" cellspacing="0" class="inner">
+                <tr>
+                    <td>
+                        <h2 style="width: 95%">Intake Assessment</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @{
+                            var Item1 = Model.QueueList.Where(objqueue => objqueue.QueueType == "IA").ToList();
+                        }
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr nomargine">
+
+                            @foreach (var refitem in Model.ReferralQueueList)
+                            {
+                                for (int i = 0; i < Item1.Count; i++)
+                                {
+                                    if (Item1[i].QueueId == refitem.QueueID)
+                                    {
+                                        string Id = refitem.ReferralId + "_" + refitem.QueueID;
+                                        string Styles = "";
+                                        if (refitem.QueueStatus == "Drafted")
+                                        {
+                                            Styles = "font-weight:bold;color:green";
+                                        }
+                                <tr>
+                                    <td width="50%" class="topbdr"><a href="#" onclick="LoadReferralQueue('@Id','@refitem.QueueStatus');"  style="@Styles">@Item1[i].QueueName </a></td>
+                                    <td width="50%" class=" topbdr nobdr">
+                                        <p><strong>Status :-</strong> @refitem.QueueStatus </p>
+                                    </td>
+                                </tr>
+                                    }
+                                }
+                            }
+                        </table>
+                    </td>
+                </tr>
+
+            </table>
+            <br clear="all" />
+            <table width="95%" border="0" cellpadding="0" cellspacing="0" class="inner">
+                <tr>
+                    <td>
+                        <h2 style="width: 95%">Acceptance Procedure</h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                        @{
+                            var Item2 = Model.QueueList.Where(objqueue => objqueue.QueueType == "AP").ToList();
+                        }
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0" class="inr nomargine">
+
+                            @foreach (var refitem in Model.ReferralQueueList)
+                            {
+                                for (int i = 0; i < Item2.Count; i++)
+                                {
+                                    if (Item2[i].QueueId == refitem.QueueID)
+                                    {
+                                        string Id = refitem.ReferralId + "_" + refitem.QueueID;
+                                        string Styles = "";
+                                        if (refitem.QueueStatus == "Drafted")
+                                        {
+                                            Styles = "font-weight:bold;color:green";
+                                        }
+                                <tr>
+                                    <td width="50%" class="topbdr"><a href="#" onclick="LoadReferralQueue('@Id','@refitem.QueueStatus');"  style="@Styles">@Item2[i].QueueName </a></td>
+                                    <td width="50%" class=" topbdr nobdr">
+                                        <p><strong>Status :-</strong> @refitem.QueueStatus </p>
+                                    </td>
+                                </tr>
+                                    }
+                                }
+                            }
+                        </table>
+
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    }
+</div>
+<script type="text/javascript">
+    $("#SearchName").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "../Dashboard/AutoCompleteRefsearch",
+                type: "POST",
+                dataType: "json",
+                data: { term: request.term + '$' + text },
+                success: function (data) {
+                    //response(data.ReferralName);
+                    response($.map(data, function (item) {
+                        return { label: item.ReferralName, value: item.ReferralName_short };
+                    }))
+                },
+            })
+        },
+        messages: {
+            noResults: '',
+            results: function (resultsCount) { }
+        }
+    });
+    $(document).ready(function () {
+        var text = "";
+        if ($('#radioCheckYes').attr('checked') == 'checked')
+            text = 'referral';
+        else
+            text = "client";
+
+        $("#SearchName").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "../Dashboard/AutoCompleteRefsearch",
+                    type: "POST",
+                    dataType: "json",
+                    data: { term: request.term + '$' + text },
+                    success: function (data) {
+                        //response(data.ReferralName);
+                        response($.map(data, function (item) {
+                            return { label: item.ReferralName, value: item.ReferralName_short };
+                        }))
+                    },
+                })
+            },
+            messages: {
+                noResults: '',
+                results: function (resultsCount) { }
+            }
+        });
+
+        $('.txtEnter').keypress(function (event) {
+            if (event.keyCode == 13) {
+                $('#btnSearch').click();
+
+            }
+        });
+
+        $('#SearchName').focus();
+    });
+
+    function SelectReferrals(type) {
+
+        var searchString = $('#SearchName').val();
+        if (type == "Yes") {
+            searchString = searchString + '$Referral';
+            $('#hdnradio').val("Referral");
+            
+        }
+        else {
+            searchString = searchString + '$Client';
+            $('#hdnradio').val("Client");
+           
+        }
+        searchString = encodeURIComponent(searchString);
+        if ($('#StudDetails').length) {
+            $('#StudDetails').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details 
+        }
+        else {
+            $('.ContentAreaContainer').load('../Details/StudentSearchDetails?SearchTag=' + searchString); // To load Referral details 
+        }
+
+    }
+</script>

@@ -1,0 +1,305 @@
+﻿@model ReferalDB.Models.UserModel
+
+@{
+    ViewBag.Title = "Review Team Referrals";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        // $('#viewUserListContent').load('../AdmissionReview/userList');
+    });
+
+</script>
+
+<script type="text/javascript">
+
+    function addAll(val) {
+        if (val == 'AddTo') {
+            var selectedOpts = $('#FromUsertxtBox option');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#ToUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+
+        }
+        else if (val == 'RemoveFrom') {
+            var selectedOpts = $('#ToUsertxtBox option');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#FromUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+        }
+    }
+    function addOneByOne(val) {
+        if (val == 'AddTo') {
+            var selectedOpts = $('#FromUsertxtBox option:selected');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#ToUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+        }
+        else if (val == 'RemoveFrom') {
+            var selectedOpts = $('#ToUsertxtBox option:selected');
+            if (selectedOpts.length == 0) {
+                alert("Nothing to move.");
+            }
+            $('#FromUsertxtBox').append($(selectedOpts).clone());
+            $(selectedOpts).remove();
+        }
+    }
+
+
+    function submitVal() {
+        $('#tdMsg').html('');
+        $('#ValidateTeam').css('display', 'none');
+        $('#ValidatelistBx').css('display', 'none');
+
+        if ($("#DdlTeam option:selected").index() != 0) {
+            var x = document.getElementById("ToUsertxtBox");
+            var valatosent = '';
+            for (var i = 0; i < x.options.length; i++) {
+                valatosent += x.options[i].value + ',';
+            }
+            var valDll = $('#DdlTeam ').val();
+            if (x.options.length > 0) {
+                $.get("../AdmissionReview/AssigndStdSubmit?StdIdz=" + valatosent + "&teamId=" +
+
+valDll, function (data) {
+    $('#tdMsg').append(data);
+});
+            }
+            else {
+                $('#ValidatelistBx').css('display', 'inline');
+            }
+        }
+        else {
+            $('#ValidateTeam').css('display', 'inline');
+        }
+
+    }
+
+    function onchangeDrp() {
+        $('#tdMsg').html('');
+        $('#ValidateTeam').css('display', 'none');
+        if ($("#DdlTeam option:selected").index() != 0) {
+
+            $.get("../AdmissionReview/GetAssigndStd?TeamId=" + $('#DdlTeam ').val(), function (data) {
+                //alert(data);
+                var selectedOpts = $('#FromUsertxtBox option:selected');
+                if (selectedOpts.length < 0) {
+                    for (var i = 0; i < x.options.length; i++) {
+                        if (x.options[i].selected == true) {
+                            x.options[i].selected = false;
+                        }
+                    }
+                }
+
+
+
+                var SelStd = data.split(',');
+
+
+                var coutSelStd = SelStd.length;
+                //  alert(coutSelStd);
+                if (coutSelStd > 0) {
+
+                    var selectedOpts = $('#ToUsertxtBox option');
+                    if (selectedOpts.length != 0) {
+                        addAll('RemoveFrom');
+                    }
+                    var x = document.getElementById("FromUsertxtBox");
+                    for (var i = 0; i < x.options.length; i++) {
+                        for (var k = 0; k < coutSelStd - 1; k++) {
+                            if (x.options[i].value == SelStd[k]) {
+                                if (x.options[i].selected == false) {
+                                    x.options[i].selected = true;
+                                }
+                            }
+                        }
+                    }
+                    addOneByOne('AddTo');
+                }
+            });
+
+        }
+        else {
+
+            var selectedOpts = $('#ToUsertxtBox option');
+            if (selectedOpts.length != 0) {
+                addAll('RemoveFrom');
+            }
+        }
+    }
+</script>
+
+<div id="SectionChecklist" class="middleContainer" style="width: 78%;">
+@using (Ajax.BeginForm("", "", FormMethod.Post, new AjaxOptions { UpdateTargetId = "" }))
+{
+    <div style="width: 100%">
+        <table style="width: 100%">
+            <tr>
+                <td class="bluebar" colspan="3">Review Team Referrals
+                </td>
+
+            </tr>
+            <tr>
+                <td id="tdMsg" colspan="3"></td>
+            </tr>
+            <tr>
+                <td colspan="3">Team Name
+                
+                    @{
+    var TeamList = Model.TeamIdList.Select(cl => new SelectListItem
+    {
+        Value = cl.TeamId.ToString(),
+        Text = cl.TeamName == null ? String.Empty : cl.TeamName
+    });
+                    }
+
+
+                    <span style="color: red">*</span>
+
+                    @* @Html.TextBoxFor(m => Model.ChecklistEngineName, new { @style = 
+
+"width:80%;margin-top:2%;" })*@
+                    @(Html.DropDownList("DdlTeam", TeamList, "-----Select-----", new { @style = 
+
+"width:260px;margin-top:2%;",onchange="onchangeDrp()" }))<label id="ValidateTeam" 
+
+style="color:red;display:none">Team should be Selected</label>
+                </td>
+            </tr>
+           <tr>
+               <td colspan="3">
+                    <table style="width: 50%; margin-top: 3%;">
+             <tr>
+                <td colspan="3">
+                    @foreach (var userlist in Model.UserList)
+                    { 
+                        <input type="hidden" id="hdTagsid+@userlist.UserId" 
+
+value="@userlist.UserId"/>  
+                        <input type="hidden" id="hdTagstxt+@userlist.UserId" 
+
+value="@userlist.UserLastName"/>                          
+                    }
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    <select id="FromUsertxtBox" name="sometext" multiple="multiple" style="width: 
+
+350px; height: 200px; padding: 2%;">
+                         @foreach (var userlist in Model.StdList)
+                         {
+                              <option 
+
+value="@userlist.studentPersonalId">@userlist.studentPersonal</option> 
+                         }
+                      @*   @foreach (var userlist in Model.StdList)
+                      {
+                          String[] splitVal = Model.SelectdPersonals.Split(',');
+                          if(splitVal.Length>0)
+                          {
+                          int k=0;
+                      if (k < splitVal.Length)
+                      {
+                              int flg=0;
+                          foreach(string sr in splitVal)
+                          {
+                              int splitCount=splitVal.Length;
+
+                              if (int.Parse(sr) == userlist.studentPersonalId)
+                              {
+                                  flg = 0;
+                                  break;
+                              }
+                              else
+                              {
+                                  flg = 1; 
+                              } 
+                          }
+                          if (flg == 1)
+                          {
+                              <option 
+
+value="@userlist.studentPersonalId">@userlist.studentPersonal</option> 
+                          }                     
+                      }           
+                      }  
+                      else
+                      {
+                              <option 
+
+value="@userlist.studentPersonalId">@userlist.studentPersonal</option>                            
+                          }
+                      }*@
+                    </select>
+                </td>
+                <td style="width:5px">
+                    <input type="button" value=">" style="margin-top: 5px" onclick="addOneByOne
+
+('AddTo')" /><br />
+                    <input type="button" value=">>" style="margin-top: 5px" onclick="addAll
+
+('AddTo')" /><br />
+                    <input type="button" value="<" style="margin-top: 5px" onclick="addOneByOne
+
+('RemoveFrom')" /><br />
+                    <input type="button" value="<<" style="margin-top: 5px" onclick="addAll
+
+('RemoveFrom')" />
+                </td>
+                <td>
+                    <select id="ToUsertxtBox" name="sometext" multiple="multiple" style="width: 
+
+350px; height: 200px; padding: 2%;">
+                       
+                       @*     @foreach (var userlist in Model.StdList)
+                      {
+                          String [] splitVal1 = Model.SelectdPersonals.Split(',');
+                          foreach(string sr in splitVal1)
+                          {
+                              if (int.Parse(sr) == userlist.studentPersonalId)  
+                              {                                                          
+                             <option 
+
+value="@userlist.studentPersonalId">@userlist.studentPersonal</option>  
+                      }    
+                      
+                      }  
+                                      
+                      }  *@
+                    </select>
+                   
+                </td>
+            </tr>
+        </table>
+                    <label id="ValidatelistBx" style="color:red;display:none">User not 
+
+Selected</label>
+               </td>
+           </tr>
+            <tr>
+                <td colspan="3" style="text-align: right; padding-right: 22%; padding-top: 3%;">
+                    <input type="button" value="Submit" name="Actions" style="float: none" 
+
+onclick="submitVal()" /></td>
+            </tr>
+        </table>
+        <table style="width: 100%">
+
+            <tr>
+                <td style="height: 20px">
+                    @*@Html.HiddenFor(m => Model.userIdz, Model.userIdz) 
+                      @Html.HiddenFor(m => Model.CheckListId, Model.CheckListId) *@
+                </td>
+            </tr>
+
+        </table>
+       
+    </div>
+} </div>

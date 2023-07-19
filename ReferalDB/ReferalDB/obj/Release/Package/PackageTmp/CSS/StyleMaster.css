@@ -1,0 +1,545 @@
+
+@charset "utf-8";
+
+body {
+    border: 0 none;
+    color: #6B6B6B;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background: url("../Images/bginner.JPG") repeat scroll left top transparent;
+}
+
+.logoContainer {
+    height: 91px;
+    margin: 0 auto;
+    position: absolute;
+    top: 40px;
+    width: 95.5%;
+    min-width: 1200px;
+}
+
+.clear {
+    border: 0 none;
+    clear: both;
+    margin: 0;
+    padding: 0;
+}
+
+div.mainContainer {
+    height: auto !important;
+    min-height: 500px;
+    width: 100%;
+    min-width: 1300px;
+}
+
+.Dashboard-logo {
+    background: url("../Images/curve.jpg") no-repeat scroll right top rgba(0, 0, 0, 0);
+    float: left;
+    height: auto;
+    margin: 0;
+    padding: 1.5% 0 0.5% 4.5%;
+    width: 95.5%;
+}
+
+
+.logoContainer ul {
+    padding: 0px;
+    margin: 0px;
+    float: right;
+    list-style: none;
+}
+
+
+.logoContainer li {
+    padding: 12px 0px 0px 0px;
+    margin: 0px 0px 0px 30px;
+    float: left;
+    width: 98px;
+    height: 53px;
+    /*background: url(../images/link-box.png) no-repeat;*/
+    color: #767676;
+    text-align: center;
+    font-family: Arial, sans-serif !important;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 13px;
+    text-shadow: #fff 0px 1px 1px;
+}
+
+
+    .logoContainer li a {
+        padding: 12px 0px 0px 0px;
+        margin: 0px 0px 0px 30px;
+        float: left;
+        width: 98px;
+        height: 53px;
+        background: url(../Images/link-box.png) no-repeat;
+        color: #767676;
+        cursor: pointer;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .logoContainer li a:hover {
+            color: #0781ba;
+            text-decoration: none;
+        }
+
+div.mainContainer div.topHead {
+    background: url("../Images/melmarkTop.jpg") repeat-y scroll left top #00539F;
+    height: 47px;
+    width: 100%;
+    min-width: 800px;
+}
+
+    div.mainContainer div.topHead a.admin,
+    div.mainContainer div.topHead a.admin:link,
+    div.mainContainer div.topHead a.admin:visited {
+        background: url(../Images/admin1.png) left 5px no-repeat;
+        width: 35%;
+        float: left;
+        height: 18px;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 6px 0 0 22px;
+        color: #fff;
+        text-decoration: none;
+        margin: 10px 0 0 15px;
+        background-position: 0 2;
+    }
+
+        div.mainContainer div.topHead a.admin:hover {
+            color: #8ed99d;
+            background-position: 0 -16px;
+        }
+
+    div.mainContainer div.topHead a.logout,
+    div.mainContainer div.topHead a.logout:link,
+    div.mainContainer div.topHead a.logout:visited {
+        background: url(../Images/Logout.png) left 5px no-repeat;
+        width: 5%;
+        float: right;
+        height: 18px;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 6px 0 0 22px;
+        color: #fff;
+        text-decoration: none;
+        margin: 10px 0 0 15px;
+        background-position: 0 2;
+    }
+
+    div.mainContainer div.topHead a.landing,
+    div.mainContainer div.topHead a.landing:link,
+    div.mainContainer div.topHead a.landing:visited {
+        background: url(../Images/hm.png) left 5px no-repeat;
+        width: 8%;
+        float: right;
+        height: 18px;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 6px 0 0 22px;
+        color: #fff;
+        text-decoration: none;
+        margin: 10px 0 0 15px;
+        background-position: 0 2;
+    }
+
+    div.mainContainer div.topHead a.checkList,
+    div.mainContainer div.topHead a.checkList:link,
+    div.mainContainer div.topHead a.checkList:visited {
+        background: url(../Images/checklist.png) left 5px no-repeat;
+        width: 10%;
+        float: right;
+        height: 18px;
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 6px 0 0 22px;
+        color: #fff;
+        text-decoration: none;
+        margin: 10px 0 0 15px;
+        background-position: 0 2;
+    }
+
+    div.mainContainer div.topHead a.logout:hover {
+        color: #81abce;
+        background-position: 0 -16px;
+    }
+
+    div.mainContainer div.topHead a.landing:hover {
+        color: #81abce;
+    }
+
+div.mainContainer div.contentPart {
+    height: auto !important;
+    min-height: 500px;
+    width: 100%;
+}
+
+    div.mainContainer div.contentPart div.imgcorner {
+        background: url("../Images/logo.JPG") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+        float: left;
+        height: 40px;
+        margin: 22px 0 0 16px;
+        min-width: 230px;
+        padding: 0;
+        width: 20%;
+    }
+
+        div.mainContainer div.contentPart div.imgcorner a.logo,
+        div.mainContainer div.contentPart div.imgcorner a.logo:link,
+        div.mainContainer div.contentPart div.imgcorner a.logo:visited {
+            border: 0;
+            margin: 15px 0 0 30px;
+            display: block;
+            float: left;
+            width: 250px;
+            height: 40px;
+            display: block;
+        }
+
+            div.mainContainer div.contentPart div.imgcorner a.logo img {
+                border: 0;
+            }
+
+    div.mainContainer div.contentPart div.ContentAreaContainer {
+        background-color: #FFFFFF;
+        box-shadow: 0 1px 1px 1px #BFC0C1;
+        height: auto;
+        margin: 80px 0 0;
+        min-height: 470px;
+        padding: 5px;
+        width: 99%;
+        overflow-x: auto;
+        min-width: 1300px;
+    }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer {
+            /*border-right: 3px solid #E5E5E5;*/
+            float: left;
+            height: auto !important;
+            min-height: 622px;
+            padding: 2px 4px 0;
+            min-width: 250px;
+            width: 19%;
+        }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainerAdmin {
+            border: 5px solid #E5E5E5;
+            float: left;
+            height: auto !important;
+            margin: 2px 0 0;
+            min-height: 622px;
+            padding: 4px;
+            width: 19.3%;
+            min-width: 257px;
+        }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.middleContainer {
+            float: left;
+            height: auto !important;
+            margin: 2px 0 0 0.5%;
+            min-height: 623px;
+            min-width: 384px;
+            width: 60%;
+            border: 3px solid #E5E5E5;
+            padding-right: 2px;
+        }
+
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.middleContainer h2 {
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 24px;
+                font-weight: normal;
+                color: #026857;
+            }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainerAdmin {
+            border: 6px solid #E5E5E5;
+            float: left;
+            height: 623px !important;
+            margin: 2px 0 0;
+            min-width: 192px;
+            padding: 0 9px 0 2px;
+            width: 15%;
+        }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer {
+            float: right;
+            height: 623px !important;
+            margin: 2px 0 0;
+        }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.imgcontainer {
+                width: 175px;
+                height: 196px;
+                float: left;
+                border: 1px solid #bfbfbf;
+            }
+
+                div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.imgcontainer h4 {
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 12px;
+                    font-weight: bold;
+                    color: #fff;
+                    padding: 5px;
+                    background: #006552;
+                    margin: 0;
+                }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer h2 {
+            border-bottom: 1px solid #B2CCCA;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 1px auto 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        /*div.mainContainer div.contentPart div.ContentAreaContainer h2:hover {
+                background-color: #0092b0;
+                color: #FFF;
+            }*/
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer h3,
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer h3 {
+            background: none repeat scroll 0 0 #0053A1;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: normal;
+            margin: 0;
+            padding: 7px 0 7px 3%;
+            text-align: left;
+            width: 97%;
+            border-radius: 3px 3px 3px 3px;
+        }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn,
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn:link,
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn:visited {
+            background: url("../Images/btnbg.JPG") repeat-x scroll left top transparent;
+            border-radius: 3px 3px 3px 3px;
+            color: #FFFFFF;
+            display: block;
+            font-size: 12px;
+            font-weight: bold;
+            height: 38px;
+            margin: 10px auto 0 auto;
+            text-decoration: none;
+            width: 80%;
+        }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn:hover {
+                color: #000000;
+            }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn img {
+                border: 0 none;
+            }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn img {
+                display: block;
+                float: left;
+                margin: 0 0 0 8px;
+            }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.rightbtn span {
+                display: block;
+                float: left;
+                margin: 12px 0 0 10px;
+            }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.lfAlainAtag,
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.lfAlainAtag:link,
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.lfAlainAtag:visited {
+            background: url("../Images/grarro.PNG") no-repeat scroll left 5px transparent;
+            color: #4F4F4F;
+            font-size: 12px;
+            padding: 2px 0 2px 15px;
+            margin: 0 auto;
+            letter-spacing: 1px;
+            text-align: left;
+            display: block;
+            font-weight: bold;
+            width: 74%;
+            text-decoration: none;
+        }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer a.lfAlainAtag:hover {
+                color: #0C69BB;
+            }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.listmenu {
+            background: none repeat scroll 0 0 #D3D3D3;
+            cursor: pointer;
+            display: inline-flex;
+            height: 29px;
+            margin: 3px 0 0 30px;
+            min-width: 102px;
+            overflow: hidden;
+            width: 80%;
+        }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.listmenu span.clsbtn {
+                display: block !important;
+                float: right;
+                width: 20px;
+                height: 14px;
+                background: url(../Images/clsbtn.png) left top no-repeat;
+                background-position: 0 0;
+                padding: 0;
+            }
+
+                div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.listmenu span.clsbtn:hover {
+                    background-position: 0 -16px;
+                }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.listmenu:hover {
+                background: none repeat scroll 0 0 #BDD4EA;
+            }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.listmenu img {
+                border: 0 none;
+                display: block;
+                float: left;
+                padding: 0;
+            }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.rightContainer div.listmenu span {
+                color: #504F4F;
+                display: block;
+                float: left;
+                margin: 7px 5px 0;
+                overflow: hidden;
+                position: inherit;
+                width: 100%;
+                font-size: 11px;
+            }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer h4 {
+            color: #6B6B6B;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 7px 0;
+            padding: 0 0 0 3%;
+            width: 97%;
+        }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer input.tx {
+            border: 1px solid #B3B3B3;
+            border-radius: 3px 3px 3px 3px;
+            color: #666666;
+            float: left;
+            font-size: 11px;
+            margin: 0 0 0 3%;
+            padding: 8px 2px;
+            width: 60%;
+        }
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer input.bt {
+            background: none repeat scroll 0 0 #03507D;
+            border: 0 none;
+            border-radius: 3px 3px 3px 3px;
+            color: #FFFFFF;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            height: 31px;
+            margin: 0 0 0 2%;
+            padding: 0 0 3px;
+            width: 20%;
+            min-width: 45px;
+        }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer input.bt:hover {
+                background: none repeat scroll 0 0 #0E71C1;
+                color: #FFFFFF;
+            }
+
+        /*div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainera, 
+
+div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer a:link, 
+
+div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer a:visited {
+            color: #4F4F4F;
+            display: block;
+            float: right;
+            font-family: Arial,Helvetica,sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            margin: 0;
+            height: 48px;
+            text-decoration: none;
+            width: 210px;
+        }*/
+
+        /*div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer a:hover {
+            background: #fff url(../images/menogradientbg.png) left bottom no-repeat;
+        }*/
+
+        div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer a span {
+            display: block;
+            width: 180px;
+            float: left;
+            height: 20px;
+            background: url(../Images/arrow.png) 5px top no-repeat;
+            padding: 0 0 0 28px;
+            margin: 13px 0 0 0;
+        }
+
+            div.mainContainer div.contentPart div.ContentAreaContainer div.leftContainer a span:hover {
+                background-position: 5px -22px;
+                color: #026857;
+            }
+
+
+
+div.mainContainer div.footer {
+    color: #666666;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 100%;
+    margin: 0 auto;
+    text-decoration: none;
+    width: 80%;
+}
+
+    div.mainContainer div.footer img {
+        border: 0;
+        margin: 10px 0 0 25px;
+        float: left;
+    }
+
+    div.mainContainer div.footer div.copyright {
+        color: #666666;
+        float: right;
+        font-size: 11px;
+        height: -16px;
+        margin: 8px 0 18px;
+        text-align: left;
+        text-decoration: none;
+        width: 29%;
+    }
+
+.Panelhead {
+    background-color: #0099B5;
+    color: #FFFFFF;
+    float: left;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    height: 35px;
+    line-height: 35px;
+    margin: 0 0 -3px;
+    padding-left: 5px;
+    text-align: left;
+    cursor: pointer;
+    width: 99.5%;
+    margin: 0 auto 2px;
+}

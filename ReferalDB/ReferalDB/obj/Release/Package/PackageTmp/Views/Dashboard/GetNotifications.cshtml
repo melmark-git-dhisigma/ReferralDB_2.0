@@ -1,0 +1,28 @@
+﻿@model ReferalDB.Models.NotificationModel
+
+<table style="width:100%;" class="gridStyle">
+    <thead>
+        <tr class="HeaderStyle">
+            <td style="width: 23%"><b>Referral Name</b>
+            </td>
+            <td style="width: 23%"><b>Queue Name</b>
+            </td>
+            <td style="width: 30%"><b>Notification</b>
+            </td>
+            <td style="width: 23%"><b>Date</b>
+            </td>
+        </tr>
+    </thead>
+    @foreach(var item in Model.Notifications){
+    <tr>
+        <td>@item.ReferalName</td>
+        <td>@item.QueueName</td>
+        <td>@item.Message</td>
+        <td>@if(item.Date!=null){
+              string CreatedDate=  Convert.ToDateTime(@item.Date).ToString("MM'/'dd'/'yyyy");
+            @CreatedDate
+        }
+        </td>
+    </tr>
+    }
+</table>

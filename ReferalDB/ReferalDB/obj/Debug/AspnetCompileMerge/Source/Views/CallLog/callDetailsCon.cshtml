@@ -1,0 +1,27 @@
+﻿@model ReferalDB.Models.CommonCallLogViewModel
+
+<div id="CallLogconDet">
+<table id="tblContacList" style="width: 100%">
+        <tr class="HeaderStyle">
+            <th class="tdLabel">Contact Name</th>
+            
+            <th class="tdLabel">Conversation</th>
+        </tr>
+    @if (Model.CallLists!=null)
+    {   
+        for (int i = 0; i < Model.CallLists.Count; i++)
+            {
+              
+
+        <tr class="RowStyle">
+            <td style="width:6%;">@Model.CallLists[i].ContactName</td>
+            
+           
+          <td style="width:10%;">@Model.CallLists[i].Conversation</td>
+
+        </tr>
+       
+          }
+    }
+    </table>
+    </div>

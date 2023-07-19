@@ -1,0 +1,345 @@
+﻿@model ReferalDB.Models.ReferralDashboardModel
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#close_x').click(function () {
+            $('#dialog').animate({ top: "-300%" }, function () {
+                $('#overlay').fadeOut('slow');
+            });
+        });
+
+        $('#slides').slides({
+            preload: true,
+            generateNextPrev: true
+        });
+
+        var itemCount = 0;
+        var value = 'A'
+        //$('#butnext').show();
+        //$('#butprv').show();
+
+
+
+        var flaglim = $('#flage').val();
+        $('#butprv').hide();
+        $('#butnext').hide();
+        if (flaglim == ">") {
+            $('#butnext').show();
+        }
+        if (flaglim == "<") {
+            $('#butprv').show();
+        }
+        if (flaglim == "<>") {
+            $('#butnext').show();
+            $('#butprv').show();
+        }
+
+        $("#butnext,#butprv").on('click', function (e) {
+            e.preventDefault();
+            var sortArg = "";
+            var data;
+            var page = $('#curval').val();
+            if ($(this).attr("name") == "next") {
+                data = page + "*n";
+            }
+            else {
+                data = page + "*p";
+            }
+            sortArg = 'A';
+
+            window.location.href = "/Dashboard/ListDashboards?argument=" + sortArg + "&bSort=true &Data=" + data + "";
+            //$("body").addClass("loading");
+
+            //window.location = "../admin/userMangment?data=" + data;
+        });
+
+        itemCount = parseInt(3);
+
+        if (itemCount == 0) {
+
+            var styl = document.getElementById("noMatch").style;
+            styl.display = "block";
+        }
+    });
+
+    //function SelectReferral(rowid) {
+    //    if ($(".selectedReferral").length > 0) {
+    //        var Id = $('.selectedReferral').attr('id');
+    //        var prevSelRow = document.getElementById(Id);
+    //        prevSelRow.className = "ReferralRow";
+    //    }
+    //    var SelRow = document.getElementById(rowid);
+    //    SelRow.className = "selectedReferral";
+
+    //}
+
+    function CustomFilter() {
+        $('#overlay').fadeIn('slow', function () {
+            $('#dialog').animate({ top: '20%' }, { duration: 'slow', easing: 'linear' })
+        });
+    }
+</script>
+<div style="width: 100%" id="DivDashbrd">
+     @using (Html.BeginForm("", "Dashboard", FormMethod.Get))
+    {
+        if (Model.DataContent.Count>0)
+        {
+        <div class="topbarCo">
+            <div class="selContainer">
+                <div id="slides">
+                    <div class="slides_container">
+
+                        <div class="slide">
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=A&bSort=false');">A</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=B&bSort=false');">B</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=C&bSort=false');">C</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=D&bSort=false');">D</a></div>
+                        </div>
+                        <div class="slide">
+
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=E&bSort=false');">E</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=F&bSort=false');">F</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=G&bSort=false');">G</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=H&bSort=false');">H</a></div>
+                        </div>
+                        <div class="slide">
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=I&bSort=false');">I</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=J&bSort=false');">J</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=K&bSort=false');">K</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=L&bSort=false');">L</a></div>
+                        </div>
+                        <div class="slide">
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=M&bSort=false');">M</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=N&bSort=false');">N</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=O&bSort=false');">O</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=P&bSort=false');">P</a></div>
+                        </div>
+                        <div class="slide">
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=Q&bSort=false');">Q</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=R&bSort=false');">R</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=S&bSort=false');">S</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=T&bSort=false');">T</a></div>
+                        </div>
+                        <div class="slide">
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=U&bSort=false');">U</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=V&bSort=false');">V</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=W&bSort=false');">W</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=X&bSort=false');">X</a></div>
+                        </div>
+                        <div class="slide">
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=Y&bSort=false');">Y</a></div>
+                            <div class="item"><a href="#" onclick="event.preventDefault();$('#DivDashbrd').load('../Dashboard/ListDashboards?argument=Z&bSort=false');">Z</a></div>
+                        </div>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div style="float: left">
+                <table style="width: 100%">
+                    <tr>
+
+                        <td class="nomarg">Sort By</td>
+                        <td class="nomarg">
+                            <select id="ddlSort" name="ddlSort" onchange="sortDashboards()">
+                                <option>-Select-</option>
+                                <option>Age</option>
+                                <option>Date Of Birth</option>
+                            </select></td>
+                    </tr>
+
+                </table>
+
+            </div>
+
+            <div>
+                <div style="float: right; padding-top: 5px;">
+                    <input type="checkbox" id="Chkwkold" onclick="" />
+                    <label for="Chkwkold">Less than one week old</label>
+
+                    <input type="checkbox" id="Chkmnthold" onclick="" />
+                    <label for="Chkmnthold">Less than one month old</label>
+
+                    <input type="checkbox" id="Chkcustom" onclick="CustomFilter();" />
+                    <label for="Chkcustom">Custom Filter</label>
+
+                </div>
+
+            </div>
+        </div>
+        }
+        <div style="width: 100%;" class="">
+            @foreach (var item in Model.DataContent)
+            {
+                string rowid = "Row" + item.ReferralId;
+                <table style="width: 100%" cellpadding="0" cellspacing="0">
+
+                    <tr id="@rowid" class="ReferralRow" >
+                        <td style="height: 100px; width: 33%">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td class="boxstyleCon" rowspan="4">
+                                        @* @if (item.ImageUrl == "")
+                                {
+                                    if (item.ReferralGender == "Male")
+                                    {
+                                    *@<img src="~/Images/Male.png" style="width: 67px; height: 67px;" />
+                                        @* }
+                                    else
+                                    { 
+                                    <img src="~/Images/Female.png" style="width: 67px; height: 67px;" />
+                                    }
+                                }
+                                else
+                                { 
+                                    <img src="../../Images/StudentImages/@string.Concat(item.ReferralId, item.ImageUrl)" style="width: 67px; height: 67px;" />
+                                }*@
+                                    </td>
+                                    @{
+                string Refname = "";
+                if (item.ReferralName.Length > 10)
+                {
+                    Refname = item.ReferralName.Substring(0, 10) + "..";
+                }
+                else
+                {
+                    Refname = item.ReferralName;
+                }
+                                        
+                                    }
+                                    <td class="boxstyleCon">Name : </td>
+                                    <td class="boxstyleCon">@Refname</td>
+                                </tr>
+                                <tr>
+                                    <td class="boxstyleCon">Date Of Birth : </td>
+                                    @{
+                string dob = "";
+                string Age = "";
+                if (item.ReferralDob != null)
+                {
+                    dob = Convert.ToDateTime(item.ReferralDob).ToString("dd-MMMM-yyyy");
+                    Age = Convert.ToString(DateTime.Now.Year - Convert.ToDateTime(item.ReferralDob).Year) + " Years";
+                }
+                                    }
+                                    <td class="boxstyleCon">@dob</td>
+                                </tr>
+                                <tr>
+                                    <td class="boxstyleCon">Age : </td>
+                                    <td class="boxstyleCon">@Age</td>
+                                </tr>
+                                <tr>
+                                    <td class="boxstyleCon">Gender : </td>
+                                    <td class="boxstyleCon">@item.ReferralGender</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="height: 100px; width: 2%; text-align: center">
+                            <hr style="height: 80%; width: 2px;" />
+                        </td>
+                        <td style="height: 100px; width: 30%">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td>Application Date : 
+                                    </td>
+                                    @{
+                string Appdate = "";
+                if (item.ApplicationDate != null)
+                {
+                    Appdate = Convert.ToDateTime(item.ApplicationDate).ToString("MM/dd/yyyy");
+                }
+                                    }
+                                    <td>
+                                        @Appdate
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Last Completed Step : </td>
+                                    <td>@item.CompletedStep</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    @{
+                string Completed = "";
+                if (item.CompletedBy != null)
+                {
+                    Completed = string.Concat("By ", item.CompletedBy);
+                }
+                                    }
+                                    <td style="text-align: right">@Completed</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="height: 100px; width: 2%; text-align: center">
+                            <hr style="height: 80%; width: 2px;" />
+                        </td>
+                        <td style="height: 100px; width: 33%">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                     
+                                    <td style="width: 90%; text-align: center">
+                                        <div style="width: 100%; background-color: #ffd800; height: 10px">
+                                            <div style="width: @item.Perc%; background-color: #E28C05; height: 10px">
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                    <td style="width: 10%; text-align: center">
+                                       
+                                        <span style="color: red">@item.Perc%</span>
+                                    </td>
+                                    <td style="width: 10%"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align: right">
+                                        @{ 
+                
+                string btnid = item.ReferralId+"-"+ item.ActiveProcess;
+                                        }
+                                        <input type="button" value="Edit" class="NFButton" id="@btnid" onclick="SelectReferral(this.id,'btn');"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr style="height: 2px"></tr>
+
+                </table>
+            }
+        </div>
+    }
+    <div id="overlay" class="web_dialog_overlay">
+    </div>
+    <div id="dialog" class="web_dialog" style="width: 711px;">
+        <div id="sign_up5">
+            <a id="close_x" class="close sprited1" href="#" style="margin-top: -13px; margin-right: -14px;">
+                <img src="../Images/button_red_close.png" style="float: right; margin-right: 0px; margin-top: 0px; z-index: 300" width="18" height="18" alt="" /></a>
+            <h3>Custom Filter</h3>
+            <hr />
+
+
+
+            <table cellpadding="0" cellspacing="5" style="text-align: left;" width="100%">
+
+                <tr>
+                    <td class="tdText">&nbsp;</td>
+                    <td class="tdText">&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    </div>
+

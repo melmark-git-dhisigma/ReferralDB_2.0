@@ -1,0 +1,345 @@
+﻿@model ReferalDB.Models.DocumentDownloadViewModel
+<script type="text/javascript" src="../Scripts/jquery.form.js"></script>
+<style type="text/css">
+    .lblBold {
+        color: #09681a !important;
+        font-family: Arial;
+        font-size: 17px;
+        font-weight: normal;
+        padding:10px 0 10px 15px !important;
+        margin: 0 0 18px;
+        text-align: left;
+        border-bottom:1px solid #09681a;
+    }
+</style>
+<script>
+    //Task 28 List 3 20-Oct-2020 Start----
+    $("#dialog").dialog({ autoOpen: false });
+    $("#dialog").dialog({ resizable: false });
+    $("#dialog").dialog({
+        buttons: {
+            //'Confirm': function () {
+            //    $("[id*=btn_Confirm_View]").click();
+            //},
+            'Cancel': function () {
+                $(this).dialog('close');
+            }
+        }
+    });
+
+    $("#dialog").dialog({ draggable: false });
+    $("#dialog").dialog({ closeOnEscape: false });
+
+    $("#dialog").dialog({
+        width: 'auto',
+        autoOpen: false,
+        show: {
+            effect: "blind",
+            duration: 1500
+        },
+        hide: {
+            effect: "scale",
+            duration: 300
+        }
+
+    });
+    $("#dialog").parent().appendTo(jQuery("form:first"));
+    $("#dialog").dialog({
+        close: function (event, ui) {
+
+        }
+
+    });
+    $(document).ready(function () {
+
+        $('#dialog').dialog({
+            autoOpen: false,
+            title: 'Edit'
+        });
+       
+    });
+    function EditFn(id) {
+        var x = document.getElementsByName('update1')[0];
+        x.setAttribute("id", id);
+        document.getElementById('dialog').style.visibility = 'visible';
+        $('#dialog').dialog('open');
+    }
+
+    //Task 28 List 3 20-Oct-2020 End-----
+</script>
+
+
+<script type="text/javascript">
+
+    function downloadFn(id) {
+        window.open('../AcceptanceProcess/DownloadConsent?id=' + id + '   ', '_blank');
+    }
+    //Task 28 List 3 20-Oct-2020 Start----
+    function EditDocName(id) {
+        var DocName = $('#txt1').val();
+        var DocType = $('#ddlDoctype').val();
+        if (DocType == "")
+            DocType = 0;
+        $.get('../GeneralInfo/EditDocumentName?id=' + id + '&DocName=' + DocName.toString() + '&DocType=' + DocType + '   ', '_blank');
+        OpenSublinks('docoument', 'New Applicant', 2);
+        //var x = document.getElementById(id);
+        //x.setAttribute("id", 'upd');
+        $('#txt1').val(" ");
+        $('#ddlDoctype').val(" ");
+        $('#dialog').dialog('close');
+    }
+    function deleteDoc(id) {
+        var message = confirm('Are you sure want to delete this document?')
+        if (message.toString() == "true") {
+            $.get('../GeneralInfo/DeleteDocument?id=' + id + '   ', '_blank');
+            OpenSublinks('docoument', 'New Applicant', 2);
+        }
+    }
+    //Task 28 List 3 20-Oct-2020 End------
+    function DocSearch() {
+
+        $('#hdReferal').val($('#txtDoc').val());
+        var Refe = $('#hdReferal').val();
+        $('#LoadLetterTray').load('../GeneralInfo/UploadedFilesView?Name=' + encodeURI(Refe));
+        $('.documentDiv').load("../GeneralInfo/UploadedFilesView?Name=" + encodeURI(Refe), function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+            $('#LoadLetterTray').html(responseTxt);
+        });
+        $('.documentDiv2').load("../GeneralInfo/ScheduleAppointmentUploadFiles?Name=" + encodeURI(Refe), function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+            $('#LoadLetterTray').html(responseTxt);
+        });
+    }
+    function DocAll() {
+
+        $('#hdReferal').val($('#txtDoc').val());
+        var Refe = $('#hdReferal').val();
+        $('#LoadLetterTray').load('../GeneralInfo/UploadedFilesView');
+        $('.documentDiv').load("../GeneralInfo/UploadedFilesView", function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+            $('#LoadLetterTray').html(responseTxt);
+        });
+        $('.documentDiv2').load("../GeneralInfo/ScheduleAppointmentUploadFiles", function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+            $('#LoadLetterTray').html(responseTxt);
+        });
+    }
+    var options = {
+        success: showResponse
+    };
+    $(function () {
+        $('#UpdateFile').ajaxForm(options);
+    });
+    function showResponse(responseText, statusText, xhr, $form) {        
+        if (responseText == "Invalid file format" || responseText == "No file selected") {
+            alert(responseText);
+        }
+        else {
+            OpenSublinks('docoument', 'New Applicant', 2);
+        }
+    }
+
+    function ShowDocuments() {
+        $('#LoadLetterTray').load("../GeneralInfo/UploadedFilesView?Add_doc=1", function (responseTxt, statusTxt, xhr) {  // To load Letter tray
+            $('#LoadLetterTray').html(responseTxt);
+        });
+
+
+        // $('#LoadLetterTray').load("../GeneralInfo/LetterGenerationView"); // To load Letter tray
+
+
+        $("#divUploads").slideToggle();
+    }
+
+    jQuery('#UpdateFile').validationEngine();
+</script>
+
+
+@using (Html.BeginForm("DocumentSave", "GeneralInfo", FormMethod.Post, new { enctype = "multipart/form-data", id = "UpdateFile" }))
+{
+    <div style="max-height:200px; overflow-y:auto;">
+        @if (Model.DocumentList.Count != 0)
+        {
+            @*<table style="width: 100%">
+                <tr>
+                   
+                    <td style="width: 11%">
+                        <span class="lblSpan">Document Name/Type</span><br/>
+                        <input type="text" id="txtDoc" /></td>
+                    <td style="width: 10%">
+                        <input type="button" style="background-color: #03507d !important;" value="Search" onclick="DocSearch();" /></td>
+                    <td style="width: 10%">
+
+                        <input type="button" value="All" onclick="DocAll();" />
+                    <td>
+                        <input style="width: 142px; float: left; visibility: hidden; background-color: #03507d !important;" type="button" value="Back To Referral" onclick="ReferalBack();" />
+                    </td>
+                     <td style="width: 14%"></td>
+            </table>*@
+            <table style="width: 100%" class="gridStyle">
+                <thead>
+                    <tr class="HeaderStyle">
+                        <td style="width: 50%"><b>Document Name</b>
+                        </td>
+                        <td style="width: 10%"><b>Document Type</b>
+                        </td>
+                        <td style="width: 10%"><b>Created On</b>
+                        </td>
+                        <td style="width: 5%"><b>Download</b>
+                        </td>
+                        <td style="width: 5%"><b>&nbsp Edit</b>
+                        </td>
+                         <td style="width: 5%"><b>Delete</b>
+                        </td>
+                    </tr>
+                </thead>
+                @for (int i = 0; i < Model.DocumentList.Count; i++)
+                {
+                                        
+                    <tr>
+                        <td>
+                            @* <a id="@Model.LetterLists[i].LetterTrayId" onclick="ViewLetterTray(event,this.id)" href="#">@Model.LetterLists[i].LetterName</a>*@
+                            @Model.DocumentList[i].DocName
+                            @Html.HiddenFor(m => Model.DocumentList[i].DocId, Model.DocumentList[i].DocId)
+                            @*@Html.TextBoxFor(m => Model.DocumentList[i].DocName, Model.DocumentList[i].DocName, new {@id=@Model.DocumentList[i].DocId, onblur = "EditFn(this.id);" })*@ 
+                        </td>
+                        <td>
+                            @Model.DocumentList[i].DocPath
+                        </td>
+                        <td>
+                            @Model.DocumentList[i].CreatedDate
+                        </td>
+                        <td>
+                            @Html.HiddenFor(m => Model.DocumentList[i].DocId, Model.DocumentList[i].DocId)
+                            <a id="@Model.DocumentList[i].DocId" href="#" onclick="downloadFn(this.id);" >Download</a></td>
+
+                        <td>
+                            @Html.HiddenFor(m => Model.DocumentList[i].DocId, Model.DocumentList[i].DocId)
+                            <a id= "@Model.DocumentList[i].DocId"  href="#" onclick="EditFn(this.id);" >&nbsp Edit</a>
+
+                        </td>
+                        <td>
+                            @Html.HiddenFor(m => Model.DocumentList[i].DocId, Model.DocumentList[i].DocId)
+                            <a id= "@Model.DocumentList[i].DocId"  href="#" onclick="deleteDoc(this.id);" >Delete</a>
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        }
+        <input id="hdReferal" type="hidden" />
+    </div>
+        if (Model.DocVisible == "1")
+        {
+    <div class="addDocDiv">
+        <table id="tblData8" class="clsTabDiv" style="float: left; display: table; width: 100%;">
+            <tbody>
+
+                <tr style="width: 100%;">
+                    <td class="lblBold" style="width: 100%;" colspan="6">Select Document</td>
+                </tr>
+                <tr style="width: 100%;">
+                    <td colspan="1">
+                        <span class="lblSpan">Document Name</span>
+                        <span style="color: red;">* </span><br/>
+                            <span>
+                                @Html.TextBoxFor(m => m.DocumentName, Model.DocumentName, new { @id = "txtDocName", @name = "objclsUpld.DocName", @class = "validate[required]" })
+                            </span>
+                       
+                    </td>
+                    <td colspan="1">
+                        <span class="lblSpan">Document Type</span>
+                        <span style="color: red;">* </span><br/>
+                            <span>
+                                @Html.DropDownListFor(m => m.DocumentType, Model.DocumentTypeList, new { @style = "width:72%;", @class = "validate[required]", @id = "drpDocType", @name = "objclsUpld.DocType", @onChange = "docTypeOther();" })
+                            </span>
+                       
+                    </td>
+                    <td class="tdtext" style="width:200px;"></td>
+                    <td class="tdtext" colspan="1"></td>
+                    <td class="tdtext" colspan="1"></td>
+                    <td class="tdtext" colspan="1"></td>
+                </tr>
+                <tr style="width: 100%;">
+                    <td colspan="1">
+                        <span class="lblSpan">Upload Documents</span>
+                        <span style="color: red">*</span><br/>
+                            <span>
+
+                                <input id="fleUpldDoccuments" type="file" name="fileUpldDocName" style="width: 222px">
+                            </span>
+                        
+                    </td>
+                    <td colspan="1">
+                       <div class="txtOtherDiv" style="display:none;">
+                       <span class="lblSpan">OtherType (Specify)</span><span style="color: red;float:left;">* </span><br/>
+                       
+                        <span>
+                            @Html.TextBoxFor(m => m.OtherFDocType, Model.OtherFDocType, new { @name = "objclsUpld.OtherName", @id = "txtOther", @class = "ui-autocomplete-input" })
+
+                        </span>
+                       </div>
+                    </td>
+                    <td class="tdtext" style="width:200px;"></td>
+                    <td class="tdtext" colspan="1"></td>
+                    <td class="tdtext" colspan="1"></td>
+                    <td class="tdtext" colspan="1"></td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        @if (ViewBag.permission == "true"){
+                        <input id="btnSaveDoccuments" class="NFButton" type="submit" value="Save" style="float:left;">
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input id="hidSec8" class="tabcls" type="hidden" name="TabId" value="8">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Task 28 List 3 12-Oct-2020 start--- -->
+    <div id="dialog" title="Edit" style="visibility:hidden">
+        <table>
+            <tr>
+                <td><label>Document Name:</label></td>
+                <td><input type="text" id="txt1"></td>
+            </tr>
+            <tr>
+                <td><label>Document Type:</label></td>
+                <td>@Html.DropDownListFor(m => m.DocumentType, Model.DocumentTypeList, new { ID = "ddlDoctype" })</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr style="width: 100%;">                
+                <td colspan="2"><input type="button" id="upd" name="update1" value="Update" onclick="EditDocName(this.id)" style="float:none;"/></td>                
+            </tr>
+        </table>
+    </div>
+    <!--Task 28 List 3 20-Oct-2020 END--- -->
+        }
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#UpdateFile').ajaxForm(options);
+    });
+
+
+    function docTypeOther() {
+        var val = $('#drpDocType').find('option:selected').text();
+        if (val == "Other") {
+            $('.txtOtherDiv').show();
+        }
+
+        else {
+
+            $('.txtOtherDiv').hide();
+
+        }
+
+    };
+</script>
+@*}*@
+

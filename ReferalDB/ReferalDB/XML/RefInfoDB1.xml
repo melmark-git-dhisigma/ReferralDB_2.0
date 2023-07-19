@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ReferralTemplate>
+  <Sections>
+    <Section name="General Information" id="1">
+      <rows>
+        <row>
+          <cell id="lblFirstName" type="label" label="First name" colspan="1"></cell>
+          <cell id="txtFirstName" type="input[text]" label="First name" modelName="RefFrstName" colspan="1"></cell>
+          <cell id="lblLastName"  type="label" label="Last name" colspan="1"></cell>
+          <cell id="txtLastName"  type="input[text]" label="Last name" modelName="RefLstName" colspan="1"></cell>
+        </row>
+        <row>
+          <cell id="lblMaidenName" type="label" label="Middle Name" colspan="1"></cell>
+          <cell id="txtMaidenName" type="input[text]" label="Middle Name" modelName="RefMaidenName" colspan="1"></cell>
+          <cell id="lblDate"  type="label" label="Date" colspan="1"></cell>
+          <cell id="txtDate"  type="input[text]" label="Date" modelName="RefDate" colspan="1"></cell>
+        </row>
+
+        <row>
+          <cell id="lblDOB" type="label" label="Date of Birth" colspan="1"></cell>
+          <cell id="txtDOB" type="input[text]" label="Date of Birth" colspan="1" modelName="RefDOB"></cell>
+          <cell id="lblSocSecurity"  type="label" label="Social Security No" colspan="1"></cell>
+          <cell id="txtSocSecurity"  type="input[text]" label="Social Security No" modelName="RefSocSecNo" colspan="1"></cell>
+        </row>
+
+        <row>
+          <cell id="lblPreheight" type="label" label="Present Height" colspan="1"></cell>
+          <cell id="txtPreheight" type="input[text]" label="Present Height" modelName="RefPresentHght" colspan="1"></cell>
+          <cell id="lblPreWeight"  type="label" label="Present Weight" colspan="1"></cell>
+          <cell id="txtPreWeight"  type="input[text]" label="Present Weight" modelName="RefPresntWeigth" colspan="1"></cell>
+        </row>
+
+        <row>
+          <cell id="lblSSiNo" type="label" label="SSI No" colspan="1"></cell>
+          <cell id="txtSSiNo" type="input[text]" label="SSI No" modelName="RefSSiNo" colspan="1"></cell>
+          <cell id="lblhairColor"  type="label" label="Hair Color" colspan="1"></cell>
+          <cell id="txthairColor"  type="input[text]" label="Hair Color" modelName="RefHairColor" colspan="1"></cell>
+        </row>
+
+        <row>
+          <cell id="lblEyecolor" type="label" label="Eye Color" colspan="1"></cell>
+          <cell id="txtEyecolor" type="input[text]" label="Eye Color" colspan="1" modelName="RefEyecolor"></cell>
+          <cell id="lblaprtUnit"  type="label" label="Apartment/Unit" colspan="1"></cell>
+          <cell id="txtaprtUnit"  type="input[text]" label="Apartment/Unit" colspan="1" modelName="RefAptUnit"></cell>
+        </row>
+
+        <row>
+          <cell id="lblStreetAdrs" type="label" label="Street Address"  colspan="1"></cell>
+          <cell id="txtStreetAdrs" type="input[text]" label="Street Address" colspan="1" modelName="RefStreetAdrs"></cell>
+          <cell id="lblCity"  type="label" label="City" colspan="1"></cell>
+          <cell id="txtCity"  type="input[text]" label="City" colspan="1" modelName="RefCity"></cell>
+        </row>
+
+        <row>
+          <cell id="lblZipCode" type="label" label="Zip Code" colspan="1"></cell>
+          <cell id="txtZipCode" type="input[text]" label="SSI No" colspan="1" modelName="RefZipCode"></cell>
+          <cell id="lblCountry"  type="label" label="Country" colspan="1"></cell>
+          <cell id="txtCountry"  type="input[text]" label="Country" colspan="1" modelName="RefCountry"></cell>
+        </row>
+
+        <row>
+          <cell id="lblState" type="label" label="State" colspan="1"></cell>
+          <cell id="txtState" type="input[text]" label="State" colspan="1" modelName="RefState"></cell>
+          <cell id="lblUploadPhoto"  type="label" label="Upload Photo" colspan="1"></cell>
+          <cell id="txthairColor"  type="input[file]" label="Hair Color" colspan="1" modelName="RefHairColor"></cell>
+        </row>
+
+        <row>
+          <cell id="lblRefFor" type="label" label="Referral For" colspan="1"></cell>
+          <cell id="chkRefFor1|chkref2|chkref3" type="input[check]" Count="3" label="Early Childhood(Day School,ages 3-10)|School Age(Day School,ages 3-10)|Residential" colspan="3"></cell>
+        </row>
+
+        <row>
+
+          <cell id="btnGenSave" type="input[button]" label="Save" colspan="3"></cell>
+
+        </row>
+
+      </rows>
+    </Section>
+
+
+    <Section name="General Family Background Information" id="1">
+      <rows>
+        <row>
+          <cell id="lblMother" type="lblBold" label="Mother" colspan="4"></cell>
+        </row>
+
+        <row>
+          <cell id="lblMthrFirstName" type="label" label="First name" colspan="1"></cell>
+          <cell id="txtMthrFirstName" type="input[text]" label="First name" modelName="txtMthrFirstName" colspan="1"></cell>
+          <cell id="lblMthrMiddleName"  type="label" label="Middle name" colspan="1"></cell>
+          <cell id="txtMthrMiddleName"  type="input[text]" label="Middle name" colspan="1" modelName="txtMthrMiddleName"></cell>
+        </row>
+        <row>
+          <cell id="lblMthrlastName" type="label" label="Last Name" colspan="1"></cell>
+          <cell id="txtMthrLstName" type="input[text]" label="Last Name" colspan="1" modelName="txtMthrLstName"></cell>
+          <cell id="lblMthrAge"  type="label" label="Age" colspan="1"></cell>
+          <cell id="txtMthrAge"  type="input[text]" label="Age" colspan="1" modelName="txtMthrAge"></cell>
+        </row>
+
+        <row>
+          <cell id="lblMthrDOB" type="label" label="Date of Birth" colspan="1"></cell>
+          <cell id="txtMthrDob" type="input[text]" label="Date of Birth" colspan="1" modelName="txtMthrDob"></cell>
+          <cell id="lblMthrUsCitzen"  type="label" label="U S Citizen?" colspan="1"></cell>
+          <cell id="txtMthrUScitzen"  type="input[text]" label="U S Citizen" colspan="1" modelName="txtMthrUScitzen"></cell>
+        </row>
+
+        <row>
+          <cell id="lblMthrEmployer" type="label" label="Employer" colspan="1"></cell>
+          <cell id="txtMthrEmployer" type="input[text]" label="Employer" colspan="1" modelName="txtMthrEmployer"></cell>
+          <cell id="lblMthrOccupied"  type="label" label="Occupation" colspan="1"></cell>
+          <cell id="chkoccupationYs|ChkoccupationNo"  type="input[checkVt]" Count="2" label="Yes|No" colspan="1"></cell>
+        </row>
+
+        <row>
+          <cell id="lblMthrStreetAdress" type="label" label="Street Address" colspan="1"></cell>
+          <cell id="txtMthrStreetAdrs" type="input[text]" label="Street Address" colspan="1" modelName="txtMthrStreetAdrs"></cell>
+          <cell id="lblMthrSuite"  type="label" label="Suite" colspan="1"></cell>
+          <cell id="txtMthrSuite"  type="input[text]" label="Suite" colspan="1" modelName="txtMthrSuite"></cell>
+        </row>
+
+        <row>
+          <cell id="lblMthrCity" type="label" label="City" colspan="1"></cell>
+          <cell id="txtMthrCity" type="input[text]" label="City" colspan="1" modelName="txtMthrCity"></cell>
+        </row>
+
+        <row>
+          <cell id="MaritalStatus|Maried|Seperated|Divorced|Remaried|Widowed|Single"  type="input[checkVt]" Count="7" label="MaritalStatus|Maried|Seperated|Divorced|Remaried|Widowed|Single" colspan="4"></cell>
+        </row>
+
+        <row>
+          <cell id="lblFather" type="lblBold" label="Father" colspan="4"></cell>
+        </row>
+
+        <row>
+          <cell id="lblFthrFirstName" type="label" label="First name" colspan="1"></cell>
+          <cell id="txtFthrFirstName" type="input[text]" label="First name" colspan="1" modelName="txtFthrFirstName"></cell>
+          <cell id="lblFthrMiddleName"  type="label" label="Middle name" colspan="1"></cell>
+          <cell id="txtFthrMiddleName"  type="input[text]" label="Middle name" colspan="1" modelName="txtFthrMiddleName"></cell>
+        </row>
+        <row>
+          <cell id="lblFthrlastName" type="label" label="Last Name" colspan="1"></cell>
+          <cell id="txtFthrLstName" type="input[text]" label="Last Name" colspan="1" modelName="txtFthrLstName"></cell>
+          <cell id="lblFthrAge"  type="label" label="Age" colspan="1"></cell>
+          <cell id="txtFthrAge"  type="input[text]" label="Age" colspan="1" modelName="txtFthrAge"></cell>
+        </row>
+
+        <row>
+
+          <cell id="btnFamDataSave" type="input[button]" label="Save" colspan="3"></cell>
+
+        </row>
+
+      </rows>
+    </Section>
+
+    <Section name="Birth And Development History" id="1">
+      <rows>
+
+
+      </rows>
+    </Section>
+  </Sections>
+</ReferralTemplate>

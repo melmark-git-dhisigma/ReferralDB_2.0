@@ -1,0 +1,83 @@
+﻿@model ReferalDB.Models.EngineViewModels
+
+
+<div style="width: 100%" id="ChecklistItems">
+    @foreach (var itm in Model.QueueList)
+    {
+        string Id = "Queue" + itm.QueueId;
+        string tableid = "QueueTable" + itm.QueueId;
+        <div id="@Id">
+            <span class="Panelhead" onclick="ColapseQueue('@tableid');" >@itm.QueueName</span>
+            <br />
+            <table style="width: 100%;display:none" id="@tableid" >
+                @{var checklisthead = Model.checklistother.Where(objchk => objchk.QueueId == itm.QueueId).ToList();}
+                @foreach (var chkitm in checklisthead)
+                {
+                    <tr>
+                        <td>
+
+                            <table style="width: 100%" class="gridStyle">
+                                <tr class="HeaderStyle" style="border-spacing: 0;">
+                                    <td style="width: 80%">
+                                        @chkitm.ChecklistName
+                                    </td>
+                                    <td style="width: 10%">
+                                        @{
+                                          string Newid = "'" + string.Concat(chkitm.ChecklistId, "chk") + "'";
+                                        }
+                                        <div>
+                                        @if (ViewBag.permission == "true")
+                                        {
+                                            <div class="NFButton"  style="cursor:pointer;float:left;width:100%" onclick="DisplayNewRow('@string.Concat(chkitm.ChecklistId, "chk")',@chkitm.ChecklistId);">
+                                                Add New Item
+                                            </div>
+                                        }
+                                        </div>
+                                    </td>
+                                    <td style="width: 10%">
+                                        <div style="cursor: pointer; margin-right: 16px; float: right;">
+                                            @if (ViewBag.permission == "true")
+                                            {
+                                                <img  src="~/Images/Delete.png" onclick="closeChecklistHeader(@chkitm.ChecklistId,@chkitm.QueueId)" />
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+
+                                    <td colspan="3">
+
+                                        <table class="gridStyle" style="width:100%;background-color:white;margin:0;border:0;" id='@string.Concat(chkitm.ChecklistId, "chk")'>
+
+                                            @foreach (var item in Model.checklistitemother)
+                                            {
+                                                if (@item.ChecklistId == @chkitm.ChecklistId)
+                                                {
+                                                <tr style="height: 30px">
+                                                    <td colspan="3" style="width: 80%">@item.ChecklistitemName</td>
+                                                    <td style="float: right; margin-right:15px">
+                                                        @if (ViewBag.permission == "true")
+                                                        {
+                                                            <img src="~/Images/Delete.png" onclick="closeChecklist('@item.ChecklistitemId,@chkitm.QueueId')" />
+                                                        }
+                                                    </td>
+                                                </tr>
+                                                }
+
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    }
+</div>
+

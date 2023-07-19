@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<script src="~/Scripts/jquery-ui-1.8.24.js"></script>
+<script src="~/Scripts/jquery-1.8.2.min.js"></script>
+<script src="~/Scripts/jquery-1.8.2.js"></script>
+<script type="text/javascript">
+    function loadPageDiv(valTopost) {
+
+        if (valTopost == 'AR') {
+            $('#RightMainDiv').load('PreAdmission/AcademicReviews');
+        }
+        if (valTopost == 'CR') {
+            $('#RightMainDiv').load('PreAdmission/ClinicalReview');
+        }
+        if (valTopost == 'FV') {
+            $('#RightMainDiv').load('PreAdmission/FundingVerification');
+        }
+        if (valTopost == 'MO') {
+            $('#RightMainDiv').load('PreAdmission/MatchOpening');
+        }
+        if (valTopost == 'ShePS') {
+            $('#RightMainDiv').load('IntakeAssessment/ParantScreenShedule');
+        }
+        if (valTopost == 'PSIA') {
+            $('#RightMainDiv').load('IntakeAssessment/TourParentScreening');
+        }
+        if (valTopost == 'ARIA') {
+            $('#RightMainDiv').load('IntakeAssessment/AcademicReviewIntakeAssessment');
+        }
+        if (valTopost == 'SAIA') {
+            $('#RightMainDiv').load('IntakeAssessment/ScheduleAppointment');
+        }
+        if (valTopost == 'DC') {
+            $('#RightMainDiv').load('AcceptanceProcess/DocumentChecklist');
+        }
+        if (valTopost == 'CM') {
+            $('#RightMainDiv').load('AcceptanceProcess/ConsentFormLists');
+        }
+        if (valTopost == 'PM') {
+            $('#RightMainDiv').load('AcceptanceProcess/PlacementAgreements');
+        }
+        if (valTopost == 'SI') {
+            $('#RightMainDiv').load('IntakeAssessment/ParantSheduleInteview');
+        }
+        if (valTopost == 'PI') {
+            $('#RightMainDiv').load('IntakeAssessment/ParentInterView');
+        }
+    }
+</script>
+<div class="leftContainer">
+    <div style="" onclick="loadPageDiv('ShePS')">Schedule Appointment for Parent Screening / Tour</div>
+    <div onclick="loadPageDiv('PSIA')">Parent Screening / Tour</div>
+    <div onclick="loadPageDiv('ARIA')">Clinical /Academic Review</div>
+    <div onclick="loadPageDiv('SAIA')">Schedule Appointment for Intake Assessment</div>
+    
+    <div onclick="loadPageDiv('AR')">Academic Review</div>
+    <div onclick="loadPageDiv('CR')">Clinical Review</div>
+    <div onclick="loadPageDiv('FV')">Funding Verification</div>
+    <div onclick="loadPageDiv('MO')">Match Opening</div>
+    <div onclick="loadPageDiv('DC')">Document Checklist</div>
+    <div  onclick="loadPageDiv('PM')">Placement Agreement</div>
+    <div onclick="loadPageDiv('CM')">Consent Meeting</div>
+    <div onclick="loadPageDiv('SI')">Schedule Parent Interview</div>
+    <div onclick="loadPageDiv('PI')">Parent Interview</div>
+
+
+    @*<div>Intake Assessment</div>
+    <div>Admission Review</div>
+    <div>Schedule Parent Interview</div>
+    <div>Parent Interview</div>
+    <div>Acceptance Procedure</div>*@
+
+</div>
+<div id="RightMainDiv" class="middleContainer" style="width: 80%">
+</div>
+
+

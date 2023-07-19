@@ -1,0 +1,195 @@
+﻿.web_dialog_overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: #000000;
+    opacity: .15;
+    filter: alpha(opacity=15);
+    -moz-opacity: .15;
+    z-index: 101;
+    display: none;
+}
+
+.web_dialog {
+    /*display: block;
+    position: fixed;
+    top: -100%;
+    left: 40%;
+    margin-left: -190px;
+    z-index: 102;
+        */
+    display: block;
+    position: fixed;
+    width: 800px;
+    height: auto;
+    top: -100%;
+    left: 40%;
+    margin-left: -190px;
+    font-size: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #333;
+    z-index: 102;
+    background: #f8f7fc url(../Images/smllogo.JPG) right bottom no-repeat;
+    padding: 5px 5px 30px 5px;
+    border: 5px solid #b2ccca;
+}
+
+    .web_dialog hr {
+    
+        margin-top: 5px;
+        padding: 1px;
+        background-color: #B6D1DD;
+    }
+
+
+.sprited {
+    /*line-height: 1000px;*/
+    overflow: hidden;
+    display: block;
+}
+
+
+.td1 {
+    padding: 3px 3px 5px 3px;
+    width: 18%;
+    text-align: left;
+    font-weight: bold;
+}
+
+#sign_up {
+    font-size: 100%;
+    font: 13px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: black;
+    -moz-border-radius: 6px;
+    background: #FFFFFF;
+    -webkit-border-radius: 6px;
+    border: 1px solid #536376;
+    -webkit-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
+    -moz-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
+    padding: 5px;
+    width: 700px;
+    position: relative;
+    display: block;
+}
+
+    #sign_up h3 {
+        color: black;
+    }
+
+#sign_up1 h3 {
+    color: black;
+}
+
+#sign_up #sign_up_form {
+    margin-top: 1px;
+}
+
+#sign_up label {
+    display: block;
+    margin-bottom: 10px;
+    color: black;
+    font-size: .9em;
+}
+
+    #sign_up label input {
+        display: block;
+        width: 393px;
+        height: 31px;
+        background-position: -201px 0;
+        padding: 2px 8px;
+        font-size: 1.2em;
+        line-height: 31px;
+    }
+
+#see_id {
+    width: 228px;
+    height: 23px;
+    background-position: -202px -133px;
+}
+
+#left_out {
+    background-position: -202px -158px;
+    width: 113px;
+    height: 16px;
+}
+
+#sign_up_form {
+    position: relative;
+    background: url(divider.png) repeat-x bottom left;
+    padding-bottom: 54px;
+    margin-bottom: 12px;
+}
+
+#cancel {
+    background-position: -198px -36px;
+}
+
+#log_in {
+    background-position: -291px -36px;
+}
+
+#cancel:hover {
+    background-position: -198px -67px;
+}
+
+#cancel:active {
+    background-position: -198px -98px;
+}
+
+#log_in:hover {
+    background-position: -291px -67px;
+}
+
+#log_in:active {
+    background-position: -291px -98px;
+}
+
+#close_x {
+    /*background-image: url(../images/close.png);*/
+   display: block;
+    height: 18px;
+    overflow: hidden;
+   
+    right: -1px;
+    top: -17px;
+    width: 34px;
+}
+
+#close_x1 {
+    display: block;
+    height: 34px;
+    overflow: hidden;
+   
+    right: -1px;
+    top: -17px;
+    width: 34px;
+}
+
+#usage {
+    background-position: -323px -172px;
+    width: 67px;
+    height: 22px;
+}
+
+#sign_up1 {
+    font-size: 100%;
+    font: 13px/20px "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: black;
+    -moz-border-radius: 6px;
+    background: #FFFFFF;
+    -webkit-border-radius: 6px;
+    border: 1px solid #536376;
+    -webkit-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
+    -moz-box-shadow: rgba(0,0,0,.6) 0px 2px 12px;
+    padding: 5px;
+    width: 700px;
+    position: relative;
+    display: block;
+}
+
