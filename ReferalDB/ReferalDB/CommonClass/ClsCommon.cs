@@ -1864,6 +1864,7 @@ namespace ReferalDB.CommonClass
                     {
                         string name = args[0].ToString();
                         val = (from objref in objData.StudentPersonals
+                               orderby objref.AdmissionDate
                                where (objref.StudentType == studentype && (objref.LastName.ToLower().StartsWith(name.ToLower()) || objref.FirstName.ToLower().StartsWith(name.ToLower()) || (objref.LastName.ToLower() + "," + objref.FirstName.ToLower()).Contains(name.ToLower()) || objref.StudentPersonalId.Equals(n)))
                                select new StudentSearchDetails
                                {
@@ -1882,6 +1883,7 @@ namespace ReferalDB.CommonClass
                     else
                     {
                         val = (from objref in objData.StudentPersonals
+                               orderby objref.AdmissionDate
                                where (objref.StudentType == studentype)
                                select new StudentSearchDetails
                                {
@@ -1902,6 +1904,7 @@ namespace ReferalDB.CommonClass
                 else
                 {
                     val = (from objref in objData.StudentPersonals
+                           orderby objref.AdmissionDate
                            where (objref.StudentType == studentype)
                            select new StudentSearchDetails
                            {
