@@ -263,7 +263,7 @@
                             </div>
                         </div>
                         <div style="width:100%;overflow-x:auto">
-                              <rsweb:ReportViewer ID="RVReferralReport" runat="server" ProcessingMode="Remote" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" ShowBackButton="false" ShowCredentialPrompts="false" ShowDocumentMapButton="true" ShowExportControls="false" ShowFindControls="false" ShowPageNavigationControls="true" ShowParameterPrompts="true" ShowPrintButton="false" ShowPromptAreaButton="true" ShowRefreshButton="false" ShowToolBar="true" ShowWaitControlCancelLink="true" ShowZoomControl="false"   Width="100%"  Visible="false" AsyncRendering="true" Height="1000px">
+                              <rsweb:ReportViewer ID="RVReferralReport" runat="server" ProcessingMode="Remote" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" ShowBackButton="false" ShowCredentialPrompts="false" ShowDocumentMapButton="true" ShowExportControls="true" ShowFindControls="false" ShowPageNavigationControls="true" ShowParameterPrompts="true" ShowPrintButton="false" ShowPromptAreaButton="true" ShowRefreshButton="false" ShowToolBar="true" ShowWaitControlCancelLink="true" ShowZoomControl="false"   Width="100%"  Visible="false" AsyncRendering="true" Height="1000px">
 
                                     <ServerReport     ReportServerUrl="<%$ appSettings:ReportUrl %>" />                            
 
