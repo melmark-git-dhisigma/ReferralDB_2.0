@@ -619,8 +619,8 @@ namespace ReferalDB.Controllers
                                    Data = Doc.Data,
                                }).SingleOrDefault();
 
-
-                ShowDocument(DocList.DocName, DocList.Data, DocList.ContentType);
+                string encodedFileName = HttpUtility.UrlEncode(DocList.DocName);
+                ShowDocument(encodedFileName, DocList.Data, DocList.ContentType);
 
 
 
