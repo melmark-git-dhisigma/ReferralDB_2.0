@@ -238,6 +238,9 @@
             var searchString = $('#SearchName').val();
             var ID = $('#sessionVal').html();
             var val = $('#hdnradio').val();
+            if (val == "") {
+                val = "Referral";
+            }
             searchString = searchString + '$' + val;
             if (parseInt(ID, 10) > 0) {
                 var Val = "";
