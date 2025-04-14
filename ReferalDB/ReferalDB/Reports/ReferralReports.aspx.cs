@@ -27,6 +27,10 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Web.UI.HtmlControls;
 using NPOI.SS.Formula.Functions;
 using DataLayer;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.VariantTypes;
+using MathNet.Numerics.LinearAlgebra.Factorization;
+using Org.BouncyCastle.Utilities.Encoders;
 namespace ReferalDB.Reports
 {
     public partial class ReferralReports : System.Web.UI.Page
@@ -320,6 +324,100 @@ namespace ReferalDB.Reports
                     }
                 }
                
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            if (Dt != null && Dt.Rows.Count > 0)
+            {
+                var distinctRows = Dt.AsEnumerable()
+                            .GroupBy(row => row["Referral Name"])
+                            .Select(group => group.First())
+                            .CopyToDataTable();
+                return distinctRows;
+            }
+            else
+            {
+                return Dt;
+            }
+        }
+        private System.Data.DataTable GetActiveAgeData(string scoolid, string txtStartAge, string txtEndAge, string schoolid, string status)
+        {
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+            string qry = "SELECT SchoolId,SD.[StudentPersonalId],SD.LastName + ',' + SD.FirstName AS studentPersonalName, CASE WHEN[ImageUrl] IS NULL OR[ImageUrl] = '' THEN CASE WHEN SD.Gender = 1 THEN" +
+     " (SELECT FormatImg FROM[dbo].[DefaultImage] WHERE Sex = 'M') ELSE(SELECT FormatImg FROM[dbo].[DefaultImage] WHERE Sex = 'F')  END ELSE[ImageUrl] END AS[ImageUrl]" +
+            ", CASE WHEN SD.Gender = 1 THEN 'Male' ELSE 'Female' END Gender, CONVERT(VARCHAR(10), SD.[BirthDate], 101) AS[BirthDate]" +
+     ",DATEDIFF(YEAR, SD.BirthDate, GETDATE()) - (CASE WHEN DATEADD(YY, DATEDIFF(YEAR, SD.BirthDate, GETDATE()),SD.BirthDate) > GETDATE() THEN 1 ELSE 0 END) AS Age" +
+     ", SD.[PlaceOfBirth] ,[Height],[Weight],ADL.[City] AS[City] ,CONVERT(VARCHAR(10), SD.[AdmissionDate], 101) AS[DateOfReferral]" +
+    " ,(SELECT LookupName FROM LookUp WHERE LookupType = 'State' AND LookupId = ADL.StateProvince) AS State, CASE WHEN InactiveList = 'True' THEN 'IL' ELSE 'AV' END AS QueueType" +
+      " FROM [dbo].[StudentPersonal] SD INNER JOIN StudentAddresRel SDR ON SDR.StudentPersonalId = SD.StudentPersonalId INNER JOIN AddressList ADL ON ADL.AddressId = SDR.AddressId" +
+      " WHERE StudentType = 'Referral' ORDER BY SD.AdmissionDate DESC";
+            SqlCommand cmd = new SqlCommand(qry, conn);
+            cmd.CommandTimeout = 1200;
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                Dt.Columns.Add("Referral Name", typeof(string));
+                Dt.Columns.Add("Gender", typeof(string));
+                Dt.Columns.Add("Birth Date", typeof(string));
+                Dt.Columns.Add("Age", typeof(string));
+                Dt.Columns.Add("Date of Referral", typeof(string));
+                Dt.Columns.Add("City", typeof(string));
+                Dt.Columns.Add("State", typeof(string));
+                if (dt != null && dt.Rows.Count > 0)
+                {
+
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        if (Convert.ToInt32(dt.Rows[i]["Age"]) >= Convert.ToInt32(txtStartAge) && Convert.ToInt32(dt.Rows[i]["Age"]) <= Convert.ToInt32(txtEndAge) && dt.Rows[i]["QueueType"].ToString() == status && dt.Rows[i]["SchoolId"].ToString() == schoolid)
+                        {
+                            DataRow row = Dt.NewRow();
+                            if (dt.Rows[i]["studentPersonalName"] != null)
+                            {
+                                row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
+                            }
+                            if (dt.Rows[i]["BirthDate"] != null)
+                            {
+                                row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
+                            }
+                            if (dt.Rows[i]["Gender"] != null)
+                            {
+                                row["Gender"] = dt.Rows[i]["Gender"].ToString();
+                            }
+                            if (dt.Rows[i]["Age"] != null)
+                            {
+                                row["Age"] = dt.Rows[i]["Age"].ToString();
+                            }
+                            if (dt.Rows[i]["DateOfReferral"] != null)
+                            {
+                                row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                            }
+                            if (dt.Rows[i]["City"] != null)
+                            {
+                                row["City"] = dt.Rows[i]["City"].ToString();
+                            }
+                            if (dt.Rows[i]["State"] != null)
+                            {
+                                row["State"] = dt.Rows[i]["State"].ToString();
+                            }
+                            Dt.Rows.Add(row);
+                        }
+                    }
+                }
+
 
             }
             catch (Exception ex)
@@ -761,6 +859,8 @@ namespace ReferalDB.Reports
             {
                 if (txtStartAge.Text != "" && txtEndAge.Text != "" && ddlStatus.SelectedItem.Value!="0")
                 {
+                    if (highcheck.Checked == false)
+                    {
                     RVReferralReport.Visible = true;
                     tdMsg.InnerHtml = "";
                     RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReportAgeStatus"];
@@ -771,6 +871,30 @@ namespace ReferalDB.Reports
                     parm[2] = new ReportParameter("AgeStart", txtStartAge.Text);
                     parm[3] = new ReportParameter("AgeEnd", txtEndAge.Text);
                     this.RVReferralReport.ServerReport.SetParameters(parm);
+                }
+                    else
+                    {
+                        RVReferralReport.Visible = false;
+                        tdMsg.InnerHtml = "";
+                        alldata = GetActiveAgeData(sess.SchoolId.ToString(), txtStartAge.Text, txtEndAge.Text, sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
+                        if (alldata != null && alldata.Rows.Count > 0)
+                        {
+                            ViewState["alldata"] = DataTableToJson(alldata);
+                            string htmlTable = GenerateHtmlTable(alldata);
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = htmlTable;
+                            string script3 = "Applypagination();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script3, true);
+                            Btnexport.Visible = true;
+                        }
+                        else
+                        {
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = "No data available";
+                        }
+                        string script2 = "hideoverlay();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show8", script2, true);
+                    }
                 }
                 else if (ddlStatus.SelectedItem.Value == "0")
                 {
