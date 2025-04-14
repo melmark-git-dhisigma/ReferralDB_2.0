@@ -40,8 +40,17 @@
             $('#' + MenuClass).attr('class', 'ActiveRef');
         }
 
+        function showoverlay() {
+            var checkbox = document.getElementById('<%= highcheck.ClientID %>');
+            if (checkbox.checked) {
+                document.getElementById("overlay").style.display = "block";
+            }
 
+        }
+        function hideoverlay() {
+            document.getElementById("overlay").style.display = "none";
 
+        }
 
         function validate(key) {
             var keycode = (key.which) ? key.which : key.keyCode;
@@ -58,7 +67,24 @@
         .linkstyle {
             padding:8px;
         }
-        
+          #overlay {
+             display: none; /* Hidden by default */
+             position: fixed;
+             top: 180px;
+             left: 340px;
+             width: 100%;
+             height: 100%;
+             background-color: rgba(0, 0, 0, 0.7);
+             color: white;
+             text-align: center;
+             font-size: 24px;
+             z-index: 9999;
+             padding-top: 400px; /* Center the text vertically */
+         }
+
+          .center-align {
+        text-align: center;
+    }
     </style>
     <title id="tileid"></title>
     
@@ -99,14 +125,13 @@
 
                 <div class="ContentAreaContainer">
                     <div class="leftContainer" style="width: 19%">
-
+                        <asp:CheckBox ID="highcheck" runat="server" Text="" />
                         <ul>
-
 
                             <li id="" class="accordion" onclick="" style="position: static;">
                                 <h5 id="AllReferral" class="allexp">
                                     <span class="dd"></span>
-                                    <asp:LinkButton ID="LbtnAllReferral" CssClass="linkstyle" runat="server" Text="All Referrals" ToolTip="All Referrals" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnAllReferral_Click"></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnAllReferral" CssClass="linkstyle" runat="server" Text="All Referrals" ToolTip="All Referrals" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnAllReferral_Click" OnClientClick="showoverlay()"></asp:LinkButton>
                              
                                 </h5>
                             </li>
@@ -262,6 +287,19 @@
                                 </table>
                             </div>
                         </div>
+                        <div id="overlay" runat="server">
+                            <p> please wait...</p>
+                                 
+                        </div>
+                              <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false"  />
+                           <asp:GridView ID="allgrid" runat="server" AutoGenerateColumns="true" AllowPaging="true"  PageSize="20"
+Width="80%" BorderColor="Black" BorderWidth="1px" CellPadding="5" Visible="false" CssClass="center-align" OnPageIndexChanging="GridView1_PageIndexChanging">
+      <HeaderStyle BackColor="darkblue" ForeColor="white" />
+                               
+            </asp:GridView>
+
+                        
+        </div>
                         <div style="width:100%;overflow-x:auto">
                               <rsweb:ReportViewer ID="RVReferralReport" runat="server" ProcessingMode="Remote" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" ShowBackButton="false" ShowCredentialPrompts="false" ShowDocumentMapButton="true" ShowExportControls="true" ShowFindControls="false" ShowPageNavigationControls="true" ShowParameterPrompts="true" ShowPrintButton="false" ShowPromptAreaButton="true" ShowRefreshButton="false" ShowToolBar="true" ShowWaitControlCancelLink="true" ShowZoomControl="false"   Width="100%"  Visible="false" AsyncRendering="true" Height="1000px">
 
@@ -274,6 +312,8 @@
                             <asp:HiddenField ID="hdnMenu" runat="server" />
                         </div>
                     </div>
+                      <div>
+         
 
 
 

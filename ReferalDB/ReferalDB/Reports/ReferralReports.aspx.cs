@@ -16,15 +16,22 @@ using System.IO;
 using BuisinessLayer;
 using System.Web.Services;
 using System.Web.Script.Services;
-
+using System.Web.Script.Serialization;
+using System.IO.Compression;
+using System.Text;
+using System.Drawing;
+using NPOI.XSSF.UserModel;  
+using NPOI.SS.UserModel;
+using System.Security.Cryptography;
 namespace ReferalDB.Reports
 {
     public partial class ReferralReports : System.Web.UI.Page
     {
         public clsSession sess = null;
+        DataTable alldata;
         protected void Page_Load(object sender, EventArgs e)
         {
-           
+            Btnexport.Visible = false;
             if (!IsPostBack)
             {
                
@@ -105,25 +112,207 @@ namespace ReferalDB.Reports
 
         protected void LbtnAllReferral_Click(object sender, EventArgs e)
         {
-            hdnMenu.Value = "AllReferral";
-            RVReferralReport.SizeToReportContent = false;
-            tdMsg.InnerHtml = "";
-            HeadingDiv.Visible = true;
-            divfunded.Visible = false;
-            referralage.Visible = false;
-            HeadingDiv.InnerHtml = "All Referrals";
-            RVReferralReport.Visible = true;
-            sess = (clsSession)Session["UserSession"];
-            RVReferralReport.ServerReport.ReportServerCredentials = new CustomReportCredentials(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], ConfigurationManager.AppSettings["Domain"]);
-            RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReport"];
-            RVReferralReport.ShowParameterPrompts = false;
-            ReportParameter[] parm = new ReportParameter[1];
-            parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
-            this.RVReferralReport.ServerReport.SetParameters(parm);
-            RVReferralReport.ServerReport.Refresh();
-            divlocation.Visible = false;
-            divbirthdate.Visible = false;
-            
+            if (highcheck.Checked == false)
+            {
+                allgrid.Visible = false;
+                hdnMenu.Value = "AllReferral";
+                RVReferralReport.SizeToReportContent = false;
+                tdMsg.InnerHtml = "";
+                HeadingDiv.Visible = true;
+                divfunded.Visible = false;
+                referralage.Visible = false;
+                HeadingDiv.InnerHtml = "All Referrals";
+                RVReferralReport.Visible = true;
+                sess = (clsSession)Session["UserSession"];
+                RVReferralReport.ServerReport.ReportServerCredentials = new CustomReportCredentials(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], ConfigurationManager.AppSettings["Domain"]);
+                RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReport"];
+                RVReferralReport.ShowParameterPrompts = false;
+                ReportParameter[] parm = new ReportParameter[1];
+                parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
+                this.RVReferralReport.ServerReport.SetParameters(parm);
+                RVReferralReport.ServerReport.Refresh();
+                divlocation.Visible = false;
+                divbirthdate.Visible = false;
+                Btnexport.Visible = false;
+
+            }
+            else
+            {
+                hdnMenu.Value = "AllReferral";
+                tdMsg.InnerHtml = "";
+                HeadingDiv.Visible = true;
+                divfunded.Visible = false;
+                referralage.Visible = false;
+                HeadingDiv.InnerHtml = "All Referrals";
+                RVReferralReport.Visible = false;
+                sess = (clsSession)Session["UserSession"];
+                divlocation.Visible = false;
+                divbirthdate.Visible = false;
+                allgrid.Visible = true;
+                 alldata = GetData(sess.SchoolId.ToString());
+                 ViewState["alldata"] = DataTableToJson(alldata);
+                allgrid.DataSource = alldata;
+                allgrid.DataBind();
+                string script2 = "hideoverlay();";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show2", script2, true);
+                Btnexport.Visible = true;
+
+            }
+
+        }
+        protected void GridView1_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            allgrid.PageIndex = e.NewPageIndex;
+            alldata = JsonToDataTable(ViewState["alldata"].ToString());
+            allgrid.DataSource = alldata;
+            allgrid.DataBind();
+            allgrid.AllowPaging = true;
+        }
+       
+        private DataTable GetData(string scoolid)
+        {
+            DataTable Dt=new DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+            SqlCommand cmd = new SqlCommand("ReferralReportProcedure", conn);
+            cmd.CommandTimeout = 1200;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@SchoolId", scoolid);
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                Dt.Columns.Add("Referral Name", typeof(string));
+                Dt.Columns.Add("Birth Date", typeof(string));
+                Dt.Columns.Add("Gender", typeof(string));
+                Dt.Columns.Add("Age", typeof(string));
+                Dt.Columns.Add("Date of Referral", typeof(string));
+                Dt.Columns.Add("City", typeof(string));
+                Dt.Columns.Add("State", typeof(string));
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)  
+                    {
+                        DataRow row = Dt.NewRow();
+                        if (dt.Rows[i]["studentPersonalName"] != null)
+                        {
+                            row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;  
+                        }
+                        if (dt.Rows[i]["BirthDate"] != null)
+                        {
+                            row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
+                        }
+                        if (dt.Rows[i]["Gender"] != null)
+                        {
+                            row["Gender"] = dt.Rows[i]["Gender"].ToString();
+                        }
+                        if (dt.Rows[i]["Age"] != null)
+                        {
+                            row["Age"] = dt.Rows[i]["Age"].ToString();
+                        }
+                        if (dt.Rows[i]["DateOfReferral"] != null)
+                        {
+                            row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                        }
+                        if (dt.Rows[i]["City"] != null)
+                        {
+                            row["City"] = dt.Rows[i]["City"].ToString();
+                        }
+                        if (dt.Rows[i]["State"] != null)
+                        {
+                            row["State"] = dt.Rows[i]["State"].ToString();
+                        }
+                        Dt.Rows.Add(row);
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            var distinctRows = Dt.AsEnumerable()
+                            .GroupBy(row => row["Referral Name"])
+                            .Select(group => group.First())
+                            .CopyToDataTable();
+            return distinctRows;
+        }
+        private string DataTableToJson(DataTable dt)
+        {
+            var rows = new List<Dictionary<string, object>>();
+            foreach (DataRow row in dt.Rows)
+            {
+                var rowDict = new Dictionary<string, object>();
+                foreach (DataColumn column in dt.Columns)
+                {
+                    rowDict[column.ColumnName] = row[column];
+                }
+                rows.Add(rowDict);
+            }
+
+            var serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = 2147483647;
+            return CompressString(serializer.Serialize(rows));
+        }
+
+        private DataTable JsonToDataTable(string jsonString)
+        {
+            jsonString = DecompressString(jsonString);
+            var serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = 2147483647;
+            var rows = serializer.Deserialize<List<Dictionary<string, object>>>(jsonString);
+            DataTable dt = new DataTable();
+            if (rows.Count > 0)
+            {
+                foreach (var column in rows[0].Keys)
+                {
+                    dt.Columns.Add(column);
+                }
+
+                foreach (var rowDict in rows)
+                {
+                    var row = dt.NewRow();
+                    foreach (var column in rowDict.Keys)
+                    {
+                        row[column] = rowDict[column];
+                    }
+                    dt.Rows.Add(row);
+                }
+            }
+
+            return dt;
+        }
+
+        public  string CompressString(string str)
+        {
+            var bytes = Encoding.UTF8.GetBytes(str);
+            using (var ms = new MemoryStream())
+            {
+                using (var gzip = new GZipStream(ms, CompressionMode.Compress))
+                {
+                    gzip.Write(bytes, 0, bytes.Length);
+                }
+                return Convert.ToBase64String(ms.ToArray());
+            }
+        }
+
+        public  string DecompressString(string compressedStr)
+        {
+            var bytes = Convert.FromBase64String(compressedStr);
+            using (var ms = new MemoryStream(bytes))
+            using (var gzip = new GZipStream(ms, CompressionMode.Decompress))
+            using (var reader = new StreamReader(gzip, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
         }
         protected void ClearAgeStatus()
         {
@@ -434,8 +623,79 @@ namespace ReferalDB.Reports
             }
         }
 
-       
+
+        protected void btnexport_Click(object sender, EventArgs e)
+        {
+            alldata = JsonToDataTable(ViewState["alldata"].ToString());
+        sess = (clsSession)Session["UserSession"];
+                 string Filename = "ReferralReport" + ".xlsx";
+             Filename = Server.UrlEncode(Filename);
+                        ExportToExcel(alldata, Filename, Response);
+          
+        }
+        
+
+private void ExportToExcel(DataTable dt, string Filename, HttpResponse response)
+    {
+            IWorkbook workbook = new XSSFWorkbook();
+            ISheet sheet = workbook.CreateSheet("Sheet1");
+
+            ICellStyle headerStyle = workbook.CreateCellStyle();
+            headerStyle.FillForegroundColor = IndexedColors.LightBlue.Index;
+            headerStyle.FillPattern = FillPattern.SolidForeground;
+            headerStyle.Alignment = HorizontalAlignment.Center;  
+            headerStyle.VerticalAlignment = VerticalAlignment.Center; 
+
+            IRow headerRow = sheet.CreateRow(0);
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                ICell cell = headerRow.CreateCell(i);
+                cell.SetCellValue(dt.Columns[i].ColumnName);
+                cell.CellStyle = headerStyle;
+            }
+
+            ICellStyle dataStyle = workbook.CreateCellStyle();
+            dataStyle.Alignment = HorizontalAlignment.Center; 
+            dataStyle.VerticalAlignment = VerticalAlignment.Center;  
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i + 1);
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    ICell cell = row.CreateCell(j);
+                    cell.SetCellValue(dt.Rows[i][j].ToString());
+                    cell.CellStyle = dataStyle; 
+                }
+            }
+
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                int columnLength = dt.Columns[i].ColumnName.Length;  
+                for (int j = 0; j < dt.Rows.Count; j++)
+                {
+                    int cellLength = dt.Rows[j][i].ToString().Length;
+                    columnLength = Math.Max(columnLength, cellLength);  
+                }
+
+                sheet.SetColumnWidth(i, (columnLength + 2) * 256);  
+            }
+
+            response.Clear();
+            response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            response.AddHeader("Content-Disposition", "attachment;filename=" + Filename);
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                workbook.Write(ms);
+                response.BinaryWrite(ms.ToArray());
+            }
+
+            response.End();
+
+        }
 
 
     }
+
 }

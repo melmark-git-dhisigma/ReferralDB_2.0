@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ReferalDB.Reports {
-    
-    
-    public partial class ReferralReports {
-        
+namespace ReferalDB.Reports
+{
+
+
+    public partial class ReferralReports
+    {
+
         /// <summary>
         /// tileid control.
         /// </summary>
@@ -48,6 +50,15 @@ namespace ReferalDB.Reports {
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnType;
         
+        /// <summary>
+        /// highcheck control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox highcheck;
+
         /// <summary>
         /// LbtnAllReferral control.
         /// </summary>
@@ -336,6 +347,33 @@ namespace ReferalDB.Reports {
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnquarter;
         
+        /// <summary>
+        /// overlay control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl overlay;
+
+        /// <summary>
+        /// Btnexport control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Btnexport;
+
+        /// <summary>
+        /// allgrid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView allgrid;
+
         /// <summary>
         /// RVReferralReport control.
         /// </summary>
