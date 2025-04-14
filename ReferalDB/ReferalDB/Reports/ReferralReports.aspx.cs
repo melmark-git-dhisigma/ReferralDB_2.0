@@ -23,12 +23,14 @@ using System.Drawing;
 using NPOI.XSSF.UserModel;  
 using NPOI.SS.UserModel;
 using System.Security.Cryptography;
+using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Web.UI.HtmlControls;
 namespace ReferalDB.Reports
 {
     public partial class ReferralReports : System.Web.UI.Page
     {
         public clsSession sess = null;
-        DataTable alldata;
+        System.Data.DataTable alldata;
         protected void Page_Load(object sender, EventArgs e)
         {
             Btnexport.Visible = false;
@@ -42,7 +44,7 @@ namespace ReferalDB.Reports
 
         protected void LoadState()
         {
-            DataTable Dt;
+            System.Data.DataTable Dt;
             SqlCommand cmd = null;
             SqlDataAdapter DAdap = null;
             SqlConnection con = new SqlConnection();
@@ -54,7 +56,7 @@ namespace ReferalDB.Reports
                 // if (blnTrans) cmd.Transaction = Trans;
                 using (DAdap = new SqlDataAdapter(cmd))
                 {
-                    Dt = new DataTable();
+                    Dt = new System.Data.DataTable();
                     DAdap.Fill(Dt);
                 }
             }
@@ -112,6 +114,10 @@ namespace ReferalDB.Reports
 
         protected void LbtnAllReferral_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             if (highcheck.Checked == false)
             {
                 allgrid.Visible = false;
@@ -168,10 +174,90 @@ namespace ReferalDB.Reports
             allgrid.DataBind();
             allgrid.AllowPaging = true;
         }
-       
-        private DataTable GetData(string scoolid)
+        private System.Data.DataTable GetTrackData(string scoolid,string status)
         {
-            DataTable Dt=new DataTable();
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+            string qry = "SELECT SD.SchoolId ,SD.[StudentPersonalId] ,SD.LastName+','+SD.FirstName AS studentPersonalName ,CASE WHEN [ImageUrl] IS NULL OR [ImageUrl]='' THEN CASE WHEN SD.Gender=1 THEN  (SELECT FormatImg FROM [dbo].[DefaultImage] WHERE Sex='M')"
+                         + "ELSE  (SELECT FormatImg FROM [dbo].[DefaultImage] WHERE Sex='F')      END ELSE [ImageUrl] END AS [ImageUrl]     ,CASE WHEN SD.Gender=1 THEN 'Male' ELSE 'Female' END Gender ,CONVERT(VARCHAR(10), SD.[BirthDate], 101) AS [BirthDate]  ,CONVERT(VARCHAR(10),"
+                         + "SD.[AdmissionDate], 101) AS [DateOfReferral] ,DATEDIFF(YEAR,SD.BirthDate,GETDATE())  - (CASE WHEN DATEADD(YY,DATEDIFF(YEAR,SD.BirthDate,GETDATE()),SD.BirthDate) >  GETDATE() THEN 1 ELSE 0 END) AS Age    ,SD.[PlaceOfBirth]   ,ADL.[City] AS [City] ,(SELECT LookupName FROM LookUp WHERE LookupType = 'State' AND LookupId = ADL.StateProvince) AS State ,CASE WHEN SD.InactiveList='True' THEN 'IL' ELSE 'AV' END AS QueueType"
+                         + " FROM  [dbo].[StudentPersonal] SD   INNER JOIN StudentAddresRel SDR ON SDR.StudentPersonalId=SD.StudentPersonalId  INNER JOIN AddressList ADL ON ADL.AddressId=SDR.AddressId  WHERE StudentType='Referral'  ORDER BY SD.[AdmissionDate] DESC";
+            SqlCommand cmd = new SqlCommand(qry, conn);
+            cmd.CommandTimeout = 1200;
+          try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                Dt.Columns.Add("Referral Name", typeof(string));
+                Dt.Columns.Add("Gender", typeof(string));
+                Dt.Columns.Add("Birth Date", typeof(string));
+                Dt.Columns.Add("Age", typeof(string));
+                Dt.Columns.Add("Date of Referral", typeof(string));
+                Dt.Columns.Add("City", typeof(string));
+                Dt.Columns.Add("State", typeof(string));
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        if (dt.Rows[i]["QueueType"].ToString() == status)
+                        {
+                            DataRow row = Dt.NewRow();
+                            if (dt.Rows[i]["studentPersonalName"] != null)
+                            {
+                                row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
+                            }
+                            if (dt.Rows[i]["BirthDate"] != null)
+                            {
+                                row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
+                            }
+                            if (dt.Rows[i]["Gender"] != null)
+                            {
+                                row["Gender"] = dt.Rows[i]["Gender"].ToString();
+                            }
+                            if (dt.Rows[i]["Age"] != null)
+                            {
+                                row["Age"] = dt.Rows[i]["Age"].ToString();
+                            }
+                            if (dt.Rows[i]["DateOfReferral"] != null)
+                            {
+                                row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                            }
+                            if (dt.Rows[i]["City"] != null)
+                            {
+                                row["City"] = dt.Rows[i]["City"].ToString();
+                            }
+                            if (dt.Rows[i]["State"] != null)
+                            {
+                                row["State"] = dt.Rows[i]["State"].ToString();
+                            }
+                            Dt.Rows.Add(row);
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            var distinctRows = Dt.AsEnumerable()
+                            .GroupBy(row => row["Referral Name"])
+                            .Select(group => group.First())
+                            .CopyToDataTable();
+            return distinctRows;
+        }
+        private System.Data.DataTable GetData(string scoolid)
+        {
+            System.Data.DataTable Dt =new System.Data.DataTable();
             SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
             SqlCommand cmd = new SqlCommand("ReferralReportProcedure", conn);
             cmd.CommandTimeout = 1200;
@@ -181,7 +267,7 @@ namespace ReferalDB.Reports
             {
                 conn.Open();
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
+                System.Data.DataTable dt = new System.Data.DataTable();
                 da.Fill(dt);
                 Dt.Columns.Add("Referral Name", typeof(string));
                 Dt.Columns.Add("Birth Date", typeof(string));
@@ -245,7 +331,7 @@ namespace ReferalDB.Reports
                             .CopyToDataTable();
             return distinctRows;
         }
-        private string DataTableToJson(DataTable dt)
+        private string DataTableToJson(System.Data.DataTable dt)
         {
             var rows = new List<Dictionary<string, object>>();
             foreach (DataRow row in dt.Rows)
@@ -263,13 +349,13 @@ namespace ReferalDB.Reports
             return CompressString(serializer.Serialize(rows));
         }
 
-        private DataTable JsonToDataTable(string jsonString)
+        private System.Data.DataTable JsonToDataTable(string jsonString)
         {
             jsonString = DecompressString(jsonString);
             var serializer = new JavaScriptSerializer();
             serializer.MaxJsonLength = 2147483647;
             var rows = serializer.Deserialize<List<Dictionary<string, object>>>(jsonString);
-            DataTable dt = new DataTable();
+            System.Data.DataTable dt = new System.Data.DataTable();
             if (rows.Count > 0)
             {
                 foreach (var column in rows[0].Keys)
@@ -324,27 +410,37 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefTrackActive_Click(object sender, EventArgs e)
         {
-            hdnMenu.Value= "RefTrackActive";
-            RVReferralReport.SizeToReportContent = false;
-            ClearAgeStatus();
-            HeadingDiv.Visible = true;
-            HeadingDiv.InnerHtml = "All Referrals Tracking Active";
-            referralage.Visible = true;
-            hdnType.Value = "Active";
-            lblageStart.Visible = false;
-            txtStartAge.Visible = false;
-            lblageend.Visible = false;
-            txtEndAge.Visible = false;
-            lblStatus.Visible = true;
-            ddlStatus.Visible = true;
-            divfunded.Visible = false;
-            divlocation.Visible = false;
-            divbirthdate.Visible = false;
-            RVReferralReport.Visible = false;
+                reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+                allgrid.Visible = false;
+                hdnMenu.Value = "RefTrackActive";
+                RVReferralReport.SizeToReportContent = false;
+                ClearAgeStatus();
+                HeadingDiv.Visible = true;
+                HeadingDiv.InnerHtml = "All Referrals Tracking Active";
+                referralage.Visible = true;
+                hdnType.Value = "Active";
+                lblageStart.Visible = false;
+                txtStartAge.Visible = false;
+                lblageend.Visible = false;
+                txtEndAge.Visible = false;
+                lblStatus.Visible = true;
+                ddlStatus.Visible = true;
+                divfunded.Visible = false;
+                divlocation.Visible = false;
+                divbirthdate.Visible = false;
+                RVReferralReport.Visible = false;
+            
+            
         }
 
         protected void LbtnRefAgeRange_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "RefAgeRange";
             RVReferralReport.SizeToReportContent = false;
             ClearAgeStatus();
@@ -366,6 +462,10 @@ namespace ReferalDB.Reports
 
         protected void LbtnTackingActiveAge_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "TackingActiveAge";
             RVReferralReport.SizeToReportContent = false;
             ClearAgeStatus();
@@ -387,6 +487,10 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefContact_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "RefContact";
             RVReferralReport.SizeToReportContent = true;
             tdMsg.InnerHtml = "";
@@ -410,6 +514,10 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefFunded_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "RefFunded";
             RVReferralReport.SizeToReportContent = false;
             ddlFundingStatus.SelectedValue = "0";
@@ -425,6 +533,10 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefLocation_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "RefLocation";
             ddlState.DataSource = null;
             RVReferralReport.SizeToReportContent = false;
@@ -442,6 +554,10 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefBirthdateQuarter_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
+            Btnexport.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "RefBirthdateQuarter";
             RVReferralReport.SizeToReportContent = false;
             ddlQuarter.SelectedValue = "0";
@@ -464,14 +580,34 @@ namespace ReferalDB.Reports
             {
                 if (ddlStatus.SelectedItem.Value != "0")
                 {
-                    RVReferralReport.Visible = true;
-                    tdMsg.InnerHtml = "";
-                    RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReportStatus"];
-                    RVReferralReport.ShowParameterPrompts = false;
-                    ReportParameter[] parm = new ReportParameter[2];
-                    parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
-                    parm[1] = new ReportParameter("Status", ddlStatus.SelectedItem.Value);
-                    this.RVReferralReport.ServerReport.SetParameters(parm);
+                    if (highcheck.Checked == false)
+                    {
+                        RVReferralReport.Visible = true;
+                        tdMsg.InnerHtml = "";
+                        RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReportStatus"];
+                        RVReferralReport.ShowParameterPrompts = false;
+                        ReportParameter[] parm = new ReportParameter[2];
+                        parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
+                        parm[1] = new ReportParameter("Status", ddlStatus.SelectedItem.Value);
+                        this.RVReferralReport.ServerReport.SetParameters(parm);
+                    }
+                    else
+                    {
+                        
+                        RVReferralReport.Visible = true;
+                        tdMsg.InnerHtml = "";
+                        alldata = GetTrackData(sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
+                        ViewState["alldata"] = DataTableToJson(alldata);
+                        string htmlTable = GenerateHtmlTable(alldata);
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = htmlTable;
+                        string script3 = "Applypagination();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show3", script3, true);
+                        Btnexport.Visible = true;
+                        string script2 = "hideoverlay();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show4", script2, true);
+
+                    }
                 }
                 else
                 {
@@ -542,6 +678,40 @@ namespace ReferalDB.Reports
             }
 
             RVReferralReport.ServerReport.Refresh();
+        }
+        private string GenerateHtmlTable(System.Data.DataTable dataTable)
+        {
+          
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("<table id='trackingactive' class='display' border='1' style='width: 80%; border-collapse: collapse;'>");
+
+            sb.Append("<thead>");
+            sb.Append("<tr>");
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                sb.AppendFormat("<th style='background-color: #111184; color: white; padding: 8px; text-align: left;'>{0}</th>", column.ColumnName);
+            }
+            sb.Append("</tr>");
+            sb.Append("</thead>");
+
+            sb.Append("<tbody>");
+            foreach (DataRow row in dataTable.Rows)
+            {
+                sb.Append("<tr>");
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    sb.AppendFormat("<td style='padding: 8px; text-align: left;'>{0}</td>", row[column]);
+                }
+                sb.Append("</tr>");
+            }
+            sb.Append("</tbody>");
+
+            sb.Append("</table>");
+
+            return sb.ToString();
+
         }
 
         protected void btnshowgraph_Click(object sender, EventArgs e)
@@ -635,7 +805,7 @@ namespace ReferalDB.Reports
         }
         
 
-private void ExportToExcel(DataTable dt, string Filename, HttpResponse response)
+private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpResponse response)
     {
             IWorkbook workbook = new XSSFWorkbook();
             ISheet sheet = workbook.CreateSheet("Sheet1");
