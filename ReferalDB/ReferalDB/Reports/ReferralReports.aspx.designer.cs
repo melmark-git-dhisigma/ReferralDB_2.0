@@ -22,7 +22,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTitle tileid;
-        
+
         /// <summary>
         /// form1 control.
         /// </summary>
@@ -31,7 +31,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
-        
+
         /// <summary>
         /// ScriptManager1 control.
         /// </summary>
@@ -40,7 +40,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.ScriptManager ScriptManager1;
-        
+
         /// <summary>
         /// hdnType control.
         /// </summary>
@@ -49,7 +49,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HiddenField hdnType;
-        
+
         /// <summary>
         /// highcheck control.
         /// </summary>
@@ -67,7 +67,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnAllReferral;
-        
+
         /// <summary>
         /// LbtnRefTrackActive control.
         /// </summary>
@@ -76,7 +76,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnRefTrackActive;
-        
+
         /// <summary>
         /// LbtnRefAgeRange control.
         /// </summary>
@@ -85,7 +85,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnRefAgeRange;
-        
+
         /// <summary>
         /// LbtnTackingActiveAge control.
         /// </summary>
@@ -94,7 +94,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnTackingActiveAge;
-        
+
         /// <summary>
         /// LbtnRefContact control.
         /// </summary>
@@ -103,7 +103,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnRefContact;
-        
+
         /// <summary>
         /// LbtnRefFunded control.
         /// </summary>
@@ -112,7 +112,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnRefFunded;
-        
+
         /// <summary>
         /// LbtnRefLocation control.
         /// </summary>
@@ -121,7 +121,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnRefLocation;
-        
+
         /// <summary>
         /// LbtnRefBirthdateQuarter control.
         /// </summary>
@@ -130,7 +130,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LbtnRefBirthdateQuarter;
-        
+
         /// <summary>
         /// HeadingDiv control.
         /// </summary>
@@ -139,7 +139,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl HeadingDiv;
-        
+
         /// <summary>
         /// tdMsg control.
         /// </summary>
@@ -148,7 +148,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tdMsg;
-        
+
         /// <summary>
         /// referralage control.
         /// </summary>
@@ -157,7 +157,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl referralage;
-        
+
         /// <summary>
         /// lblStatus control.
         /// </summary>
@@ -166,7 +166,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblStatus;
-        
+
         /// <summary>
         /// ddlStatus control.
         /// </summary>
@@ -175,7 +175,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlStatus;
-        
+
         /// <summary>
         /// lblageStart control.
         /// </summary>
@@ -184,7 +184,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblageStart;
-        
+
         /// <summary>
         /// txtStartAge control.
         /// </summary>
@@ -193,7 +193,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtStartAge;
-        
+
         /// <summary>
         /// lblageend control.
         /// </summary>
@@ -202,7 +202,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblageend;
-        
+
         /// <summary>
         /// txtEndAge control.
         /// </summary>
@@ -211,7 +211,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEndAge;
-        
+
         /// <summary>
         /// btnShowReport control.
         /// </summary>
@@ -220,7 +220,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnShowReport;
-        
+
         /// <summary>
         /// divfunded control.
         /// </summary>
@@ -229,7 +229,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divfunded;
-        
+
         /// <summary>
         /// lblfunding control.
         /// </summary>
@@ -238,7 +238,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblfunding;
-        
+
         /// <summary>
         /// ddlFundingStatus control.
         /// </summary>
@@ -247,7 +247,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlFundingStatus;
-        
+
         /// <summary>
         /// btnshowgraph control.
         /// </summary>
@@ -256,7 +256,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnshowgraph;
-        
+
         /// <summary>
         /// divlocation control.
         /// </summary>
@@ -265,7 +265,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divlocation;
-        
+
         /// <summary>
         /// lblStatusdata control.
         /// </summary>
@@ -274,7 +274,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblStatusdata;
-        
+
         /// <summary>
         /// ddlState control.
         /// </summary>
@@ -283,7 +283,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlState;
-        
+
         /// <summary>
         /// lblcity control.
         /// </summary>
@@ -292,7 +292,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblcity;
-        
+
         /// <summary>
         /// txtcity control.
         /// </summary>
@@ -301,7 +301,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtcity;
-        
+
         /// <summary>
         /// btnlocation control.
         /// </summary>
@@ -310,7 +310,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnlocation;
-        
+
         /// <summary>
         /// divbirthdate control.
         /// </summary>
@@ -319,7 +319,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl divbirthdate;
-        
+
         /// <summary>
         /// Label1 control.
         /// </summary>
@@ -328,7 +328,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label Label1;
-        
+
         /// <summary>
         /// ddlQuarter control.
         /// </summary>
@@ -337,7 +337,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlQuarter;
-        
+
         /// <summary>
         /// btnquarter control.
         /// </summary>
@@ -346,7 +346,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnquarter;
-        
+
         /// <summary>
         /// overlay control.
         /// </summary>
@@ -366,6 +366,15 @@ namespace ReferalDB.Reports
         protected global::System.Web.UI.WebControls.Button Btnexport;
 
         /// <summary>
+        /// reporttable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl reporttable;
+
+        /// <summary>
         /// allgrid control.
         /// </summary>
         /// <remarks>
@@ -382,7 +391,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Microsoft.Reporting.WebForms.ReportViewer RVReferralReport;
-        
+
         /// <summary>
         /// hdnMenu control.
         /// </summary>

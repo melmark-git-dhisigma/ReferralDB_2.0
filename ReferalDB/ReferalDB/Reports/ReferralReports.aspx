@@ -12,12 +12,18 @@
 <head runat="server">
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script src="../Scripts/jquery-1.8.2.js" type="text/javascript"></script>
+    <%--<script src="../Scripts/jquery-1.8.2.js" type="text/javascript"></script>--%>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <link href="../CSS/StyleMaster.css" rel="stylesheet" type="text/css" />
     <link href="../CSS/StyleControl.css" rel="stylesheet" type="text/css" />
     <link href="../CSS/StyleCommon.css" rel="stylesheet" type="text/css" />
     <link href="../CSS/StyleLeftPanel.css" rel="stylesheet" type="text/css" />
     <link href="../CSS/StyleBars.css" rel="stylesheet" type="text/css" />
+    
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#UserName').load('../Dashboard/GetUserName');// To load User Name 
@@ -62,6 +68,24 @@
                 return true;
             }
         }
+        function Applypagination() {
+            $(document).ready(function () {
+                if ($('#trackingactive').length) {
+                    $('#trackingactive').DataTable({
+                        "pageLength": 20,
+                        "paging": true,
+                        "ordering": false,
+                        "info": true,
+                        "searching": false,
+                        "lengthChange":false
+                    });
+                } else {
+                    console.log("Table not found!");
+                }
+            });
+
+
+        }
     </script>
     <style type="text/css">
         .linkstyle {
@@ -71,7 +95,7 @@
              display: none; /* Hidden by default */
              position: fixed;
              top: 180px;
-             left: 340px;
+             left: 450px;
              width: 100%;
              height: 100%;
              background-color: rgba(0, 0, 0, 0.7);
@@ -85,6 +109,35 @@
           .center-align {
         text-align: center;
     }
+                 /* Custom pagination styles */
+        .dataTables_paginate {
+            text-align: left; /* Center the pagination controls */
+            margin-top: 10px;
+        }
+
+        /* Style for all pagination controls */
+        .dataTables_paginate a {
+            padding: 6px 12px;
+            margin: 0 5px;
+            text-decoration: none;
+            color: #111184; 
+
+        }
+      
+       .dataTables_paginate a:hover {
+            color: #111184; /* Darker blue text when hovered */
+            text-decoration: underline; /* Underline the text on hover */
+        }
+       .dataTables_paginate .paginate_button {
+    display: inline-block; /* Ensure buttons are inline */
+    margin-right: 5px; /* Optional: add space between the buttons */
+    }
+
+.dataTables_paginate .paginate_button.previous,
+.dataTables_paginate .paginate_button.next {
+    padding: 5px 10px; /* Optional: adjust padding for better size */
+}
+       
     </style>
     <title id="tileid"></title>
     
@@ -140,7 +193,7 @@
                                 <h5 id="RefTrackActive" class="allexp" >
                                     <span class="dd"></span>
                                    
-                                    <asp:LinkButton ID="LbtnRefTrackActive" CssClass="linkstyle" runat="server" Text="All Referrals Tracking Active" ToolTip="All Referrals Tracking Active" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefTrackActive_Click" ></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnRefTrackActive" CssClass="linkstyle" runat="server" Text="All Referrals Tracking Active" ToolTip="All Referrals Tracking Active" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefTrackActive_Click"></asp:LinkButton>
                                 </h5>
                             </li>
                             <li id="Li2" class="accordion" onclick="" style="position: static;">
@@ -221,7 +274,7 @@
                                         <asp:TextBox ID="txtStartAge" runat="server" onkeypress="return validate(event)" ></asp:TextBox></td> <td><asp:Label ID="lblageend" runat="server" Text="And"></asp:Label></td>
                                     <td><asp:TextBox ID="txtEndAge" runat="server" onkeypress="return validate(event)" ></asp:TextBox></td>
                                     <td>
-                                        <asp:Button ID="btnShowReport" runat="server" Text="Show Report" OnClick="btnShowReport_Click" /></td>
+                                        <asp:Button ID="btnShowReport" runat="server" Text="Show Report" OnClick="btnShowReport_Click" onClientclick="showoverlay()"/></td>
                                 </tr>
                             </table>
                                 </div>
@@ -292,14 +345,17 @@
                                  
                         </div>
                               <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false"  />
+                        <div runat="server" id="reporttable" visible="false">
+
+                        </div>
                            <asp:GridView ID="allgrid" runat="server" AutoGenerateColumns="true" AllowPaging="true"  PageSize="20"
 Width="80%" BorderColor="Black" BorderWidth="1px" CellPadding="5" Visible="false" CssClass="center-align" OnPageIndexChanging="GridView1_PageIndexChanging">
       <HeaderStyle BackColor="darkblue" ForeColor="white" />
+
                                
             </asp:GridView>
 
                         
-        </div>
                         <div style="width:100%;overflow-x:auto">
                               <rsweb:ReportViewer ID="RVReferralReport" runat="server" ProcessingMode="Remote" WaitMessageFont-Names="Verdana" WaitMessageFont-Size="14pt" ShowBackButton="false" ShowCredentialPrompts="false" ShowDocumentMapButton="true" ShowExportControls="true" ShowFindControls="false" ShowPageNavigationControls="true" ShowParameterPrompts="true" ShowPrintButton="false" ShowPromptAreaButton="true" ShowRefreshButton="false" ShowToolBar="true" ShowWaitControlCancelLink="true" ShowZoomControl="false"   Width="100%"  Visible="false" AsyncRendering="true" Height="1000px">
 
@@ -308,6 +364,8 @@ Width="80%" BorderColor="Black" BorderWidth="1px" CellPadding="5" Visible="false
                                 </rsweb:ReportViewer>
                      
                             </div>
+                                </div>
+
                         <div>
                             <asp:HiddenField ID="hdnMenu" runat="server" />
                         </div>
