@@ -345,6 +345,7 @@
                                  
                         </div>
                               <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false"  />
+                       <div style="text-align:center;"><asp:Label ID="nodata" runat="server" visible="false" Text="" /> </div>
                         <div runat="server" id="reporttable" visible="false">
 
                         </div>

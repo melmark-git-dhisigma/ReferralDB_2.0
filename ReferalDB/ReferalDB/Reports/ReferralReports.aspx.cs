@@ -25,6 +25,8 @@ using NPOI.SS.UserModel;
 using System.Security.Cryptography;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Web.UI.HtmlControls;
+using NPOI.SS.Formula.Functions;
+using DataLayer;
 namespace ReferalDB.Reports
 {
     public partial class ReferralReports : System.Web.UI.Page
@@ -254,6 +256,95 @@ namespace ReferalDB.Reports
                             .Select(group => group.First())
                             .CopyToDataTable();
             return distinctRows;
+        }
+        private System.Data.DataTable GetAgeData(string scoolid, string txtStartAge, string txtEndAge)
+        {
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+            String proc = "[dbo].[ReferralReportProcedure]";
+            SqlCommand cmd = new SqlCommand(proc, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@SchoolId", Convert.ToInt32(scoolid));
+            cmd.CommandTimeout = 1200;
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                Dt.Columns.Add("Referral Name", typeof(string));
+                Dt.Columns.Add("Gender", typeof(string));
+                Dt.Columns.Add("Birth Date", typeof(string));
+                Dt.Columns.Add("Age", typeof(string));
+                Dt.Columns.Add("Date of Referral", typeof(string));
+                Dt.Columns.Add("City", typeof(string));
+                Dt.Columns.Add("State", typeof(string));
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        if (Convert.ToInt32(dt.Rows[i]["Age"]) >= Convert.ToInt32(txtStartAge) && Convert.ToInt32(dt.Rows[i]["Age"]) <= Convert.ToInt32(txtEndAge))
+                        {
+                            DataRow row = Dt.NewRow();
+                            if (dt.Rows[i]["studentPersonalName"] != null)
+                            {
+                                row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
+                            }
+                            if (dt.Rows[i]["BirthDate"] != null)
+                            {
+                                row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
+                            }
+                            if (dt.Rows[i]["Gender"] != null)
+                            {
+                                row["Gender"] = dt.Rows[i]["Gender"].ToString();
+                            }
+                            if (dt.Rows[i]["Age"] != null)
+                            {
+                                row["Age"] = dt.Rows[i]["Age"].ToString();
+                            }
+                            if (dt.Rows[i]["DateOfReferral"] != null)
+                            {
+                                row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                            }
+                            if (dt.Rows[i]["City"] != null)
+                            {
+                                row["City"] = dt.Rows[i]["City"].ToString();
+                            }
+                            if (dt.Rows[i]["State"] != null)
+                            {
+                                row["State"] = dt.Rows[i]["State"].ToString();
+                            }
+                            Dt.Rows.Add(row);
+                        }
+                    }
+                }
+               
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            if (Dt != null && Dt.Rows.Count > 0)
+            {
+                var distinctRows = Dt.AsEnumerable()
+                            .GroupBy(row => row["Referral Name"])
+                            .Select(group => group.First())
+                            .CopyToDataTable();
+                return distinctRows;
+            }
+            else
+            {
+                return Dt;
+            }
         }
         private System.Data.DataTable GetData(string scoolid)
         {
@@ -619,6 +710,8 @@ namespace ReferalDB.Reports
             {
                 if (txtStartAge.Text != "" && txtEndAge.Text != "")
                 {
+                    if (highcheck.Checked == false)
+                    {
                     RVReferralReport.Visible = true;
                     tdMsg.InnerHtml = "";
                     RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReportAge"];
@@ -628,6 +721,30 @@ namespace ReferalDB.Reports
                     parm[1] = new ReportParameter("AgeStart", txtStartAge.Text);
                     parm[2] = new ReportParameter("AgeEnd", txtEndAge.Text);
                     this.RVReferralReport.ServerReport.SetParameters(parm);
+                }
+                    else
+                    {
+                        RVReferralReport.Visible = false;
+                        tdMsg.InnerHtml = "";
+                        alldata = GetAgeData(sess.SchoolId.ToString(), txtStartAge.Text, txtEndAge.Text);
+                        if (alldata != null && alldata.Rows.Count > 0)
+                        {
+                            ViewState["alldata"] = DataTableToJson(alldata);
+                            string htmlTable = GenerateHtmlTable(alldata);
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = htmlTable;
+                            string script3 = "Applypagination();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                            Btnexport.Visible = true;
+                        }
+                        else
+                        {
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = "No data available";
+                        }
+                            string script2 = "hideoverlay();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+                    }
                 }
                 else if (txtStartAge.Text == "")
                 {
