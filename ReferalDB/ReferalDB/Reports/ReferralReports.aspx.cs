@@ -205,6 +205,11 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("State", typeof(string));
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    var distinctRows = dt.AsEnumerable()
+                                    .GroupBy(row => row["StudentPersonalId"])
+                                    .Select(group => group.First())
+                                    .CopyToDataTable();
+                    dt = distinctRows;
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         if (dt.Rows[i]["QueueType"].ToString() == status)
@@ -255,11 +260,8 @@ namespace ReferalDB.Reports
                     conn.Close();
                 }
             }
-            var distinctRows = Dt.AsEnumerable()
-                            .GroupBy(row => row["Referral Name"])
-                            .Select(group => group.First())
-                            .CopyToDataTable();
-            return distinctRows;
+           
+          return Dt;
         }
         private System.Data.DataTable GetAgeData(string scoolid, string txtStartAge, string txtEndAge)
         {
@@ -285,6 +287,11 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("State", typeof(string));
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    var distinctRows = dt.AsEnumerable()
+                                    .GroupBy(row => row["StudentPersonalId"])
+                                    .Select(group => group.First())
+                                    .CopyToDataTable();
+                    dt = distinctRows;
                     
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
@@ -337,19 +344,9 @@ namespace ReferalDB.Reports
                     conn.Close();
                 }
             }
-            if (Dt != null && Dt.Rows.Count > 0)
-            {
-                var distinctRows = Dt.AsEnumerable()
-                            .GroupBy(row => row["Referral Name"])
-                            .Select(group => group.First())
-                            .CopyToDataTable();
-                return distinctRows;
-            }
-            else
-            {
+          
                 return Dt;
             }
-        }
         private System.Data.DataTable GetActiveAgeData(string scoolid, string txtStartAge, string txtEndAge, string schoolid, string status)
         {
             System.Data.DataTable Dt = new System.Data.DataTable();
@@ -379,7 +376,11 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("State", typeof(string));
                 if (dt != null && dt.Rows.Count > 0)
                 {
-
+                    var distinctRows = dt.AsEnumerable()
+                                    .GroupBy(row => row["StudentPersonalId"])
+                                    .Select(group => group.First())
+                                    .CopyToDataTable();
+                    dt = distinctRows;
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         if (Convert.ToInt32(dt.Rows[i]["Age"]) >= Convert.ToInt32(txtStartAge) && Convert.ToInt32(dt.Rows[i]["Age"]) <= Convert.ToInt32(txtEndAge) && dt.Rows[i]["QueueType"].ToString() == status && dt.Rows[i]["SchoolId"].ToString() == schoolid)
@@ -431,19 +432,10 @@ namespace ReferalDB.Reports
                     conn.Close();
                 }
             }
-            if (Dt != null && Dt.Rows.Count > 0)
-            {
-                var distinctRows = Dt.AsEnumerable()
-                            .GroupBy(row => row["Referral Name"])
-                            .Select(group => group.First())
-                            .CopyToDataTable();
-                return distinctRows;
-            }
-            else
-            {
+            
                 return Dt;
+           
             }
-        }
         private System.Data.DataTable GetData(string scoolid)
         {
             System.Data.DataTable Dt =new System.Data.DataTable();
@@ -467,6 +459,11 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("State", typeof(string));
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    var distinctRows = dt.AsEnumerable()
+                                    .GroupBy(row => row["StudentPersonalId"])
+                                    .Select(group => group.First())
+                                    .CopyToDataTable();
+                    dt = distinctRows;
                     for (int i = 0; i < dt.Rows.Count; i++)  
                     {
                         DataRow row = Dt.NewRow();
@@ -514,11 +511,7 @@ namespace ReferalDB.Reports
                     conn.Close();
                 }
             }
-            var distinctRows = Dt.AsEnumerable()
-                            .GroupBy(row => row["Referral Name"])
-                            .Select(group => group.First())
-                            .CopyToDataTable();
-            return distinctRows;
+           return Dt;
         }
         private string DataTableToJson(System.Data.DataTable dt)
         {
