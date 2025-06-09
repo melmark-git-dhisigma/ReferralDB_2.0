@@ -311,7 +311,7 @@
                                         <td><asp:Label ID="lblcity" runat="server"  Text="City"></asp:Label></td>
                                         <td > <asp:TextBox ID="txtcity" runat="server" ></asp:TextBox> </td>
                                         <td >
-                                            <asp:Button ID="btnlocation" runat="server" Text="Show Report" OnClick="btnlocation_Click"  />
+                                            <asp:Button ID="btnlocation" runat="server" Text="Show Report" OnClick="btnlocation_Click" onClientclick="showoverlay()" />
                                         </td>
                                         <td></td>
                                     </tr>
