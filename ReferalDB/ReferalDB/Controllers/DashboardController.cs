@@ -32,10 +32,12 @@ namespace ReferalDB.Controllers
         public ActionResult Dashboard()
         {
             string title = System.Configuration.ConfigurationManager.AppSettings["Server"].ToString();
-            if (title == "PA")
-                ViewBag.Title = "Melmark Pennsylvania";
-            else
-                ViewBag.Title = "Melmark New England";
+            //if (title == "PA")
+            //    ViewBag.Title = "Melmark Pennsylvania";
+            //else
+            //    ViewBag.Title = "Melmark New England";
+            title = "EnvisionSmart";
+            ViewBag.Title = title;
             setSession();
             sess = (clsSession)Session["UserSession"];
             sess.ReferralId = 0;
@@ -54,10 +56,13 @@ namespace ReferalDB.Controllers
         public ActionResult GetTitle()
         {
             string title = System.Configuration.ConfigurationManager.AppSettings["Server"].ToString();
-            if (title == "PA")
-                title = "Melmark Pennsylvania";
-            else
-                title = "Melmark New England";
+            //if (title == "PA")
+            //    title = "Melmark Pennsylvania";
+            //else
+            //    title = "Melmark New England";
+            title = "EnvisionSmart";
+            ViewBag.Title = title;
+
             return Json(title, JsonRequestBehavior.AllowGet);
         }
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.None)]
@@ -82,10 +87,12 @@ namespace ReferalDB.Controllers
         public string GetTitleReport()
         {
             string title = System.Configuration.ConfigurationManager.AppSettings["Server"].ToString();
-            if (title == "PA")
-                title = "Melmark Pennsylvania";
-            else
-                title = "Melmark New England";
+            //if (title == "PA")
+            //    title = "Melmark Pennsylvania";
+            //else
+            //    title = "Melmark New England";
+            title = "EnvisionSmart";
+            ViewBag.Title = title;
             return title;
 
         }
