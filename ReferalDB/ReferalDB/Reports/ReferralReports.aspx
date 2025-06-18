@@ -333,7 +333,7 @@
                                             </asp:DropDownList>
                                         </td>
                                         <td style="width:15%">
-                                            <asp:Button ID="btnquarter" runat="server" Text="Show Report" OnClick="btnquarter_Click"  />
+                                            <asp:Button ID="btnquarter" runat="server" Text="Show Report" OnClick="btnquarter_Click" onClientclick="showoverlay()" />
                                         </td>
                                         <td></td>
                                     </tr>

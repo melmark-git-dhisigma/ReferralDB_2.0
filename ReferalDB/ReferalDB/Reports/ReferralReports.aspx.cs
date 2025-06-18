@@ -1034,6 +1034,9 @@ namespace ReferalDB.Reports
             if (ddlQuarter.SelectedItem.Value != "0")
             {
                 tdMsg.InnerHtml = "";
+                 if (highcheck.Checked == false)
+                 {
+                     tdMsg.InnerHtml = "";
                 RVReferralReport.Visible = true;
                 sess = (clsSession)Session["UserSession"];                
                 RVReferralReport.ServerReport.ReportServerCredentials = new CustomReportCredentials(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], ConfigurationManager.AppSettings["Domain"]);
@@ -1047,11 +1050,121 @@ namespace ReferalDB.Reports
             }
             else
             {
+                     tdMsg.InnerHtml = "";
+                     RVReferralReport.Visible = true;
+                     sess = (clsSession)Session["UserSession"];
+
+                     alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
+                     if (alldata != null && alldata.Rows.Count > 0)
+                     {
+                         ViewState["alldata"] = DataTableToJson(alldata);
+                         string htmlTable = GenerateHtmlTable(alldata);
+                         reporttable.Visible = true;
+                         reporttable.InnerHtml = htmlTable;
+                         string script3 = "Applypagination();";
+                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
+                         Btnexport.Visible = true;
+                     }
+                     else
+                     {
+                         reporttable.Visible = true;
+                         reporttable.InnerHtml = "No data available";
+                     }
+                     string script2 = "hideoverlay();";
+                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                 }
+            }
+            else
+            {
                 tdMsg.InnerHtml = clsGeneral.warningMsg("Please select birthdate quarter");
                 ddlQuarter.Focus();
             }
         }
+        private System.Data.DataTable GetQuarterData(string scoolid, string quart)
+        {
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+            String proc = "[dbo].[ReferralReportProcedure]";
+            SqlCommand cmd = new SqlCommand(proc, conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@SchoolId", Convert.ToInt32(scoolid));
+            cmd.CommandTimeout = 1200;
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                Dt.Columns.Add("Referral Name", typeof(string));
+                Dt.Columns.Add("Age", typeof(string));
+                Dt.Columns.Add("Gender", typeof(string));
+                Dt.Columns.Add("Date of Referral", typeof(string));
+                Dt.Columns.Add("City", typeof(string));
+                Dt.Columns.Add("State", typeof(string));
+                if (dt != null && dt.Rows.Count > 0)
+                {
 
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        if (dt.Rows[i]["mMonth"].ToString().Trim() == quart)
+                        {
+                            DataRow row = Dt.NewRow();
+                            if (dt.Rows[i]["studentPersonalName"] != null)
+                            {
+                                row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
+                            }
+                            if (dt.Rows[i]["Age"] != null)
+                            {
+                                row["Age"] = dt.Rows[i]["Age"].ToString();
+                            }
+                            if (dt.Rows[i]["Gender"] != null)
+                            {
+                                row["Gender"] = dt.Rows[i]["Gender"].ToString();
+                            }
+
+                            if (dt.Rows[i]["DateOfReferral"] != null)
+                            {
+                                row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                            }
+                            if (dt.Rows[i]["City"] != null)
+                            {
+                                row["City"] = dt.Rows[i]["City"].ToString().Trim();
+                            }
+                            if (dt.Rows[i]["State"] != null)
+                            {
+                                row["State"] = dt.Rows[i]["State"].ToString().Trim();
+                            }
+                            Dt.Rows.Add(row);
+                        }
+                    }
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+            if (Dt != null && Dt.Rows.Count > 0)
+            {
+                var distinctRows = Dt.AsEnumerable()
+                            .GroupBy(row => row["Referral Name"])
+                            .Select(group => group.First())
+                            .CopyToDataTable();
+                return distinctRows;
+            }
+            else
+            {
+                return Dt;
+            }
+        }
         private System.Data.DataTable GetLocationData(string scoolid, string city, string state)
         {
             System.Data.DataTable Dt = new System.Data.DataTable();
@@ -1073,7 +1186,7 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("Date of Referral", typeof(string));
                 Dt.Columns.Add("City", typeof(string));
                 Dt.Columns.Add("State", typeof(string));
-                if (dt != nsull && dt.Rows.Count > 0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
 
                     for (int i = 0; i < dt.Rows.Count; i++)
