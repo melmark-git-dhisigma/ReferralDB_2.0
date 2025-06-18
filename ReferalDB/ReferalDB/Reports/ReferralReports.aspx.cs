@@ -975,8 +975,10 @@ namespace ReferalDB.Reports
 
         protected void btnlocation_Click(object sender, EventArgs e)
         {
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
             RVReferralReport.Visible = false;
-            if (ddlState.SelectedItem.Value != "0" && txtcity.Text != "")
+            if (ddlState.SelectedItem.Value != "0")
             {
                 tdMsg.InnerHtml = "";
                 if (highcheck.Checked == false)
@@ -1016,17 +1018,18 @@ namespace ReferalDB.Reports
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
                 }
             }
-            else if (ddlState.SelectedItem.Value == "0")
+            //else if (ddlState.SelectedItem.Value == "0")
+            else
             {
                 tdMsg.InnerHtml = clsGeneral.warningMsg("Please select state");
                 ddlState.Focus();
             }
-            else
-            {
-                tdMsg.InnerHtml = clsGeneral.warningMsg("Please enter city");
-                txtcity.Focus();
+            //else
+            //{
+            //    tdMsg.InnerHtml = clsGeneral.warningMsg("Please enter city");
+            //    txtcity.Focus();
+            //}
             }
-        }
 
         protected void btnquarter_Click(object sender, EventArgs e)
         {
@@ -1198,9 +1201,13 @@ namespace ReferalDB.Reports
                                     .CopyToDataTable();
                     dt = distinctRows;
 
+
+                    if (city != "")
+                    {
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        if (dt.Rows[i]["City"].ToString().Trim() == city && dt.Rows[i]["StateProvince"].ToString() == state)
+                            //if (dt.Rows[i]["City"].ToString().Trim() == city && dt.Rows[i]["StateProvince"].ToString() == state)
+                            if (dt.Rows[i]["City"].ToString().Trim().ToLower().Contains(city.ToLower()) && dt.Rows[i]["StateProvince"].ToString() == state)
                         {
                             DataRow row = Dt.NewRow();
                             if (dt.Rows[i]["studentPersonalName"] != null)
@@ -1232,7 +1239,44 @@ namespace ReferalDB.Reports
                         }
                     }
                 }
+                    else
+                    {
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            if (dt.Rows[i]["StateProvince"].ToString() == state)
+                            {
+                                DataRow row = Dt.NewRow();
+                                if (dt.Rows[i]["studentPersonalName"] != null)
+                                {
+                                    row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
+                                }
+                                if (dt.Rows[i]["BirthDate"] != null)
+                                {
+                                    row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
+                                }
+                                if (dt.Rows[i]["Gender"] != null)
+                                {
+                                    row["Gender"] = dt.Rows[i]["Gender"].ToString();
+                                }
 
+                                if (dt.Rows[i]["DateOfReferral"] != null)
+                                {
+                                    row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                                }
+                                if (dt.Rows[i]["City"] != null)
+                                {
+                                    row["City"] = dt.Rows[i]["City"].ToString().Trim();
+                                }
+                                if (dt.Rows[i]["State"] != null)
+                                {
+                                    row["State"] = dt.Rows[i]["State"].ToString().Trim();
+                                }
+                                Dt.Rows.Add(row);
+                            }
+                        }
+                    }
+                    
+                }
 
             }
             catch (Exception ex)
