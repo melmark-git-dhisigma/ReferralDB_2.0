@@ -1031,6 +1031,8 @@ namespace ReferalDB.Reports
         protected void btnquarter_Click(object sender, EventArgs e)
         {
             RVReferralReport.Visible = false;
+            reporttable.Visible = false;
+            reporttable.InnerHtml = "";
             if (ddlQuarter.SelectedItem.Value != "0")
             {
                 tdMsg.InnerHtml = "";
@@ -1047,11 +1049,12 @@ namespace ReferalDB.Reports
                 parm[1] = new ReportParameter("Quarter", ddlQuarter.SelectedItem.Value);
                 this.RVReferralReport.ServerReport.SetParameters(parm);
                 RVReferralReport.ServerReport.Refresh();
+
             }
             else
             {
                      tdMsg.InnerHtml = "";
-                     RVReferralReport.Visible = true;
+                     RVReferralReport.Visible = false;
                      sess = (clsSession)Session["UserSession"];
 
                      alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
@@ -1099,11 +1102,18 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("Age", typeof(string));
                 Dt.Columns.Add("Gender", typeof(string));
                 Dt.Columns.Add("Date of Referral", typeof(string));
+                Dt.Columns.Add("Birthdate", typeof(string));
                 Dt.Columns.Add("City", typeof(string));
                 Dt.Columns.Add("State", typeof(string));
                 if (dt != null && dt.Rows.Count > 0)
                 {
-
+                    
+                        var distinctRows = dt.AsEnumerable()
+                                    .GroupBy(row => row["StudentPersonalId"])
+                                    .Select(group => group.First())
+                                    .CopyToDataTable();
+                        dt= distinctRows;
+                    
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         if (dt.Rows[i]["mMonth"].ToString().Trim() == quart)
@@ -1125,6 +1135,10 @@ namespace ReferalDB.Reports
                             if (dt.Rows[i]["DateOfReferral"] != null)
                             {
                                 row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                            }
+                            if (dt.Rows[i]["BirthDate"] != null)
+                            {
+                                row["Birthdate"] = dt.Rows[i]["BirthDate"].ToString();
                             }
                             if (dt.Rows[i]["City"] != null)
                             {
@@ -1152,19 +1166,9 @@ namespace ReferalDB.Reports
                     conn.Close();
                 }
             }
-            if (Dt != null && Dt.Rows.Count > 0)
-            {
-                var distinctRows = Dt.AsEnumerable()
-                            .GroupBy(row => row["Referral Name"])
-                            .Select(group => group.First())
-                            .CopyToDataTable();
-                return distinctRows;
-            }
-            else
-            {
+          
                 return Dt;
             }
-        }
         private System.Data.DataTable GetLocationData(string scoolid, string city, string state)
         {
             System.Data.DataTable Dt = new System.Data.DataTable();
@@ -1188,6 +1192,11 @@ namespace ReferalDB.Reports
                 Dt.Columns.Add("State", typeof(string));
                 if (dt != null && dt.Rows.Count > 0)
                 {
+                    var distinctRows = dt.AsEnumerable()
+                                    .GroupBy(row => row["StudentPersonalId"])
+                                    .Select(group => group.First())
+                                    .CopyToDataTable();
+                    dt = distinctRows;
 
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
@@ -1237,19 +1246,9 @@ namespace ReferalDB.Reports
                     conn.Close();
                 }
             }
-            if (Dt != null && Dt.Rows.Count > 0)
-            {
-                var distinctRows = Dt.AsEnumerable()
-                            .GroupBy(row => row["Referral Name"])
-                            .Select(group => group.First())
-                            .CopyToDataTable();
-                return distinctRows;
-            }
-            else
-            {
+          
                 return Dt;
             }
-        }
         protected void btnexport_Click(object sender, EventArgs e)
         {
             alldata = JsonToDataTable(ViewState["alldata"].ToString());
