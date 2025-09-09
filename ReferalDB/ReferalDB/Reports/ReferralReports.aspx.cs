@@ -31,6 +31,7 @@ using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.VariantTypes;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 using Org.BouncyCastle.Utilities.Encoders;
+using NPOI.SS.Util;
 namespace ReferalDB.Reports
 {
     public partial class ReferralReports : System.Web.UI.Page
@@ -40,7 +41,11 @@ namespace ReferalDB.Reports
         protected void Page_Load(object sender, EventArgs e)
         {
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             if (!IsPostBack)
             {
                
@@ -125,6 +130,9 @@ namespace ReferalDB.Reports
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
             allgrid.Visible = false;
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             if (highcheck.Checked == false)
             {
                 allgrid.Visible = false;
@@ -593,9 +601,13 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefTrackActive_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
                 reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
                 allgrid.Visible = false;
                 hdnMenu.Value = "RefTrackActive";
@@ -621,9 +633,13 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefAgeRange_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefAgeRange";
@@ -647,9 +663,13 @@ namespace ReferalDB.Reports
 
         protected void LbtnTackingActiveAge_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "TackingActiveAge";
@@ -673,9 +693,13 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefContact_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefContact";
@@ -683,9 +707,13 @@ namespace ReferalDB.Reports
             tdMsg.InnerHtml = "";
             RVReferralReport.Visible = false;
             HeadingDiv.Visible = true;
+            divlocation.Visible = false;
+            divbirthdate.Visible = false;
             divfunded.Visible = false;
             HeadingDiv.InnerHtml = "All Contact Events";
             referralage.Visible = false;
+            if (highcheck.Checked == false)
+            {
             RVReferralReport.Visible = true;
             sess = (clsSession)Session["UserSession"];
             RVReferralReport.ServerReport.ReportServerCredentials = new CustomReportCredentials(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], ConfigurationManager.AppSettings["Domain"]);
@@ -698,12 +726,63 @@ namespace ReferalDB.Reports
             divlocation.Visible = false;
             divbirthdate.Visible = false;
         }
+            else
+            {
+                contactdrop.Visible = true;
+                ddlReferrals.Visible = true;
+                contactshow.Visible = true; 
+                LoadReferrals();
+                sess = (clsSession)Session["UserSession"];
+                System.Data.DataTable dt = Getallcontact(sess.SchoolId.ToString(),"0");
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    ViewState["alldata"] = DataTableToJson(dt);
+                    string htmlTable = GenerateHtmlTablecont(dt);
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = htmlTable;
+                    string script3 = "Applypagination2();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                    Btnexport1.Visible = true;
+                }
+                else
+                {
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = "No data available";
+                }
+                string script2 = "hideoverlay();";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+            }
+        }
+        private void LoadReferrals()
+        {
+            sess = (clsSession)Session["UserSession"];
+            string connStr = ConfigurationManager.ConnectionStrings["dbConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = "select StudentPersonalId AS id, lastname +' '+firstname AS Name  from StudentPersonal where SchoolId="+sess.SchoolId +" and StudentType='Referral'";  
+                SqlCommand cmd = new SqlCommand(query, conn);
+                conn.Open();
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                ddlReferrals.DataSource = reader;
+                ddlReferrals.DataTextField = "Name";
+                ddlReferrals.DataValueField = "Id";
+                ddlReferrals.DataBind();
+                conn.Close();
+            }
+        }
 
         protected void LbtnRefFunded_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefFunded";
@@ -721,9 +800,13 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefLocation_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefLocation";
@@ -743,10 +826,13 @@ namespace ReferalDB.Reports
 
         protected void LbtnRefBirthdateQuarter_Click(object sender, EventArgs e)
         {
+            contactdrop.Visible = false;
+            ddlReferrals.Visible = false;
+            contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
-            allgrid.Visible = false;
+            Btnexport1.Visible = false;
             Btnexport3.Visible = false; allgrid.Visible = false;
             hdnMenu.Value = "RefBirthdateQuarter";
             RVReferralReport.SizeToReportContent = false;
@@ -783,7 +869,7 @@ namespace ReferalDB.Reports
                     }
                     else
                     {
-                        
+
                         RVReferralReport.Visible = true;
                         tdMsg.InnerHtml = "";
                         alldata = GetTrackData(sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
@@ -982,14 +1068,22 @@ namespace ReferalDB.Reports
                     RVReferralReport.Visible = false;
                     sess = (clsSession)Session["UserSession"];
                     System.Data.DataTable dt = Getfunddata(sess.SchoolId.ToString(), ddlFundingStatus.SelectedItem.Value);
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
                     string htmlTable = GenerateHtmlTablefund(dt, ddlFundingStatus.SelectedItem.Value);
                     reporttable.Visible = true;
                     reporttable.InnerHtml = htmlTable;
                     string script3 = "Applypagination();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
                     Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
                     Btnexport3.Visible = true;
-
+                    }
+                    else
+                    {
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = "No data available";
+                    }
                     string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
                 }
@@ -1331,10 +1425,70 @@ namespace ReferalDB.Reports
                         ExportToExcel(alldata, Filename, Response);
           
         }
-        
+        protected void btnexport2_Click(object sender, EventArgs e)
+        {
+            if (ViewState["data"] != null)
+            {
+                System.Data.DataTable dt = JsonToDataTable(ViewState["data"].ToString());
 
-private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpResponse response)
+                ExportToExcelcontact(dt, "ContactEvent");
+            }
+
+
+        }
+        private System.Data.DataTable BuildDataTable(System.Data.DataTable dt, List<string> distinctRelations)
     {
+            System.Data.DataTable result = new System.Data.DataTable();
+            result.Columns.Add("Referral Name");
+            result.Columns.Add("Birth Date");
+            result.Columns.Add("Date Of Referral");
+            result.Columns.Add("Gender");
+            result.Columns.Add("City");
+            result.Columns.Add("State");
+
+            Dictionary<string, string> relMap = new Dictionary<string, string>();
+            foreach (string rel in distinctRelations)
+            {
+                string safe = chngColumnName(rel);
+                relMap[rel] = safe;
+                result.Columns.Add(safe + "cname");
+                result.Columns.Add(safe + "occ");
+                result.Columns.Add(safe + "plang");
+            }
+
+            var grouped = dt.AsEnumerable().GroupBy(row => row["StudentPersonalId"].ToString());
+
+            foreach (var group in grouped)
+            {
+                var first = group.First();
+                DataRow newRow = result.NewRow();
+                newRow["Referral Name"] = first["ReferralName"];
+                newRow["Birth Date"] = first["BirthDate"];
+                newRow["Date Of Referral"] = first["DateOfReferral"];
+                newRow["Gender"] = first["Gender"];
+                newRow["City"] = first["City"];
+                newRow["State"] = first["State"];
+
+                foreach (var row in group)
+                {
+                    string rel = row["Relationship"].ToString();
+                    if (relMap.ContainsKey(rel))
+                    {
+                        string safe = relMap[rel];
+                        newRow[safe + "cname"] = row["ContactName"];
+                        newRow[safe + "occ"] = row["Occupation"];
+                        newRow[safe + "plang"] = row["ContactPrimaryLanguage"];
+                    }
+                }
+
+                result.Rows.Add(newRow);
+            }
+
+            return result;
+        }
+
+        private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpResponse response)
+        {
             IWorkbook workbook = new XSSFWorkbook();
             ISheet sheet = workbook.CreateSheet("Sheet1");
 
@@ -1391,6 +1545,213 @@ private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpRespon
 
             response.End();
 
+        }
+
+        private System.Data.DataTable Getallcontact(string scoolid,string ids)
+        {
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+            string qry = "";
+            if (ids == "0")
+            {
+                 qry = "SELECT   SP.StudentPersonalId, SP.SchoolId, SP.LastName AS ReferralLast , SP.FirstName AS ReferralFirst, LP.LookupName AS Relationship,  CASE WHEN SP.Gender = '1' THEN 'Male' ELSE 'Female' END AS Gender, CONVERT(VARCHAR(10), SP.BirthDate, 101) AS BirthDate, CONVERT(VARCHAR(10),SP.AdmissionDate,101) AS DateOfReferral, " +
+                                " CP.LastName AS LastName,  CP.FirstName AS FirstName, CASE "
+        + " WHEN SAR.ContactSequence = '1' THEN 'Home'"
+      + "  WHEN SAR.ContactSequence = '2' THEN 'Work'"
+       + "  WHEN SAR.ContactSequence = '3' THEN 'Other'"
+     + " END AS TYPE,ADL.STREETNAME + CHAR(13) + CHAR(10) + "
+       + "  CASE WHEN ADL.ApartmentType IS NULL THEN ' ' ELSE ADL.ApartmentType END  + CHAR(13) + CHAR(10) + "
+        + "  CASE WHEN ADL.City IS NULL THEN ' ' ELSE ADL.City END AS   streetaddress, ADL.Phone AS PHONE, ADL.Mobile AS MOBILE,	ADL.PrimaryEmail AS EMAIL,"
+     + " ADL.[City] AS [City], (SELECT LookupName FROM LookUp WHERE LookupType = 'State' AND  LookupId = ADL.StateProvince) AS State   FROM   "
+    + " StudentPersonal AS SP INNER JOIN  StudentAddresRel AS SAR ON SP.StudentPersonalId = SAR.StudentPersonalId INNER JOIN AddressList ADL "
+      + " ON ADL.AddressId=SAR.AddressId INNER JOIN  ContactPersonal AS CP ON CP.ContactPersonalId = SAR.ContactPersonalId"
+      + "  INNER JOIN  StudentContactRelationship AS SCR ON SCR.ContactPersonalId = SAR.ContactPersonalId INNER JOIN "
+      + "   LookUp AS LP ON LP.LookupId = SCR.RelationshipId WHERE  "
+        + " (SP.StudentType = 'Referral') AND (SAR.ContactSequence <> 0) AND CP.Status=1  "
+        + "  ORDER BY SP.AdmissionDate DESC";
+            }
+            else
+            {
+                 qry = "SELECT   SP.StudentPersonalId, SP.SchoolId, SP.LastName AS ReferralLast , SP.FirstName AS ReferralFirst, LP.LookupName AS Relationship,  CASE WHEN SP.Gender = '1' THEN 'Male' ELSE 'Female' END AS Gender, CONVERT(VARCHAR(10), SP.BirthDate, 101) AS BirthDate, CONVERT(VARCHAR(10),SP.AdmissionDate,101) AS DateOfReferral, " +
+                                                " CP.LastName AS LastName,  CP.FirstName AS FirstName, CASE "
+                        + " WHEN SAR.ContactSequence = '1' THEN 'Home'"
+                      + "  WHEN SAR.ContactSequence = '2' THEN 'Work'"
+                       + "  WHEN SAR.ContactSequence = '3' THEN 'Other'"
+                     + " END AS TYPE,ADL.STREETNAME + CHAR(13) + CHAR(10) + "
+                       + "  CASE WHEN ADL.ApartmentType IS NULL THEN ' ' ELSE ADL.ApartmentType END  + CHAR(13) + CHAR(10) + "
+                        + "  CASE WHEN ADL.City IS NULL THEN ' ' ELSE ADL.City END AS   streetaddress, ADL.Phone AS PHONE, ADL.Mobile AS MOBILE,	ADL.PrimaryEmail AS EMAIL,"
+                     + " ADL.[City] AS [City], (SELECT LookupName FROM LookUp WHERE LookupType = 'State' AND  LookupId = ADL.StateProvince) AS State   FROM   "
+                    + " StudentPersonal AS SP INNER JOIN  StudentAddresRel AS SAR ON SP.StudentPersonalId = SAR.StudentPersonalId INNER JOIN AddressList ADL "
+                      + " ON ADL.AddressId=SAR.AddressId INNER JOIN  ContactPersonal AS CP ON CP.ContactPersonalId = SAR.ContactPersonalId"
+                      + "  INNER JOIN  StudentContactRelationship AS SCR ON SCR.ContactPersonalId = SAR.ContactPersonalId INNER JOIN "
+                      + "   LookUp AS LP ON LP.LookupId = SCR.RelationshipId WHERE  "
+                        + " (SP.StudentType = 'Referral') AND (SAR.ContactSequence <> 0) AND CP.Status=1  "
+                        + "  AND SP.StudentPersonalId in ("+ids+") ORDER BY SP.AdmissionDate DESC";
+            }
+            SqlCommand cmd = new SqlCommand(qry, conn);
+            cmd.CommandTimeout = 1200;
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                return dt;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+
+
+        }
+        string Getrow(DataRow row, string columnName)
+        {
+            if (row.IsNull(columnName))
+                return string.Empty;
+
+            var value = row[columnName].ToString();
+            return string.IsNullOrWhiteSpace(value) ? string.Empty : value.Trim();
+        }
+
+        string Addlines(IEnumerable<DataRow> rows, string columnName)
+        {
+            var list = rows.Select(r =>
+            {
+                var value = r.IsNull(columnName) ? "" : r[columnName].ToString().Trim();
+                return string.IsNullOrWhiteSpace(value) ? "&nbsp;" : value; // preserve row height if empty
+            }).ToList();
+
+            StringBuilder result = new StringBuilder();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                result.Append(list[i]);
+                if (i < list.Count - 1)
+                {
+                    result.Append("<div style='border-bottom:1px solid gray; margin:4px 0;'></div>");
+                }
+            }
+
+            return result.ToString();
+        }
+
+
+
+        private string GenerateHtmlTablecont(System.Data.DataTable dt)
+        {
+            var uniqueRows = dt.AsEnumerable().Distinct(DataRowComparer.Default);
+            dt = uniqueRows.CopyToDataTable();
+
+            StringBuilder html = new StringBuilder();
+
+            html.Append("<table id='trackingactive' class='display' border='1' style='width: 100%; border-collapse: collapse; table-layout: auto;white-space: nowrap; width: max-content;'>");
+            html.Append("<thead>");
+            html.Append("<tr style='background-color: #111184; color: white; height: 40px;'>");
+            html.Append("<th>Referral Last</th>");
+            html.Append("<th>Referral First</th>");
+            html.Append("<th>DOB</th>");
+            html.Append("<th>Admission Date</th>");
+            html.Append("<th>Relationship</th>");
+            html.Append("<th>Last</th>");
+            html.Append("<th>First</th>");
+            html.Append("<th>Type</th>");
+            html.Append("<th>Street Address</th>");
+            html.Append("<th>Phone</th>");
+            html.Append("<th>Mobile</th>");
+            html.Append("<th>Email</th>");
+            html.Append("</tr>");
+            html.Append("</thead>");
+
+            html.Append("<tbody>");
+
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            Dt.Columns.Add("sid", typeof(string));
+            Dt.Columns.Add("Referrallast", typeof(string));
+            Dt.Columns.Add("Referralfirst", typeof(string));
+            Dt.Columns.Add("DOB", typeof(string));
+            Dt.Columns.Add("Admissiondate", typeof(string));
+            Dt.Columns.Add("Relationship", typeof(string));
+            Dt.Columns.Add("last", typeof(string));
+            Dt.Columns.Add("first", typeof(string));
+            Dt.Columns.Add("type", typeof(string));
+            Dt.Columns.Add("street", typeof(string));
+            Dt.Columns.Add("phone", typeof(string));
+            Dt.Columns.Add("mobile", typeof(string));
+            Dt.Columns.Add("email", typeof(string));
+
+            foreach (DataRow rows in dt.Rows)
+            {
+                DataRow drow = Dt.NewRow();
+                drow["sid"] = rows["StudentPersonalId"].ToString();
+                drow["Referrallast"] = Getrow(rows, "ReferralLast");
+                drow["Referralfirst"] = Getrow(rows, "ReferralFirst");
+                drow["DOB"] = Getrow(rows, "BirthDate");
+                drow["Admissiondate"] = Getrow(rows, "DateOfReferral");
+                drow["Relationship"] = Getrow(rows, "Relationship");
+                drow["last"] = Getrow(rows, "LastName");
+                drow["first"] = Getrow(rows, "FirstName");
+                drow["type"] = Getrow(rows, "TYPE");
+                drow["street"] = Getrow(rows, "streetaddress");
+                drow["phone"] = Getrow(rows, "PHONE");
+                drow["mobile"] = Getrow(rows, "MOBILE");
+                drow["email"] = Getrow(rows, "EMAIL");
+                Dt.Rows.Add(drow);
+            }
+
+            ViewState["data"] = DataTableToJson(Dt);
+            var groupedStudents = Dt.AsEnumerable().GroupBy(r => r["sid"].ToString());
+
+            int rowIndex = 0;
+
+            foreach (var studentGroup in groupedStudents)
+            {
+                var first = studentGroup.First();
+
+                string relationships = Addlines(studentGroup, "Relationship");
+                string lastNames = Addlines(studentGroup, "last");
+                string firstNames = Addlines(studentGroup, "first");
+                string types = Addlines(studentGroup, "type");
+                string streets = Addlines(studentGroup, "street");
+                string phones = Addlines(studentGroup, "phone");
+                string mobiles = Addlines(studentGroup, "mobile");
+                string emails = Addlines(studentGroup, "email");
+
+                // Alternate row colors
+                string rowStyle = rowIndex % 2 == 0
+                    ? "style='background-color: white;'"
+                    : "style='background-color: rgba(0, 0, 0, 0.08);'";
+
+                html.AppendFormat("<tr {0}>", rowStyle);
+                html.AppendFormat("<td>{0}</td>", first["Referrallast"]);
+                html.AppendFormat("<td>{0}</td>", first["Referralfirst"]);
+                html.AppendFormat("<td>{0}</td>", first["DOB"]);
+                html.AppendFormat("<td>{0}</td>", first["Admissiondate"]);
+                html.AppendFormat("<td>{0}</td>", relationships);
+                html.AppendFormat("<td>{0}</td>", lastNames);
+                html.AppendFormat("<td>{0}</td>", firstNames);
+                html.AppendFormat("<td>{0}</td>", types);
+                html.AppendFormat("<td>{0}</td>", streets);
+                html.AppendFormat("<td>{0}</td>", phones);
+                html.AppendFormat("<td>{0}</td>", mobiles);
+                html.AppendFormat("<td>{0}</td>", emails);
+                html.Append("</tr>");
+
+                rowIndex++;
+            }
+
+            html.Append("</tbody>");
+            html.Append("</table>");
+
+            return html.ToString();
         }
 
 
@@ -1607,7 +1968,97 @@ private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpRespon
             }
 
         }
+        private void ExportToExcelcontact(System.Data.DataTable dt, string fileName)
+{
+    IWorkbook workbook = new XSSFWorkbook();
+    ISheet sheet = workbook.CreateSheet("Referrals");
+    var headerStyle = workbook.CreateCellStyle();
+    headerStyle.FillForegroundColor = IndexedColors.Blue.Index;
+    headerStyle.FillPattern = FillPattern.SolidForeground;
+    var headerFont = workbook.CreateFont();
+    headerFont.Color = IndexedColors.White.Index;
+    headerFont.IsBold = true;
+    headerStyle.SetFont(headerFont);
+    int rowIndex = 0;
+    IRow header = sheet.CreateRow(rowIndex++);
+    IRow hdrRow = sheet.CreateRow(0);
+    string[] headers = { "Referral Last", "Referral First", "DOB", "Admission Date",
+                         "Relationship", "Last", "First", "Type", "Street", "Phone", "Mobile", "Email" };
+    for (int i = 0; i < headers.Length; i++)
+    {
+        var cell = hdrRow.CreateCell(i);
+        cell.SetCellValue(headers[i]);
+        cell.CellStyle = headerStyle;
+    }
+    sheet.SetColumnWidth(0, 20 * 256); 
+    sheet.SetColumnWidth(1, 20 * 256); 
+    sheet.SetColumnWidth(2, 15 * 256); 
+    sheet.SetColumnWidth(3, 18 * 256); 
+    sheet.SetColumnWidth(4, 20 * 256); 
+    sheet.SetColumnWidth(5, 20 * 256); 
+    sheet.SetColumnWidth(6, 20 * 256); 
+    sheet.SetColumnWidth(7, 15 * 256); 
+    sheet.SetColumnWidth(8, 30 * 256); 
+    sheet.SetColumnWidth(9, 15 * 256); 
+    sheet.SetColumnWidth(10, 15 * 256); 
+    sheet.SetColumnWidth(11, 30 * 256); 
 
+    var grouped = dt.AsEnumerable().GroupBy(r => r["sid"].ToString());
+    foreach (var group in grouped)
+    {
+        int startRow = rowIndex;
+        bool first = true;
+        foreach (var dr in group)
+        {
+            IRow r = sheet.CreateRow(rowIndex);
+            int col = 0;
+            if (first)
+            {
+                r.CreateCell(col++).SetCellValue(dr["Referrallast"].ToString());
+                r.CreateCell(col++).SetCellValue(dr["Referralfirst"].ToString());
+                r.CreateCell(col++).SetCellValue(dr["DOB"].ToString());
+                r.CreateCell(col++).SetCellValue(dr["Admissiondate"].ToString());
+                first = false;
+            }
+            else
+            {
+                col += 4; // skip those cols
+            }
+            r.CreateCell(col++).SetCellValue(dr["Relationship"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["last"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["first"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["type"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["street"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["phone"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["mobile"].ToString());
+            r.CreateCell(col++).SetCellValue(dr["email"].ToString());
+            rowIndex++;
+        }
+        int endRow = rowIndex - 1;
+        if (endRow > startRow)
+        {
+            for (int c = 0; c < 4; c++)
+                sheet.AddMergedRegion(new CellRangeAddress(startRow, endRow, c, c));
+        }
+    }
+
+    //for (int i = 0; i < headers.Length; i++)
+    //    sheet.AutoSizeColumn(i);
+
+    using (var ms = new MemoryStream())
+    {
+        workbook.Write(ms);
+        HttpContext.Current.Response.Clear();
+        HttpContext.Current.Response.Buffer = true;
+        HttpContext.Current.Response.AddHeader("content-disposition",
+            string.Format("attachment;filename={0}.xlsx", fileName));
+        HttpContext.Current.Response.ContentType =
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        HttpContext.Current.Response.BinaryWrite(ms.ToArray());
+        HttpContext.Current.Response.End();
+    }
+    
+}
         private System.Data.DataTable BuildDataTablefund(System.Data.DataTable dt)
         {
             System.Data.DataTable result = new System.Data.DataTable();
@@ -1636,5 +2087,41 @@ private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpRespon
             return result;
         }
 
+        protected void btncontactshow_Click(object sender, EventArgs e)
+        {
+            var selectedItems = ddlReferrals.Items.Cast<ListItem>().Where(i => i.Selected).ToList();
+            System.Data.DataTable dt = null;
+            sess = (clsSession)Session["UserSession"];
+            
+            if (selectedItems.Count == 0 || selectedItems.Count == ddlReferrals.Items.Count)
+            {
+                dt = Getallcontact(sess.SchoolId.ToString(), "0");
+               
     }
+            else
+            {
+                string studs = string.Join(",", selectedItems.Select(i => i.Value));
+                dt = Getallcontact(sess.SchoolId.ToString(), studs);
+            }
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                ViewState["alldata"] = DataTableToJson(dt);
+                string htmlTable = GenerateHtmlTablecont(dt);
+                reporttable.Visible = true;
+                reporttable.InnerHtml = htmlTable;
+                string script3 = "Applypagination2();";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                Btnexport1.Visible = true;
+            }
+            else
+            {
+                reporttable.Visible = true;
+                reporttable.InnerHtml = "No data available";
+            }
+            string script2 = "hideoverlay();";
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+        }
+
+    }
+
 }
