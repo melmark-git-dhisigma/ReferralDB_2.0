@@ -153,6 +153,10 @@ namespace ReferalDB.Controllers
         {
             sess = (clsSession1)Session["UserSession1"];
             string result = "";
+            // Normalize names
+            model.FirstName = NormalizeName(model.FirstName);
+            model.MiddleName = NormalizeName(model.MiddleName);
+            model.LastName = NormalizeName(model.LastName);
             result = objFuns.SaveData(model, profilePicture);
             if (result == "Failed")
             {
@@ -258,6 +262,16 @@ namespace ReferalDB.Controllers
 
 
             return View("ClientRegistration", model);
+        }
+
+        private string NormalizeName(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Trim and normalize spaces (one space between words)
+            var parts = input.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(" ", parts);
         }
 
         #region Referral Quick updates

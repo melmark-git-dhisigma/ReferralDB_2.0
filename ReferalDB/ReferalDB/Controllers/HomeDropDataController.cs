@@ -8,6 +8,8 @@ using ReferalDB.Models;
 using BuisinessLayer;
 using ReferalDB.CommonClass;
 using ReferalDBApplicant.Classes;
+using System.Xml;
+using System.IO;
 namespace ReferalDB.Controllers
 {
     public class DetailsController : Controller
@@ -234,6 +236,9 @@ namespace ReferalDB.Controllers
                 {
                     Localid = "1";
                 }
+                // Normalize names
+                Model.Firstname = NormalizeName(Model.Firstname);
+                Model.Lastname = NormalizeName(Model.Lastname);
                 SPObj.FirstName = Model.Firstname;
                 SPObj.LastName = Model.Lastname;
                 SPObj.BirthDate = dtbirthdate;
@@ -324,6 +329,9 @@ namespace ReferalDB.Controllers
                 addr = objData.AddressLists.Where(x => x.AddressId == adrRel.AddressId).SingleOrDefault();
                 }
                 DiaObj = objData.DiaganosesPAs.Where(x => x.StudentPersonalId == sess.ReferralId).First();
+                // Normalize names
+                Model.Firstname = NormalizeName(Model.Firstname);
+                Model.Lastname = NormalizeName(Model.Lastname);
                 SPObj.FirstName = Model.Firstname;
                 SPObj.LastName = Model.Lastname;
                 SPObj.BirthDate = dtbirthdate;
@@ -392,5 +400,16 @@ namespace ReferalDB.Controllers
 
             return Content(resStat+"*" + sess.ReferralId);
         }
+
+        private string NormalizeName(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Trim and normalize spaces (one space between words)
+            var parts = input.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(" ", parts);
+        }
+
     }
 }
