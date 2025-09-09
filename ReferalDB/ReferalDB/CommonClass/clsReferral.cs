@@ -91,8 +91,11 @@ namespace ReferalDBApplicant.Classes
                     model.lukUpMthrId = 0;
                 }
 
-
-
+                // Normalize names
+                model.RefFrstName = NormalizeName(model.RefFrstName);
+                model.RefMaidenName = NormalizeName(model.RefMaidenName);
+                model.RefLstName = NormalizeName(model.RefLstName);
+                
                 using (TransactionScope trans = new TransactionScope(TransactionScopeOption.Required))
                 {
                     ClsErrorLog erorLg = new ClsErrorLog();
@@ -8011,6 +8014,16 @@ namespace ReferalDBApplicant.Classes
             return FundID;
         }
         //--- 02Oct2020 - List 3 - Task #2 -(End)--//
+
+        private string NormalizeName(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Trim and normalize spaces (one space between words)
+            var parts = input.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(" ", parts);
+        }
     }
 
 }
