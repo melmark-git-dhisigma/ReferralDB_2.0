@@ -366,6 +366,24 @@ namespace ReferalDB.Reports
         protected global::System.Web.UI.WebControls.Button Btnexport;
 
         /// <summary>
+        /// Btnexport1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Btnexport1;
+        
+        /// <summary>
+        /// Btnexport3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Btnexport3;
+        
+        /// <summary>
         /// nodata control.
         /// </summary>
         /// <remarks>
