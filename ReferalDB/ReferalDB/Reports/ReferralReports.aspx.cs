@@ -40,6 +40,7 @@ namespace ReferalDB.Reports
         protected void Page_Load(object sender, EventArgs e)
         {
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
             if (!IsPostBack)
             {
                
@@ -595,6 +596,7 @@ namespace ReferalDB.Reports
                 reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
                 allgrid.Visible = false;
                 hdnMenu.Value = "RefTrackActive";
                 RVReferralReport.SizeToReportContent = false;
@@ -622,6 +624,7 @@ namespace ReferalDB.Reports
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefAgeRange";
             RVReferralReport.SizeToReportContent = false;
@@ -647,6 +650,7 @@ namespace ReferalDB.Reports
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "TackingActiveAge";
             RVReferralReport.SizeToReportContent = false;
@@ -672,6 +676,7 @@ namespace ReferalDB.Reports
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefContact";
             RVReferralReport.SizeToReportContent = true;
@@ -699,6 +704,7 @@ namespace ReferalDB.Reports
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefFunded";
             RVReferralReport.SizeToReportContent = false;
@@ -718,6 +724,7 @@ namespace ReferalDB.Reports
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
+            Btnexport3.Visible = false;
             allgrid.Visible = false;
             hdnMenu.Value = "RefLocation";
             ddlState.DataSource = null;
@@ -740,6 +747,7 @@ namespace ReferalDB.Reports
             reporttable.InnerHtml = "";
             Btnexport.Visible = false;
             allgrid.Visible = false;
+            Btnexport3.Visible = false; allgrid.Visible = false;
             hdnMenu.Value = "RefBirthdateQuarter";
             RVReferralReport.SizeToReportContent = false;
             ddlQuarter.SelectedValue = "0";
@@ -953,6 +961,8 @@ namespace ReferalDB.Reports
             RVReferralReport.Visible = false;
             if(ddlFundingStatus.SelectedItem.Value!="0")
             {
+                if (highcheck.Checked == false)
+                {
             tdMsg.InnerHtml = "";
             RVReferralReport.Visible = true;
             sess = (clsSession)Session["UserSession"];
@@ -964,6 +974,25 @@ namespace ReferalDB.Reports
             parm[1] = new ReportParameter("Fund", ddlFundingStatus.SelectedItem.Value);
             this.RVReferralReport.ServerReport.SetParameters(parm);
             RVReferralReport.ServerReport.Refresh();
+            }
+            else
+            {
+                    reporttable.Visible = false;
+                    reporttable.InnerHtml = "";
+                    RVReferralReport.Visible = false;
+                    sess = (clsSession)Session["UserSession"];
+                    System.Data.DataTable dt = Getfunddata(sess.SchoolId.ToString(), ddlFundingStatus.SelectedItem.Value);
+                    string htmlTable = GenerateHtmlTablefund(dt, ddlFundingStatus.SelectedItem.Value);
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = htmlTable;
+                    string script3 = "Applypagination();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
+                    Btnexport.Visible = false;
+                    Btnexport3.Visible = true;
+
+                    string script2 = "hideoverlay();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                }
             }
             else
             {
@@ -1365,6 +1394,247 @@ private void ExportToExcel(System.Data.DataTable dt, string Filename, HttpRespon
         }
 
 
-    }
+        private string chngColumnName(string input)
+        {
+            return input.Replace(" ", "_").Replace("/", "_").Replace("-", "_");
+        }
+        private System.Data.DataTable Getfunddata(string scoolid, string status)
+        {
+            string qer = "SELECT StudentPersonalId,QueueProcess,QueueStatusId,StaffName,Nameofcontact,studentName,SchoolId,DateOfReferral,City,State,ImageUrl,Funded"
+         + " FROM (SELECT StudentPersonalId,QueueProcess,FUNDVSNONFUND.QueueStatusId,REFCL.StaffName,REFCL.Nameofcontact,studentName,FUNDVSNONFUND.SchoolId,"
+        + " DateOfReferral,City,State,ImageUrl,Funded FROM (SELECT *,"
+        + "(SELECT QueueStatusId FROM ref_QueueStatus WHERE StudentPersonalId=FUND.StudentPersonalId AND QueueProcess=FUND.QueueProcess AND "
+        + " QueueId=(SELECT QueueId FROM ref_Queue WHERE QueueType='FV')  AND Draft='N' AND CurrentStatus='false' ) AS QueueStatusId"
+         + " FROM (SELECT SP.StudentPersonalId,SP.LastName+','+SP.FirstName AS studentName,SP.SchoolId,CONVERT(VARCHAR(10), SP.[AdmissionDate], 101) AS [DateOfReferral],"
+         + " ADL.City AS City,(SELECT LookupName FROM LookUp WHERE LookupType = 'State' AND LookupId = ADL.StateProvince) AS State, (SELECT MAX(QueueProcess) FROM ref_QueueStatus WHERE StudentPersonalId=SP.StudentPersonalId) AS QueueProcess,"
+         + " CASE WHEN SP.ImageUrl IS NULL OR SP.ImageUrl='' THEN CASE WHEN Gender=1 THEN (SELECT FormatImg FROM [dbo].[DefaultImage] WHERE Sex='M')"
+                + " ELSE  (SELECT FormatImg FROM [dbo].[DefaultImage] WHERE Sex='F')"
+                + " END ELSE [ImageUrl] END AS [ImageUrl],CASE WHEN SP.FundingVerification='True' THEN 'FD' ELSE 'NF' END  Funded"
+         + " FROM StudentPersonal SP INNER JOIN StudentAddresRel SDR ON SDR.StudentPersonalId=SP.StudentPersonalId"
+             + " INNER JOIN AddressList ADL ON ADL.AddressId=SDR.AddressId WHERE SP.StudentType='Referral') FUND) FUNDVSNONFUND"
+         + " LEFT JOIN ref_CallLogs AS REFCL ON REFCL.QueueStatusId=FUNDVSNONFUND.QueueStatusId)  FUNDEDVSNONFUNDED"
+         + " ORDER BY DATEPART(YEAR,DateOfReferral) DESC, DATEPART(MONTH,DateOfReferral) DESC, DATEPART(DAY,DateOfReferral) DESC";
 
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["dbConnectionString"].ToString());
+
+            SqlCommand cmd = new SqlCommand(qer, conn);
+            cmd.CommandTimeout = 1200;
+            try
+            {
+                conn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                System.Data.DataTable dt = new System.Data.DataTable();
+                da.Fill(dt);
+                return dt;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                if (conn.State == ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        private string GenerateHtmlTablefund(System.Data.DataTable dt, string status)
+        {
+            //ViewState["data"] = DataTableToJson(dt);
+            StringBuilder html = new StringBuilder();
+            html.Append("<table id='trackingactive' class='display' border='1' style='width: 80%; border-collapse: collapse;'>");
+            html.Append("<thead>");
+            html.Append("<tr style='background-color: #111184; color: white; height: 40px;'>");
+            html.Append("<th rowspan='2'>Referral Name</th>");
+            html.Append("<th rowspan='2'>Date Of Referral</th>");
+            html.Append("<th rowspan='2'>City</th>");
+            html.Append("<th rowspan='2'>State</th>");
+            html.Append("<th colspan='2'>Contact log details</th>");
+
+            html.Append("</tr>");
+            html.Append("<tr style='background-color: #111184; color: white; height: 40px;'>");
+
+            html.Append("<th> Name of contact</th><th>Staff Name</th>");
+            html.Append("</tr>");
+
+            html.Append("</thead>");
+
+            html.Append("<tbody>");
+
+            System.Data.DataTable Dt = new System.Data.DataTable();
+            Dt.Columns.Add("ReferralName", typeof(string));
+            Dt.Columns.Add("DateofReferral", typeof(string));
+            Dt.Columns.Add("City", typeof(string));
+            Dt.Columns.Add("State", typeof(string));
+            Dt.Columns.Add("nameofcontact", typeof(string));
+            Dt.Columns.Add("staffname", typeof(string));
+
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                var distinctRows = dt.AsEnumerable()
+                                .GroupBy(row => row["StudentPersonalId"])
+                                .Select(group => group.First())
+                                .CopyToDataTable();
+                dt = distinctRows;
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (dt.Rows[i]["Funded"].ToString() == status)
+                    {
+                        DataRow row = Dt.NewRow();
+                        row["ReferralName"] = dt.Rows[i]["studentName"].ToString(); ;
+                        row["DateofReferral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                        row["City"] = dt.Rows[i]["City"].ToString();
+                        row["State"] = dt.Rows[i]["State"].ToString();
+                        row["nameofcontact"] = dt.Rows[i]["Nameofcontact"].ToString();
+                        row["staffname"] = dt.Rows[i]["StaffName"].ToString();
+                        Dt.Rows.Add(row);
+                    }
+                }
+                ViewState["data"] = DataTableToJson(Dt);
+
+            }
+            foreach (DataRow rows in Dt.Rows)
+            {
+                html.Append("<tr>");
+                html.Append(string.Format("<td style='height:40px;'>{0}</td>", rows["ReferralName"]));
+                html.Append(string.Format("<td>{0}</td>", rows["DateofReferral"]));
+                html.Append(string.Format("<td>{0}</td>", rows["City"]));
+                html.Append(string.Format("<td>{0}</td>", rows["State"]));
+
+                html.Append(string.Format("<td>{0}</td>", rows["nameofcontact"]));
+                html.Append(string.Format("<td>{0}</td>", rows["StaffName"]));
+                html.Append("</tr>");
+            }
+
+            html.Append("</tbody>");
+            html.Append("</table>");
+            return html.ToString();
+        }
+
+        protected void btnexport3_Click(object sender, EventArgs e)
+        {
+
+            System.Data.DataTable dt = JsonToDataTable(ViewState["data"].ToString());
+
+
+            var Dt = BuildDataTablefund(dt);
+
+            IWorkbook workbook = new XSSFWorkbook();
+            ISheet sheet = workbook.CreateSheet("Referral Report");
+
+            ICellStyle headerStyle = workbook.CreateCellStyle();
+            headerStyle.FillForegroundColor = IndexedColors.LightBlue.Index;
+            headerStyle.FillPattern = FillPattern.SolidForeground;
+            headerStyle.Alignment = HorizontalAlignment.Center;
+
+            headerStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            headerStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+
+            headerStyle.TopBorderColor = IndexedColors.White.Index;
+            headerStyle.BottomBorderColor = IndexedColors.White.Index;
+            headerStyle.LeftBorderColor = IndexedColors.White.Index;
+            headerStyle.RightBorderColor = IndexedColors.White.Index;
+
+            IFont headerFont = workbook.CreateFont();
+            headerFont.IsBold = true;
+            headerFont.Color = IndexedColors.White.Index;
+            headerStyle.SetFont(headerFont);
+            int rowIndex = 0;
+
+            IRow headerRow1 = sheet.CreateRow(rowIndex++);
+            IRow headerRow2 = sheet.CreateRow(rowIndex++);
+
+            string[] fixedHeaders = { "Referral Name", "Date Of Referral", "City", "State" };
+
+            int colIndex = 0;
+
+            foreach (var header in fixedHeaders)
+            {
+                var cell = headerRow1.CreateCell(colIndex);
+                cell.SetCellValue(header);
+                cell.CellStyle = headerStyle;
+                sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 1, colIndex, colIndex));
+                colIndex++;
+            }
+
+            var cell1 = headerRow1.CreateCell(colIndex);
+            cell1.SetCellValue("Contact log details");
+            cell1.CellStyle = headerStyle;
+            sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(0, 0, colIndex, colIndex + 1));
+
+            var sub1 = headerRow2.CreateCell(colIndex++);
+            sub1.SetCellValue("Name of contact");
+            sub1.CellStyle = headerStyle;
+
+            var sub2 = headerRow2.CreateCell(colIndex++);
+            sub2.SetCellValue("Staff Name");
+            sub2.CellStyle = headerStyle;
+
+
+            foreach (DataRow dataRow in Dt.Rows)
+            {
+                IRow excelRow = sheet.CreateRow(rowIndex++);
+                colIndex = 0;
+
+                foreach (var header in fixedHeaders)
+                {
+                    excelRow.CreateCell(colIndex++).SetCellValue(dataRow[header].ToString());
+                }
+
+                string reltn = chngColumnName("Contact log details");
+                excelRow.CreateCell(colIndex++).SetCellValue(dataRow["nameofcontact"].ToString());
+                excelRow.CreateCell(colIndex++).SetCellValue(dataRow["StaffName"].ToString());
+            }
+            for (int i = 0; i < colIndex; i++)
+            {
+                sheet.SetColumnWidth(i, 25 * 256); 
+            }
+
+            using (MemoryStream exportData = new MemoryStream())
+            {
+                workbook.Write(exportData);
+                HttpContext.Current.Response.Clear();
+                HttpContext.Current.Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                HttpContext.Current.Response.AddHeader("Content-Disposition", "attachment; filename=Referral_All_FundedvsNonfunded_Report.xlsx");
+                HttpContext.Current.Response.BinaryWrite(exportData.ToArray());
+                HttpContext.Current.Response.End();
+            }
+
+        }
+
+        private System.Data.DataTable BuildDataTablefund(System.Data.DataTable dt)
+        {
+            System.Data.DataTable result = new System.Data.DataTable();
+            result.Columns.Add("Referral Name");
+            result.Columns.Add("Date Of Referral");
+            result.Columns.Add("City");
+            result.Columns.Add("State");
+            result.Columns.Add("nameofcontact");
+            result.Columns.Add("StaffName");
+
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+
+                DataRow row = result.NewRow();
+                row["Referral Name"] = dt.Rows[i]["ReferralName"].ToString(); ;
+                row["Date Of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
+                    row["City"] = dt.Rows[i]["City"].ToString();
+                    row["State"] = dt.Rows[i]["State"].ToString();
+                    row["nameofcontact"] = dt.Rows[i]["Nameofcontact"].ToString();
+                    row["staffname"] = dt.Rows[i]["StaffName"].ToString();
+                    result.Rows.Add(row);
+                
+            }
+
+            return result;
+        }
+
+    }
 }

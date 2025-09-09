@@ -292,7 +292,7 @@
                                             </asp:DropDownList>
                                         </td>
                                         <td style="width:15%">
-                                            <asp:Button ID="btnshowgraph" runat="server" Text="Show Report" OnClick="btnshowgraph_Click" />
+                                            <asp:Button ID="btnshowgraph" runat="server" Text="Show Report" OnClick="btnshowgraph_Click" onClientclick="showoverlay()"/>
                                         </td>
                                         <td></td>
                                     </tr>
@@ -345,8 +345,9 @@
                                  
                         </div>
                               <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false"  />
+                               <asp:Button ID="Btnexport3" runat="server" Text="Export" OnClick="btnexport3_Click" visible="false"  />
                        <div style="text-align:center;"><asp:Label ID="nodata" runat="server" visible="false" Text="" /> </div>
-                        <div runat="server" id="reporttable" visible="false">
+                        <div runat="server" id="reporttable" visible="false" style="overflow-y:auto;">
 
                         </div>
                            <asp:GridView ID="allgrid" runat="server" AutoGenerateColumns="true" AllowPaging="true"  PageSize="20"
