@@ -17,6 +17,10 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.0/dist/js/bootstrap-multiselect.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@1.1.0/dist/css/bootstrap-multiselect.css" rel="stylesheet" />
     <link href="../CSS/StyleMaster.css" rel="stylesheet" type="text/css" />
     <link href="../CSS/StyleControl.css" rel="stylesheet" type="text/css" />
     <link href="../CSS/StyleCommon.css" rel="stylesheet" type="text/css" />
@@ -36,6 +40,15 @@
                 ChangeSelectedMenu(MenuType);
             }
                        
+        });
+        $(document).ready(function () {
+            $('#<%= ddlReferrals.ClientID %>').multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                buttonClass: 'btn btn-light multiselect',
+                buttonWidth: '200px',
+                nonSelectedText: 'Select Referrals'
+            });
         });
 
 
@@ -78,6 +91,24 @@
                         "info": true,
                         "searching": false,
                         "lengthChange":false
+                    });
+                } else {
+                    console.log("Table not found!");
+                }
+            });
+
+
+        }
+        function Applypagination2() {
+            $(document).ready(function () {
+                if ($('#trackingactive').length) {
+                    $('#trackingactive').DataTable({
+                        "pageLength": 10,
+                        "paging": true,
+                        "ordering": false,
+                        "info": true,
+                        "searching": false,
+                        "lengthChange": false
                     });
                 } else {
                     console.log("Table not found!");
@@ -137,7 +168,21 @@
 .dataTables_paginate .paginate_button.next {
     padding: 5px 10px; /* Optional: adjust padding for better size */
 }
-       
+      .multiselect-container {
+        max-height: 200px !important;
+        overflow-y: auto;
+    } 
+      .btn.multiselect {
+        border: 2px solid #000080 !important; 
+        color: #000080; 
+        height: 30px !important;
+        padding: 0 6px !important;
+        font-size: 12px !important;
+        line-height: 18px !important;
+    }
+
+
+
     </style>
     <title id="tileid"></title>
     
@@ -215,7 +260,7 @@
                                 <h5 id="RefContact" class="allexp"  >
                                     <span class="dd"></span>
                              
-                                    <asp:LinkButton ID="LbtnRefContact" runat="server" CssClass="linkstyle" Text="All Contact Events" ToolTip="All Contact Events" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefContact_Click" ></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnRefContact" runat="server" CssClass="linkstyle" Text="All Contact Events" ToolTip="All Contact Events" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefContact_Click" OnClientClick="showoverlay()"></asp:LinkButton>
                                 </h5>
                             </li>
                            
@@ -340,12 +385,38 @@
                                 </table>
                             </div>
                         </div>
+                        <div>
+<div id="contactdrop" runat="server" visible="false"   style="display: flex; flex-direction: row; align-items: center; gap: 10px; flex-wrap: nowrap;">
+                            <label for="ddlReferrals" style="font-size:18px; color:black; white-space: nowrap;">Referrals</label>
+
+                           
+                                <asp:ListBox 
+                                ID="ddlReferrals" 
+                                runat="server" 
+                                CssClass="form-control" 
+                                SelectionMode="Multiple" 
+                                style="width: 200px; height: 120px;" />
+
+                            <asp:Button 
+                                ID="contactshow" 
+                                runat="server" 
+                                Text="Show Report" 
+                                style="background-color:#000080;width: 100px; overflow-y: auto;"
+                                OnClientClick="showoverlay()"
+                                OnClick="btncontactshow_Click" 
+                             />
+
+                              <asp:Button ID="Btnexport1" runat="server" Text="Export" OnClick="btnexport2_Click" visible="false" style="background-color:#000080;width: 100px; overflow-y: auto;" />
+
+                             </div>
+                        </div>
                         <div id="overlay" runat="server">
                             <p> please wait...</p>
                                  
                         </div>
-                              <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false"  />
-                               <asp:Button ID="Btnexport3" runat="server" Text="Export" OnClick="btnexport3_Click" visible="false"  />
+                              <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" />
+                               <asp:Button ID="Btnexport3" runat="server" Text="Export" OnClick="btnexport3_Click" visible="false" style="background-color:#000080" />
+
                        <div style="text-align:center;"><asp:Label ID="nodata" runat="server" visible="false" Text="" /> </div>
                         <div runat="server" id="reporttable" visible="false" style="overflow-y:auto;">
 
