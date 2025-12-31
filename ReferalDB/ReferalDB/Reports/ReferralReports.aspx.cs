@@ -171,12 +171,26 @@ namespace ReferalDB.Reports
                 divbirthdate.Visible = false;
                 allgrid.Visible = true;
                  alldata = GetData(sess.SchoolId.ToString());
+                if (alldata != null && alldata.Rows.Count > 0)
+                {
                  ViewState["alldata"] = DataTableToJson(alldata);
                 allgrid.DataSource = alldata;
                 allgrid.DataBind();
+                    
+                    Btnexport.Visible = true;
+                }
+                else
+                {
+                    allgrid.Visible = false;
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = "No data available";
+                    Btnexport.Visible = false;
+                    Btnexport1.Visible = false;
+                    Btnexport3.Visible = false;
+
+                }
                 string script2 = "hideoverlay();";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "show2", script2, true);
-                Btnexport.Visible = true;
 
             }
 
@@ -749,6 +763,9 @@ namespace ReferalDB.Reports
                 {
                     reporttable.Visible = true;
                     reporttable.InnerHtml = "No data available";
+                    Btnexport.Visible = false;
+                    Btnexport1.Visible = false;
+                    Btnexport3.Visible = false;
                 }
                 string script2 = "hideoverlay();";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
@@ -926,6 +943,9 @@ namespace ReferalDB.Reports
                         {
                             reporttable.Visible = true;
                             reporttable.InnerHtml = "No data available";
+                            Btnexport.Visible = false;
+                            Btnexport1.Visible = false;
+                            Btnexport3.Visible = false;
                         }
                             string script2 = "hideoverlay();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
@@ -978,6 +998,9 @@ namespace ReferalDB.Reports
                         {
                             reporttable.Visible = true;
                             reporttable.InnerHtml = "No data available";
+                            Btnexport.Visible = false;
+                            Btnexport1.Visible = false;
+                            Btnexport3.Visible = false;
                         }
                         string script2 = "hideoverlay();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show8", script2, true);
@@ -1083,6 +1106,9 @@ namespace ReferalDB.Reports
                     {
                         reporttable.Visible = true;
                         reporttable.InnerHtml = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
                     }
                     string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
@@ -1136,6 +1162,9 @@ namespace ReferalDB.Reports
                     {
                         reporttable.Visible = true;
                         reporttable.InnerHtml = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
                     }
                     string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
@@ -1198,6 +1227,9 @@ namespace ReferalDB.Reports
                      {
                          reporttable.Visible = true;
                          reporttable.InnerHtml = "No data available";
+                         Btnexport.Visible = false;
+                         Btnexport1.Visible = false;
+                         Btnexport3.Visible = false;
                      }
                      string script2 = "hideoverlay();";
                      ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
@@ -2117,6 +2149,9 @@ namespace ReferalDB.Reports
             {
                 reporttable.Visible = true;
                 reporttable.InnerHtml = "No data available";
+                Btnexport.Visible = false;
+                Btnexport1.Visible = false;
+                Btnexport3.Visible = false;
             }
             string script2 = "hideoverlay();";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
