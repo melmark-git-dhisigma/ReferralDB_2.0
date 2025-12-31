@@ -331,7 +331,7 @@
                                         <asp:TextBox ID="txtStartAge" runat="server" onkeypress="return validate(event)" ></asp:TextBox></td> <td><asp:Label ID="lblageend" runat="server" Text="And"></asp:Label></td>
                                     <td><asp:TextBox ID="txtEndAge" runat="server" onkeypress="return validate(event)" ></asp:TextBox></td>
                                     <td>
-                                        <asp:Button ID="btnShowReport" runat="server" Text="Show Report" OnClick="btnShowReport_Click" onClientclick="showoverlay()"/></td>
+                                        <asp:Button ID="btnShowReport" runat="server" Text="Show Report" OnClick="btnShowReport_Click" onClientclick="showoverlay()" style="background-color:#000080"/></td>
                                 </tr>
                             </table>
                                 </div>
@@ -349,7 +349,7 @@
                                             </asp:DropDownList>
                                         </td>
                                         <td style="width:15%">
-                                            <asp:Button ID="btnshowgraph" runat="server" Text="Show Report" OnClick="btnshowgraph_Click" onClientclick="showoverlay()"/>
+                                            <asp:Button ID="btnshowgraph" runat="server" Text="Show Report" OnClick="btnshowgraph_Click" onClientclick="showoverlay()" style="background-color:#000080"/>
                                         </td>
                                         <td></td>
                                     </tr>
@@ -368,7 +368,7 @@
                                         <td><asp:Label ID="lblcity" runat="server"  Text="City"></asp:Label></td>
                                         <td > <asp:TextBox ID="txtcity" runat="server" ></asp:TextBox> </td>
                                         <td >
-                                            <asp:Button ID="btnlocation" runat="server" Text="Show Report" OnClick="btnlocation_Click" onClientclick="showoverlay()" />
+                                            <asp:Button ID="btnlocation" runat="server" Text="Show Report" OnClick="btnlocation_Click" onClientclick="showoverlay()" style="background-color:#000080"/>
                                         </td>
                                         <td></td>
                                     </tr>
@@ -390,7 +390,7 @@
                                             </asp:DropDownList>
                                         </td>
                                         <td style="width:15%">
-                                            <asp:Button ID="btnquarter" runat="server" Text="Show Report" OnClick="btnquarter_Click" onClientclick="showoverlay()" />
+                                            <asp:Button ID="btnquarter" runat="server" Text="Show Report" OnClick="btnquarter_Click" onClientclick="showoverlay()" style="background-color:#000080" />
                                         </td>
                                         <td></td>
                                     </tr>
@@ -436,6 +436,8 @@
                            <asp:GridView ID="allgrid" runat="server" AutoGenerateColumns="true" AllowPaging="true"  PageSize="20"
 Width="80%" BorderColor="Black" BorderWidth="1px" CellPadding="5" Visible="false" CssClass="center-align" OnPageIndexChanging="GridView1_PageIndexChanging">
       <HeaderStyle BackColor="darkblue" ForeColor="white" />
+    <RowStyle BackColor="white" />
+    <AlternatingRowStyle BackColor="#EBEBEB" />
 
                                
             </asp:GridView>
