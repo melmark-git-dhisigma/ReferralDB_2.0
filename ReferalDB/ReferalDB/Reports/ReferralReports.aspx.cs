@@ -1054,26 +1054,33 @@ namespace ReferalDB.Reports
 
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("<table id='trackingactive' class='display' border='1' style='width: 80%; border-collapse: collapse;'>");
+            sb.Append("<table id='trackingactive' class='display' border='1' style='width: 80%; border-collapse: collapse; text-align: center; vertical-align: middle;'>");
 
             sb.Append("<thead>");
             sb.Append("<tr>");
             foreach (DataColumn column in dataTable.Columns)
             {
-                sb.AppendFormat("<th style='background-color: #111184; color: white; padding: 8px; text-align: left;'>{0}</th>", column.ColumnName);
+                sb.AppendFormat("<th style='background-color: #111184; color: white; padding: 8px; text-align: center;'>{0}</th>", column.ColumnName);
             }
             sb.Append("</tr>");
             sb.Append("</thead>");
 
             sb.Append("<tbody>");
+            int rowIndex = 0;
             foreach (DataRow row in dataTable.Rows)
             {
-                sb.Append("<tr>");
+                string rowStyle = (rowIndex % 2 == 0)
+                    ? "background-color: white;"
+                    : "background-color: rgba(0, 0, 0, 0.08);";
+
+                sb.AppendFormat("<tr style='{0}'>", rowStyle);
+
                 foreach (DataColumn column in dataTable.Columns)
                 {
-                    sb.AppendFormat("<td style='padding: 8px; text-align: left;'>{0}</td>", row[column]);
+                    sb.AppendFormat("<td style='padding: 8px; text-align: center;'>{0}</td>", row[column]);
                 }
                 sb.Append("</tr>");
+                rowIndex++;
             }
             sb.Append("</tbody>");
 
@@ -1710,7 +1717,7 @@ namespace ReferalDB.Reports
 
             StringBuilder html = new StringBuilder();
 
-            html.Append("<table id='trackingactive' class='display' border='1' style='width: 100%; border-collapse: collapse; table-layout: auto;white-space: nowrap; width: max-content;'>");
+            html.Append("<table id='trackingactive' class='display' border='1' style='width: 100%; border-collapse: collapse; table-layout: auto;white-space: nowrap; width: max-content;text-align: center; vertical-align: middle;'>");
             html.Append("<thead>");
             html.Append("<tr style='background-color: #111184; color: white; height: 40px;'>");
             html.Append("<th>Referral Last</th>");
@@ -1864,7 +1871,7 @@ namespace ReferalDB.Reports
         {
             //ViewState["data"] = DataTableToJson(dt);
             StringBuilder html = new StringBuilder();
-            html.Append("<table id='trackingactive' class='display' border='1' style='width: 80%; border-collapse: collapse;'>");
+            html.Append("<table id='trackingactive' class='display' border='1' style='width: 80%; border-collapse: collapse;text-align: center; vertical-align: middle;'>");
             html.Append("<thead>");
             html.Append("<tr style='background-color: #111184; color: white; height: 40px;'>");
             html.Append("<th rowspan='2'>Referral Name</th>");
@@ -1915,17 +1922,23 @@ namespace ReferalDB.Reports
                 ViewState["data"] = DataTableToJson(Dt);
 
             }
+            int rowIndex = 0;
             foreach (DataRow rows in Dt.Rows)
             {
-                html.Append("<tr>");
-                html.Append(string.Format("<td style='height:40px;'>{0}</td>", rows["ReferralName"]));
-                html.Append(string.Format("<td>{0}</td>", rows["DateofReferral"]));
-                html.Append(string.Format("<td>{0}</td>", rows["City"]));
-                html.Append(string.Format("<td>{0}</td>", rows["State"]));
+                string rowStyle = (rowIndex % 2 == 0)
+                    ? "background-color: white;"
+                    : "background-color: rgba(0, 0, 0, 0.08);";
 
-                html.Append(string.Format("<td>{0}</td>", rows["nameofcontact"]));
-                html.Append(string.Format("<td>{0}</td>", rows["StaffName"]));
+                html.AppendFormat("<tr style='{0}'>", rowStyle);
+                html.AppendFormat("<td style='height:40px;'>{0}</td>", rows["ReferralName"]);
+                html.AppendFormat("<td>{0}</td>", rows["DateofReferral"]);
+                html.AppendFormat("<td>{0}</td>", rows["City"]);
+                html.AppendFormat("<td>{0}</td>", rows["State"]);
+                html.AppendFormat("<td>{0}</td>", rows["nameofcontact"]);
+                html.AppendFormat("<td>{0}</td>", rows["staffname"]);
                 html.Append("</tr>");
+
+                rowIndex++;
             }
 
             html.Append("</tbody>");
