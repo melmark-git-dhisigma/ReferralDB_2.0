@@ -429,7 +429,7 @@
                               <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" />
                                <asp:Button ID="Btnexport3" runat="server" Text="Export" OnClick="btnexport3_Click" visible="false" style="background-color:#000080" />
 
-                       <div style="text-align:center;"><asp:Label ID="nodata" runat="server" visible="false" Text="" /> </div>
+                       <div style="text-align:left;"><asp:Label ID="nodata" runat="server" visible="false" Text="" /> </div>
                         <div runat="server" id="reporttable" visible="false" style="overflow-y:auto;">
 
                         </div>

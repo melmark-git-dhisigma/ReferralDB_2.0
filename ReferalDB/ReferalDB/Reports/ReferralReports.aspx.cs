@@ -46,6 +46,8 @@ namespace ReferalDB.Reports
             contactdrop.Visible = false;
             ddlReferrals.Visible = false;
             contactshow.Visible = false;
+            nodata.Visible = false;
+            nodata.Text = "";
             if (!IsPostBack)
             {
                
@@ -128,6 +130,8 @@ namespace ReferalDB.Reports
         {
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             allgrid.Visible = false;
             contactdrop.Visible = false;
@@ -620,6 +624,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
                 reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
@@ -652,6 +658,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
@@ -682,6 +690,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
@@ -712,6 +722,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
@@ -798,6 +810,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
@@ -822,6 +836,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
@@ -848,6 +864,8 @@ namespace ReferalDB.Reports
             contactshow.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false; allgrid.Visible = false;
@@ -1088,6 +1106,8 @@ namespace ReferalDB.Reports
             {
                     reporttable.Visible = false;
                     reporttable.InnerHtml = "";
+                    nodata.Visible = false;
+                    nodata.Text = "";
                     RVReferralReport.Visible = false;
                     sess = (clsSession)Session["UserSession"];
                     System.Data.DataTable dt = Getfunddata(sess.SchoolId.ToString(), ddlFundingStatus.SelectedItem.Value);
@@ -1126,6 +1146,8 @@ namespace ReferalDB.Reports
         {
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             RVReferralReport.Visible = false;
             if (ddlState.SelectedItem.Value != "0")
             {
@@ -1160,8 +1182,9 @@ namespace ReferalDB.Reports
                     }
                     else
                     {
-                        reporttable.Visible = true;
-                        reporttable.InnerHtml = "No data available";
+                        
+                        nodata.Visible = true;
+                        nodata.Text = "No data available";
                         Btnexport.Visible = false;
                         Btnexport1.Visible = false;
                         Btnexport3.Visible = false;
@@ -1188,6 +1211,8 @@ namespace ReferalDB.Reports
             RVReferralReport.Visible = false;
             reporttable.Visible = false;
             reporttable.InnerHtml = "";
+            nodata.Visible = false;
+            nodata.Text = "";
             if (ddlQuarter.SelectedItem.Value != "0")
             {
                 tdMsg.InnerHtml = "";
