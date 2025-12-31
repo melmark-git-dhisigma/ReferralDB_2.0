@@ -855,6 +855,32 @@ namespace ReferalDB.Reports
             divlocation.Visible = true;
             divbirthdate.Visible = false;
             LoadState();
+            if (highcheck.Checked == true)
+            {
+                sess = (clsSession)Session["UserSession"];
+                alldata = GetLocationData(sess.SchoolId.ToString(), txtcity.Text, ddlState.SelectedItem.Value);
+                if (alldata != null && alldata.Rows.Count > 0)
+                {
+                    ViewState["alldata"] = DataTableToJson(alldata);
+                    string htmlTable = GenerateHtmlTable(alldata);
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = htmlTable;
+                    string script3 = "Applypagination();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show9", script3, true);
+                    Btnexport.Visible = true;
+        }
+                else
+                {
+
+                    nodata.Visible = true;
+                    nodata.Text = "No data available";
+                    Btnexport.Visible = false;
+                    Btnexport1.Visible = false;
+                    Btnexport3.Visible = false;
+                }
+                string script2 = "hideoverlay();";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
+            }
         }
 
         protected void LbtnRefBirthdateQuarter_Click(object sender, EventArgs e)
@@ -880,6 +906,34 @@ namespace ReferalDB.Reports
             referralage.Visible = false;
             divlocation.Visible = false;
             RVReferralReport.Visible = false;
+            if (highcheck.Checked == true)
+            {
+                tdMsg.InnerHtml = "";
+                RVReferralReport.Visible = false;
+                sess = (clsSession)Session["UserSession"];
+
+                alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
+                if (alldata != null && alldata.Rows.Count > 0)
+                {
+                    ViewState["alldata"] = DataTableToJson(alldata);
+                    string htmlTable = GenerateHtmlTable(alldata);
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = htmlTable;
+                    string script3 = "Applypagination();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
+                    Btnexport.Visible = true;
+        }
+                else
+                {
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = "No data available";
+                    Btnexport.Visible = false;
+                    Btnexport1.Visible = false;
+                    Btnexport3.Visible = false;
+                }
+                string script2 = "hideoverlay();";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+            }
         }
 
         protected void btnShowReport_Click(object sender, EventArgs e)
@@ -1156,8 +1210,8 @@ namespace ReferalDB.Reports
             nodata.Visible = false;
             nodata.Text = "";
             RVReferralReport.Visible = false;
-            if (ddlState.SelectedItem.Value != "0")
-            {
+            //if (ddlState.SelectedItem.Value != "0")
+            //{
                 tdMsg.InnerHtml = "";
                 if (highcheck.Checked == false)
                 {
@@ -1199,13 +1253,13 @@ namespace ReferalDB.Reports
                     string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
                 }
-            }
+            //}
             //else if (ddlState.SelectedItem.Value == "0")
-            else
-            {
-                tdMsg.InnerHtml = clsGeneral.warningMsg("Please select state");
-                ddlState.Focus();
-            }
+            //else
+            //{
+            //    tdMsg.InnerHtml = clsGeneral.warningMsg("Please select state");
+            //    ddlState.Focus();
+            //}
             //else
             //{
             //    tdMsg.InnerHtml = clsGeneral.warningMsg("Please enter city");
@@ -1220,8 +1274,8 @@ namespace ReferalDB.Reports
             reporttable.InnerHtml = "";
             nodata.Visible = false;
             nodata.Text = "";
-            if (ddlQuarter.SelectedItem.Value != "0")
-            {
+            //if (ddlQuarter.SelectedItem.Value != "0")
+            //{
                 tdMsg.InnerHtml = "";
                  if (highcheck.Checked == false)
                  {
@@ -1266,13 +1320,13 @@ namespace ReferalDB.Reports
                      string script2 = "hideoverlay();";
                      ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
                  }
+            //}
+            //else
+            //{
+            //    tdMsg.InnerHtml = clsGeneral.warningMsg("Please select birthdate quarter");
+            //    ddlQuarter.Focus();
+            //}
             }
-            else
-            {
-                tdMsg.InnerHtml = clsGeneral.warningMsg("Please select birthdate quarter");
-                ddlQuarter.Focus();
-            }
-        }
         private System.Data.DataTable GetQuarterData(string scoolid, string quart)
         {
             System.Data.DataTable Dt = new System.Data.DataTable();
@@ -1306,7 +1360,7 @@ namespace ReferalDB.Reports
                     
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                        if (dt.Rows[i]["mMonth"].ToString().Trim() == quart)
+                        if (dt.Rows[i]["mMonth"].ToString().Trim() == quart || quart=="0")
                         {
                             DataRow row = Dt.NewRow();
                             if (dt.Rows[i]["studentPersonalName"] != null)
@@ -1388,80 +1442,50 @@ namespace ReferalDB.Reports
                                     .CopyToDataTable();
                     dt = distinctRows;
 
+                    string citySearch = (city != null) ? city.Trim().ToLower() : "";
+                    bool cityProvided = !string.IsNullOrWhiteSpace(citySearch);
+                    bool stateProvided = state != "0";
 
-                    if (city != "")
-                    {
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
-                            //if (dt.Rows[i]["City"].ToString().Trim() == city && dt.Rows[i]["StateProvince"].ToString() == state)
-                            if (dt.Rows[i]["City"].ToString().Trim().ToLower().Contains(city.ToLower()) && dt.Rows[i]["StateProvince"].ToString() == state)
+                        string rowCity = (dt.Rows[i]["City"] != null && dt.Rows[i]["City"] != DBNull.Value)
+                            ? dt.Rows[i]["City"].ToString().Trim().ToLower()
+                            : "";
+
+                        string rowState = (dt.Rows[i]["StateProvince"] != null && dt.Rows[i]["StateProvince"] != DBNull.Value)
+                            ? dt.Rows[i]["StateProvince"].ToString().Trim()
+                            : "";
+
+                        bool cityMatch = !cityProvided || rowCity.Contains(citySearch);
+                        bool stateMatch = !stateProvided || rowState == state;
+
+                        if (cityMatch && stateMatch)
                         {
                             DataRow row = Dt.NewRow();
-                            if (dt.Rows[i]["studentPersonalName"] != null)
-                            {
-                                row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
-                            }
-                            if (dt.Rows[i]["BirthDate"] != null)
-                            {
-                                row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
-                            }
-                            if (dt.Rows[i]["Gender"] != null)
-                            {
-                                row["Gender"] = dt.Rows[i]["Gender"].ToString();
-                            }
-                          
-                            if (dt.Rows[i]["DateOfReferral"] != null)
-                            {
-                                row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
-                            }
-                            if (dt.Rows[i]["City"] != null)
-                            {
-                                row["City"] = dt.Rows[i]["City"].ToString().Trim();
-                            }
-                            if (dt.Rows[i]["State"] != null)
-                            {
-                                row["State"] = dt.Rows[i]["State"].ToString().Trim();
-                            }
-                            Dt.Rows.Add(row);
-                        }
-                    }
-                }
-                    else
-                    {
-                        for (int i = 0; i < dt.Rows.Count; i++)
-                        {
-                            if (dt.Rows[i]["StateProvince"].ToString() == state)
-                            {
-                                DataRow row = Dt.NewRow();
-                                if (dt.Rows[i]["studentPersonalName"] != null)
-                                {
-                                    row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString(); ;
-                                }
-                                if (dt.Rows[i]["BirthDate"] != null)
-                                {
-                                    row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
-                                }
-                                if (dt.Rows[i]["Gender"] != null)
-                                {
-                                    row["Gender"] = dt.Rows[i]["Gender"].ToString();
-                                }
 
-                                if (dt.Rows[i]["DateOfReferral"] != null)
-                                {
+                            if (dt.Rows[i]["studentPersonalName"] != DBNull.Value)
+                                row["Referral Name"] = dt.Rows[i]["studentPersonalName"].ToString();
+
+                            if (dt.Rows[i]["BirthDate"] != DBNull.Value)
+                                row["Birth Date"] = dt.Rows[i]["BirthDate"].ToString();
+
+                            if (dt.Rows[i]["Gender"] != DBNull.Value)
+                                row["Gender"] = dt.Rows[i]["Gender"].ToString();
+
+                            if (dt.Rows[i]["DateOfReferral"] != DBNull.Value)
                                     row["Date of Referral"] = dt.Rows[i]["DateOfReferral"].ToString();
-                                }
-                                if (dt.Rows[i]["City"] != null)
-                                {
+
+                            if (dt.Rows[i]["City"] != DBNull.Value)
                                     row["City"] = dt.Rows[i]["City"].ToString().Trim();
-                                }
-                                if (dt.Rows[i]["State"] != null)
-                                {
+
+                            if (dt.Rows[i]["State"] != DBNull.Value)
                                     row["State"] = dt.Rows[i]["State"].ToString().Trim();
-                                }
+
                                 Dt.Rows.Add(row);
                             }
                         }
-                    }
+
+
                     
                 }
 
