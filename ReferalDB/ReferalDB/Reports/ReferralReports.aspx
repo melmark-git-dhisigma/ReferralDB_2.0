@@ -62,10 +62,22 @@
         function showoverlay() {
             var checkbox = document.getElementById('<%= highcheck.ClientID %>');
             if (checkbox.checked) {
-                document.getElementById("overlay").style.display = "block";
-            }
+                var midContent = document.getElementById("MidContent");
+                var overlay = document.getElementById("overlay");
 
+                // Get position and size of MidContent
+                var rect = midContent.getBoundingClientRect();
+
+                overlay.style.position = "absolute";
+                overlay.style.top = rect.top + window.scrollY + "px";
+                overlay.style.left = rect.left + window.scrollX + "px";
+                overlay.style.width = rect.width + "px";
+                overlay.style.height = rect.height + "px";
+
+                overlay.style.display = "block";
         }
+        }
+
         function hideoverlay() {
             document.getElementById("overlay").style.display = "none";
 
