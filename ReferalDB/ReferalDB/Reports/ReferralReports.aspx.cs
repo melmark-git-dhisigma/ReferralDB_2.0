@@ -881,6 +881,22 @@ namespace ReferalDB.Reports
                 string script2 = "hideoverlay();";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
             }
+            else
+            {
+                RVReferralReport.Visible = true;
+                sess = (clsSession)Session["UserSession"];
+                RVReferralReport.ServerReport.ReportServerCredentials = new CustomReportCredentials(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], ConfigurationManager.AppSettings["Domain"]);
+                RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReportLocation"];
+                RVReferralReport.ShowParameterPrompts = false;
+                ddlState.SelectedIndex = 0;
+                txtcity.Text = "";
+                ReportParameter[] parm = new ReportParameter[3];
+                parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
+                parm[1] = new ReportParameter("State", ddlState.SelectedItem.Value);
+                parm[2] = new ReportParameter("City", txtcity.Text);
+                this.RVReferralReport.ServerReport.SetParameters(parm);
+                RVReferralReport.ServerReport.Refresh();
+        }
         }
 
         protected void LbtnRefBirthdateQuarter_Click(object sender, EventArgs e)
@@ -917,6 +933,7 @@ namespace ReferalDB.Reports
                 {
                     ViewState["alldata"] = DataTableToJson(alldata);
                     string htmlTable = GenerateHtmlTable(alldata);
+                    RVReferralReport.Visible = false;
                     reporttable.Visible = true;
                     reporttable.InnerHtml = htmlTable;
                     string script3 = "Applypagination();";
@@ -933,6 +950,32 @@ namespace ReferalDB.Reports
                 }
                 string script2 = "hideoverlay();";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+            }
+            else
+            {
+                tdMsg.InnerHtml = "";
+                RVReferralReport.Visible = true;
+                sess = (clsSession)Session["UserSession"];
+                RVReferralReport.ServerReport.ReportServerCredentials = new CustomReportCredentials(ConfigurationManager.AppSettings["Username"], ConfigurationManager.AppSettings["Password"], ConfigurationManager.AppSettings["Domain"]);
+                RVReferralReport.ServerReport.ReportPath = ConfigurationManager.AppSettings["ReferralReportQuarter"];
+                RVReferralReport.ShowParameterPrompts = false;
+                ReportParameter[] parm = new ReportParameter[2];
+                parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
+
+                List<string> allQuarters = new List<string>();
+
+                foreach (ListItem item in ddlQuarter.Items)
+                {
+                    if (item.Value != "0")
+                    {
+                        allQuarters.Add(item.Value);
+        }
+                }
+
+                parm[1] = new ReportParameter("Quarter", allQuarters.ToArray());
+                //parm[1] = new ReportParameter("Quarter", ddlQuarter.SelectedItem.Value);
+                this.RVReferralReport.ServerReport.SetParameters(parm);
+                RVReferralReport.ServerReport.Refresh();
             }
         }
 
@@ -1287,7 +1330,25 @@ namespace ReferalDB.Reports
                 RVReferralReport.ShowParameterPrompts = false;
                 ReportParameter[] parm = new ReportParameter[2];
                 parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
+                if (ddlQuarter.SelectedIndex > 0)
+                {
                 parm[1] = new ReportParameter("Quarter", ddlQuarter.SelectedItem.Value);
+                }
+                else
+                {
+                    List<string> allQuarters = new List<string>();
+
+                    foreach (ListItem item in ddlQuarter.Items)
+                    {
+                        if (item.Value != "0")
+                        {
+                            allQuarters.Add(item.Value);
+                        }
+                    }
+
+                    parm[1] = new ReportParameter("Quarter", allQuarters.ToArray());
+                }
+                //parm[1] = new ReportParameter("Quarter", ddlQuarter.SelectedItem.Value);
                 this.RVReferralReport.ServerReport.SetParameters(parm);
                 RVReferralReport.ServerReport.Refresh();
 
