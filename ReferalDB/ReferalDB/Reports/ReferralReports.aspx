@@ -29,6 +29,12 @@
     
 
     <script type="text/javascript">
+        window.onload = function () {
+            if (document.getElementById('btncontact').value == "contact") {
+                document.getElementById('contactdrop').style.display = 'flex';
+                document.getElementById('btncontact').value = "";
+            }
+        };
         $(document).ready(function () {
             $('#UserName').load('../Dashboard/GetUserName');// To load User Name 
             $.get("../Dashboard/GetTitleReport", function (data) {
@@ -77,6 +83,25 @@
                 overlay.style.display = "block";
         }
         }
+        function showoverlaycont() {
+            var checkbox = document.getElementById('<%= highcheck.ClientID %>');
+             if (checkbox.checked) {
+                 var midContent = document.getElementById("MidContent");
+                 var overlay = document.getElementById("overlay");
+
+                 // Get position and size of MidContent
+                 var rect = midContent.getBoundingClientRect();
+
+                 overlay.style.position = "absolute";
+                 overlay.style.top = rect.top + window.scrollY + "px";
+                 overlay.style.left = rect.left + window.scrollX + "px";
+                 overlay.style.width = rect.width + "px";
+                 overlay.style.height = rect.height + "px";
+
+                 overlay.style.display = "block";
+            }
+            document.getElementById('btncontact').value = "contact";
+         }
 
         function hideoverlay() {
             document.getElementById("overlay").style.display = "none";
@@ -272,7 +297,7 @@
                                 <h5 id="RefContact" class="allexp"  >
                                     <span class="dd"></span>
                              
-                                    <asp:LinkButton ID="LbtnRefContact" runat="server" CssClass="linkstyle" Text="All Contact Events" ToolTip="All Contact Events" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefContact_Click" OnClientClick="showoverlay()"></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnRefContact" runat="server" CssClass="linkstyle" Text="All Contact Events" ToolTip="All Contact Events" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefContact_Click" OnClientClick="showoverlaycont()"></asp:LinkButton>
                                 </h5>
                             </li>
                            
@@ -287,14 +312,14 @@
                                 <h5 id="RefLocation" class="allexp"  >
                                     <span class="dd"></span>
                                
-                                    <asp:LinkButton ID="LbtnRefLocation" runat="server" CssClass="linkstyle" Text="All Referrals by Location" ToolTip="All Referrals by Location" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefLocation_Click" ></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnRefLocation" runat="server" CssClass="linkstyle" Text="All Referrals by Location" ToolTip="All Referrals by Location" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefLocation_Click" onClientclick="showoverlay()"></asp:LinkButton>
                                 </h5>
                             </li>
                             <li id="Li8" class="accordion" onclick="" style="position: static;">
                                 <h5 id="RefBirthdateQuarter" class="allexp"  >
                                     <span class="dd"></span>
                      
-                                    <asp:LinkButton ID="LbtnRefBirthdateQuarter" runat="server" CssClass="linkstyle" Text="All Referrals by Birthdate Quarter" ToolTip="All Referrals by Birthdate Quarter" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefBirthdateQuarter_Click" ></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnRefBirthdateQuarter" runat="server" CssClass="linkstyle" Text="All Referrals by Birthdate Quarter" ToolTip="All Referrals by Birthdate Quarter" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefBirthdateQuarter_Click" onClientclick="showoverlay()"></asp:LinkButton>
                                 </h5>
                             </li>
 
@@ -305,7 +330,7 @@
                     </div>
                     <div class="middleContainer" id="MidContent" style="width:79%">
                                          
-                        <div class="headingDivBar" style="width: 100%" id="HeadingDiv" runat="server" visible="false">
+                        <div class="headingDivBar" style="width: 100%;height: 30px;" id="HeadingDiv" runat="server" visible="false">
 
                        
 
@@ -332,6 +357,7 @@
                                     <td><asp:TextBox ID="txtEndAge" runat="server" onkeypress="return validate(event)" ></asp:TextBox></td>
                                     <td>
                                         <asp:Button ID="btnShowReport" runat="server" Text="Show Report" OnClick="btnShowReport_Click" onClientclick="showoverlay()" style="background-color:#000080"/></td>
+                                    <td>                               <asp:Button ID="btnexporttr" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" /> </td>
                                 </tr>
                             </table>
                                 </div>
@@ -351,12 +377,16 @@
                                         <td style="width:15%">
                                             <asp:Button ID="btnshowgraph" runat="server" Text="Show Report" OnClick="btnshowgraph_Click" onClientclick="showoverlay()" style="background-color:#000080"/>
                                         </td>
+                                        <td>
+                               <asp:Button ID="Btnexport3" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" />
+
+                                        </td>
                                         <td></td>
                                     </tr>
                                 </table>
                             </div>
                              <div id="divlocation" runat="server" visible="false">
-                                <table style="width:100%;float:left">
+                                <table style="width:100%;">
                                     <tr>
                                         <td>
                                             <asp:Label ID="lblStatusdata" runat="server"  Text="State"></asp:Label>
@@ -370,7 +400,9 @@
                                         <td >
                                             <asp:Button ID="btnlocation" runat="server" Text="Show Report" OnClick="btnlocation_Click" onClientclick="showoverlay()" style="background-color:#000080"/>
                                         </td>
-                                        <td></td>
+                                        <td>
+                                          <asp:Button ID="btnexportloc" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" />
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -392,13 +424,15 @@
                                         <td style="width:15%">
                                             <asp:Button ID="btnquarter" runat="server" Text="Show Report" OnClick="btnquarter_Click" onClientclick="showoverlay()" style="background-color:#000080" />
                                         </td>
-                                        <td></td>
+                                        <td>                               <asp:Button ID="btnexportqtr" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" /></td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                         <div>
-<div id="contactdrop" runat="server" visible="false"   style="display: flex; flex-direction: row; align-items: center; gap: 10px; flex-wrap: nowrap;">
+<%--<div id="contactdrop" runat="server" visible="false"   style="display: flex; flex-direction: row; align-items: center; gap: 10px; flex-wrap: nowrap;">--%>
+                            <div id="contactdrop" runat="server"
+     style="display:none; flex-direction:row; align-items:center; gap:10px;">
                             <label for="ddlReferrals" style="font-size:18px; color:black; white-space: nowrap;">Referrals</label>
 
                            
@@ -414,20 +448,21 @@
                                 runat="server" 
                                 Text="Show Report" 
                                 style="background-color:#000080;width: 100px; overflow-y: auto;"
-                                OnClientClick="showoverlay()"
+                                OnClientClick="showoverlaycont()"
                                 OnClick="btncontactshow_Click" 
                              />
 
                               <asp:Button ID="Btnexport1" runat="server" Text="Export" OnClick="btnexport2_Click" visible="false" style="background-color:#000080;width: 100px; overflow-y: auto;" />
-
+   
                              </div>
+                            <asp:HiddenField ID="btncont" runat="server" Value="" />
                         </div>
+                        <asp:HiddenField ID="btncontact" runat="server" value=""/>
                         <div id="overlay" runat="server">
                             <p> please wait...</p>
                                  
                         </div>
                               <asp:Button ID="Btnexport" runat="server" Text="Export" OnClick="btnexport_Click" visible="false" style="background-color:#000080" />
-                               <asp:Button ID="Btnexport3" runat="server" Text="Export" OnClick="btnexport3_Click" visible="false" style="background-color:#000080" />
 
                        <div style="text-align:left;"><asp:Label ID="nodata" runat="server" visible="false" Text="" /> </div>
                         <div runat="server" id="reporttable" visible="false" style="overflow-y:auto;">
