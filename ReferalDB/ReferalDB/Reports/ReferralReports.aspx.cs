@@ -43,11 +43,16 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
             contactdrop.Visible = false;
             ddlReferrals.Visible = false;
             contactshow.Visible = false;
             nodata.Visible = false;
             nodata.Text = "";
+            contactdrop.Visible = false;
             if (!IsPostBack)
             {
                
@@ -191,6 +196,12 @@ namespace ReferalDB.Reports
                     Btnexport.Visible = false;
                     Btnexport1.Visible = false;
                     Btnexport3.Visible = false;
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
+
+
+
 
                 }
                 string script2 = "hideoverlay();";
@@ -629,7 +640,11 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
-                allgrid.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
+            allgrid.Visible = false;
                 hdnMenu.Value = "RefTrackActive";
                 RVReferralReport.SizeToReportContent = false;
                 ClearAgeStatus();
@@ -663,6 +678,10 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
             allgrid.Visible = false;
             hdnMenu.Value = "RefAgeRange";
             RVReferralReport.SizeToReportContent = false;
@@ -695,6 +714,10 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
             allgrid.Visible = false;
             hdnMenu.Value = "TackingActiveAge";
             RVReferralReport.SizeToReportContent = false;
@@ -727,6 +750,10 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
             allgrid.Visible = false;
             hdnMenu.Value = "RefContact";
             RVReferralReport.SizeToReportContent = true;
@@ -754,9 +781,10 @@ namespace ReferalDB.Reports
         }
             else
             {
+                
                 contactdrop.Visible = true;
                 ddlReferrals.Visible = true;
-                contactshow.Visible = true; 
+                contactshow.Visible = true;
                 LoadReferrals();
                 sess = (clsSession)Session["UserSession"];
                 System.Data.DataTable dt = Getallcontact(sess.SchoolId.ToString(),"0");
@@ -765,10 +793,14 @@ namespace ReferalDB.Reports
                 {
                     ViewState["alldata"] = DataTableToJson(dt);
                     string htmlTable = GenerateHtmlTablecont(dt);
+                    string script4 = "showoverlaycont();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script4, true);
                     reporttable.Visible = true;
                     reporttable.InnerHtml = htmlTable;
+
                     string script3 = "Applypagination2();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                    
                     Btnexport1.Visible = true;
                 }
                 else
@@ -778,9 +810,14 @@ namespace ReferalDB.Reports
                     Btnexport.Visible = false;
                     Btnexport1.Visible = false;
                     Btnexport3.Visible = false;
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
+
+
                 }
                 string script2 = "hideoverlay();";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script2, true);
             }
         }
         private void LoadReferrals()
@@ -815,6 +852,10 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
             allgrid.Visible = false;
             hdnMenu.Value = "RefFunded";
             RVReferralReport.SizeToReportContent = false;
@@ -841,6 +882,10 @@ namespace ReferalDB.Reports
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
             Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+
             allgrid.Visible = false;
             hdnMenu.Value = "RefLocation";
             ddlState.DataSource = null;
@@ -867,7 +912,8 @@ namespace ReferalDB.Reports
                     reporttable.InnerHtml = htmlTable;
                     string script3 = "Applypagination();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show9", script3, true);
-                    Btnexport.Visible = true;
+                    Btnexport.Visible = false;
+                    btnexportloc.Visible = true;
         }
                 else
                 {
@@ -877,6 +923,11 @@ namespace ReferalDB.Reports
                     Btnexport.Visible = false;
                     Btnexport1.Visible = false;
                     Btnexport3.Visible = false;
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
+
+
                 }
                 string script2 = "hideoverlay();";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
@@ -896,7 +947,7 @@ namespace ReferalDB.Reports
                 parm[2] = new ReportParameter("City", txtcity.Text);
                 this.RVReferralReport.ServerReport.SetParameters(parm);
                 RVReferralReport.ServerReport.Refresh();
-        }
+            }
         }
 
         protected void LbtnRefBirthdateQuarter_Click(object sender, EventArgs e)
@@ -910,7 +961,11 @@ namespace ReferalDB.Reports
             nodata.Text = "";
             Btnexport.Visible = false;
             Btnexport1.Visible = false;
-            Btnexport3.Visible = false; allgrid.Visible = false;
+            Btnexport3.Visible = false;
+            btnexporttr.Visible = false;
+            btnexportqtr.Visible = false;
+            btnexportloc.Visible = false;
+            allgrid.Visible = false;
             hdnMenu.Value = "RefBirthdateQuarter";
             RVReferralReport.SizeToReportContent = false;
             ddlQuarter.SelectedValue = "0";
@@ -938,7 +993,8 @@ namespace ReferalDB.Reports
                     reporttable.InnerHtml = htmlTable;
                     string script3 = "Applypagination();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
-                    Btnexport.Visible = true;
+                    Btnexport.Visible = false;
+                    btnexportqtr.Visible = true;
         }
                 else
                 {
@@ -947,6 +1003,12 @@ namespace ReferalDB.Reports
                     Btnexport.Visible = false;
                     Btnexport1.Visible = false;
                     Btnexport3.Visible = false;
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
+
+
+
                 }
                 string script2 = "hideoverlay();";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
@@ -969,7 +1031,7 @@ namespace ReferalDB.Reports
                     if (item.Value != "0")
                     {
                         allQuarters.Add(item.Value);
-        }
+                    }
                 }
 
                 parm[1] = new ReportParameter("Quarter", allQuarters.ToArray());
@@ -1005,15 +1067,34 @@ namespace ReferalDB.Reports
                         RVReferralReport.Visible = true;
                         tdMsg.InnerHtml = "";
                         alldata = GetTrackData(sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
-                        ViewState["alldata"] = DataTableToJson(alldata);
-                        string htmlTable = GenerateHtmlTable(alldata);
-                        reporttable.Visible = true;
-                        reporttable.InnerHtml = htmlTable;
-                        string script3 = "Applypagination();";
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show3", script3, true);
-                        Btnexport.Visible = true;
+                        if (alldata != null && alldata.Rows.Count > 0)
+                        {
+                            ViewState["alldata"] = DataTableToJson(alldata);
+                            string htmlTable = GenerateHtmlTable(alldata);
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = htmlTable;
+                            string script3 = "Applypagination();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show3", script3, true);
+                            Btnexport.Visible = false;
+                            btnexporttr.Visible = true;
+                           
+                        }
+                        else
+                        {
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = "No data available";
+                            Btnexport.Visible = false;
+                            Btnexport1.Visible = false;
+                            Btnexport3.Visible = false;
+                            btnexporttr.Visible = false;
+                            btnexportqtr.Visible = false;
+                            btnexportloc.Visible = false;
+
+
+                        }
                         string script2 = "hideoverlay();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show4", script2, true);
+
 
                     }
                 }
@@ -1052,7 +1133,9 @@ namespace ReferalDB.Reports
                             reporttable.InnerHtml = htmlTable;
                             string script3 = "Applypagination();";
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
-                            Btnexport.Visible = true;
+                            Btnexport.Visible = false;
+                            btnexporttr.Visible = true;
+
                         }
                         else
                         {
@@ -1061,8 +1144,14 @@ namespace ReferalDB.Reports
                             Btnexport.Visible = false;
                             Btnexport1.Visible = false;
                             Btnexport3.Visible = false;
+                            btnexporttr.Visible = false;
+                            btnexportqtr.Visible = false;
+                            btnexportloc.Visible = false;
+
+
+
                         }
-                            string script2 = "hideoverlay();";
+                        string script2 = "hideoverlay();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
                     }
                 }
@@ -1107,7 +1196,9 @@ namespace ReferalDB.Reports
                             reporttable.InnerHtml = htmlTable;
                             string script3 = "Applypagination();";
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script3, true);
-                            Btnexport.Visible = true;
+                            Btnexport.Visible = false;
+                            btnexporttr.Visible = true;
+
                         }
                         else
                         {
@@ -1116,6 +1207,12 @@ namespace ReferalDB.Reports
                             Btnexport.Visible = false;
                             Btnexport1.Visible = false;
                             Btnexport3.Visible = false;
+                            btnexporttr.Visible = false;
+                            btnexportqtr.Visible = false;
+                            btnexportloc.Visible = false;
+
+
+
                         }
                         string script2 = "hideoverlay();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show8", script2, true);
@@ -1225,6 +1322,7 @@ namespace ReferalDB.Reports
                     Btnexport.Visible = false;
                         Btnexport1.Visible = false;
                     Btnexport3.Visible = true;
+                        btnexporttr.Visible = false;
                     }
                     else
                     {
@@ -1233,6 +1331,13 @@ namespace ReferalDB.Reports
                         Btnexport.Visible = false;
                         Btnexport1.Visible = false;
                         Btnexport3.Visible = false;
+                        btnexporttr.Visible = false;
+
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
+
+
+
                     }
                     string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
@@ -1282,9 +1387,10 @@ namespace ReferalDB.Reports
                         reporttable.InnerHtml = htmlTable;
                         string script3 = "Applypagination();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show9", script3, true);
-                        Btnexport.Visible = true;
-                    }
-                    else
+                        Btnexport.Visible = false;
+                    btnexportloc.Visible = true;
+                }
+                else
                     {
                         
                         nodata.Visible = true;
@@ -1292,8 +1398,14 @@ namespace ReferalDB.Reports
                         Btnexport.Visible = false;
                         Btnexport1.Visible = false;
                         Btnexport3.Visible = false;
-                    }
-                    string script2 = "hideoverlay();";
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
+
+
+
+                }
+                string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
                 }
             //}
@@ -1332,7 +1444,7 @@ namespace ReferalDB.Reports
                 parm[0] = new ReportParameter("SchoolID", sess.SchoolId.ToString());
                 if (ddlQuarter.SelectedIndex > 0)
                 {
-                parm[1] = new ReportParameter("Quarter", ddlQuarter.SelectedItem.Value);
+                    parm[1] = new ReportParameter("Quarter", ddlQuarter.SelectedItem.Value);
                 }
                 else
                 {
@@ -1368,7 +1480,9 @@ namespace ReferalDB.Reports
                          reporttable.InnerHtml = htmlTable;
                          string script3 = "Applypagination();";
                          ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
-                         Btnexport.Visible = true;
+                         Btnexport.Visible = false;
+                        btnexporttr.Visible = false;
+                    btnexportqtr.Visible = true;
                      }
                      else
                      {
@@ -1377,8 +1491,14 @@ namespace ReferalDB.Reports
                          Btnexport.Visible = false;
                          Btnexport1.Visible = false;
                          Btnexport3.Visible = false;
-                     }
-                     string script2 = "hideoverlay();";
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
+
+
+
+                }
+                string script2 = "hideoverlay();";
                      ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
                  }
             //}
@@ -2275,6 +2395,12 @@ namespace ReferalDB.Reports
                 Btnexport.Visible = false;
                 Btnexport1.Visible = false;
                 Btnexport3.Visible = false;
+                btnexporttr.Visible = false;
+                btnexportqtr.Visible = false;
+                btnexportloc.Visible = false;
+
+
+
             }
             string script2 = "hideoverlay();";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);

@@ -222,6 +222,15 @@ namespace ReferalDB.Reports
         protected global::System.Web.UI.WebControls.Button btnShowReport;
 
         /// <summary>
+        /// btnexporttr control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnexporttr;
+
+        /// <summary>
         /// divfunded control.
         /// </summary>
         /// <remarks>
@@ -256,6 +265,15 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnshowgraph;
+
+        /// <summary>
+        /// Btnexport3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button Btnexport3;
 
         /// <summary>
         /// divlocation control.
@@ -312,6 +330,15 @@ namespace ReferalDB.Reports
         protected global::System.Web.UI.WebControls.Button btnlocation;
 
         /// <summary>
+        /// btnexportloc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnexportloc;
+
+        /// <summary>
         /// divbirthdate control.
         /// </summary>
         /// <remarks>
@@ -348,6 +375,15 @@ namespace ReferalDB.Reports
         protected global::System.Web.UI.WebControls.Button btnquarter;
 
         /// <summary>
+        /// btnexportqtr control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnexportqtr;
+
+        /// <summary>
         /// contactdrop control.
         /// </summary>
         /// <remarks>
@@ -355,7 +391,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl contactdrop;
-        
+
         /// <summary>
         /// ddlReferrals control.
         /// </summary>
@@ -364,7 +400,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ListBox ddlReferrals;
-        
+
         /// <summary>
         /// contactshow control.
         /// </summary>
@@ -373,7 +409,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button contactshow;
-        
+
         /// <summary>
         /// Btnexport1 control.
         /// </summary>
@@ -382,7 +418,25 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Btnexport1;
-        
+
+        /// <summary>
+        /// btncont control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField btncont;
+
+        /// <summary>
+        /// btncontact control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField btncontact;
+
         /// <summary>
         /// overlay control.
         /// </summary>
@@ -391,7 +445,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl overlay;
-        
+
         /// <summary>
         /// Btnexport control.
         /// </summary>
@@ -400,16 +454,7 @@ namespace ReferalDB.Reports
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button Btnexport;
-        
-        /// <summary>
-        /// Btnexport3 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Btnexport3;
-        
+
         /// <summary>
         /// nodata control.
         /// </summary>
