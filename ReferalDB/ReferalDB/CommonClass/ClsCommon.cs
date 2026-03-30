@@ -70,6 +70,38 @@ namespace ReferalDB.CommonClass
             {
                 Ext = ".odt";
             }
+            else if (ContentType.ToLower() == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            {
+                Ext = ".docx";
+            }
+            else if (ContentType.ToLower() == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+            {
+                Ext = ".pptx";
+            }
+            else if (ContentType.ToLower() == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                Ext = ".xlsx";
+            }
+            else if (ContentType.ToLower() == "application/vnd.oasis.opendocument.presentation")
+            {
+                Ext = ".odp";
+            }
+            else if (ContentType.ToLower() == "application/vnd.ms-word.document.macroenabled.12")
+            {
+                Ext = ".docm";
+            }
+            else if (ContentType.ToLower() == "application/vnd.ms-excel.sheet.macroenabled.12")
+            {
+                Ext = ".xlsm";
+            }
+            else if (ContentType.ToLower() == "text/csv")
+            {
+                Ext = ".csv";
+            }
+            else if (ContentType.ToLower() == "application/csv")
+            {
+                Ext = ".csv";
+            }
             return Ext;
         }
 
@@ -109,12 +141,35 @@ namespace ReferalDB.CommonClass
                 case "application/vnd.oasis.opendocument.text":
                     ContentType = ".odt";
                     break;
-                //case "application/vnd.ms-excel":
-                //    ContentType = ".xlsx";
-                //    break;
-                //case "application/vnd.ms-excel":
-                //    ContentType = ".csv";
-                //    break;
+                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                    return ".docx";
+                case "application/vnd.openxmlformats-officedocument.presentationml.presentation": // .pptx
+                    ContentType = ".pptx";
+                    break;
+                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": // .xlsx
+                    ContentType = ".xlsx";
+                    break;
+                case "application/vnd.oasis.opendocument.presentation":
+                    ContentType = ".odp";
+                    break;
+                case "application/vnd.ms-word.document.macroEnabled.12":
+                    ContentType = ".docm";
+                    break;
+                case "application/vnd.ms-excel.sheet.macroEnabled.12":
+                    ContentType = ".xlsm";
+                    break;
+                case "text/csv":
+                    ContentType= ".csv";
+                    break;
+                case "application/csv":
+                    ContentType= ".csv";
+                    break;
+                    //case "application/vnd.ms-excel":
+                    //    ContentType = ".xlsx";
+                    //    break;
+                    //case "application/vnd.ms-excel":
+                    //    ContentType = ".csv";
+                    //    break;
             }
             return ContentType;
         }
