@@ -763,7 +763,7 @@ namespace ReferalDB.Reports
             divlocation.Visible = false;
             divbirthdate.Visible = false;
             divfunded.Visible = false;
-            HeadingDiv.InnerHtml = "All Contact Events";
+            HeadingDiv.InnerHtml = "Client/Contact/Vendor";
             referralage.Visible = false;
             if (highcheck.Checked == false)
             {

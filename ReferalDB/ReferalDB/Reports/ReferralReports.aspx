@@ -297,7 +297,7 @@
                                 <h5 id="RefContact" class="allexp"  >
                                     <span class="dd"></span>
                              
-                                    <asp:LinkButton ID="LbtnRefContact" runat="server" CssClass="linkstyle" Text="All Contact Events" ToolTip="All Contact Events" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefContact_Click" OnClientClick="showoverlaycont()"></asp:LinkButton>
+                                    <asp:LinkButton ID="LbtnRefContact" runat="server" CssClass="linkstyle" Text="Client/Contact/Vendor" ToolTip="All Contact Events" ForeColor="White" Height="70%" Width="100%" OnClick="LbtnRefContact_Click" OnClientClick="showoverlaycont()"></asp:LinkButton>
                                 </h5>
                             </li>
                            
