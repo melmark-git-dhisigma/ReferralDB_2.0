@@ -67,7 +67,7 @@
 
         function showoverlay() {
             var checkbox = document.getElementById('<%= highcheck.ClientID %>');
-            if (checkbox.checked) {
+            if (!checkbox.checked) {
                 var midContent = document.getElementById("MidContent");
                 var overlay = document.getElementById("overlay");
 
@@ -85,7 +85,7 @@
         }
         function showoverlaycont() {
             var checkbox = document.getElementById('<%= highcheck.ClientID %>');
-             if (checkbox.checked) {
+             if (!checkbox.checked) {
                  var midContent = document.getElementById("MidContent");
                  var overlay = document.getElementById("overlay");
 

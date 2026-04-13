@@ -142,7 +142,7 @@ namespace ReferalDB.Reports
             contactdrop.Visible = false;
             ddlReferrals.Visible = false;
             contactshow.Visible = false;
-            if (highcheck.Checked == false)
+            if (!highcheck.Checked == false)
             {
                 allgrid.Visible = false;
                 hdnMenu.Value = "AllReferral";
@@ -765,7 +765,7 @@ namespace ReferalDB.Reports
             divfunded.Visible = false;
             HeadingDiv.InnerHtml = "Client/Contact/Vendor";
             referralage.Visible = false;
-            if (highcheck.Checked == false)
+            if (!highcheck.Checked == false)
             {
             RVReferralReport.Visible = true;
             sess = (clsSession)Session["UserSession"];
@@ -900,7 +900,7 @@ namespace ReferalDB.Reports
             divlocation.Visible = true;
             divbirthdate.Visible = false;
             LoadState();
-            if (highcheck.Checked == true)
+            if (!highcheck.Checked == true)
             {
                 sess = (clsSession)Session["UserSession"];
                 alldata = GetLocationData(sess.SchoolId.ToString(), txtcity.Text, ddlState.SelectedItem.Value);
@@ -977,7 +977,7 @@ namespace ReferalDB.Reports
             referralage.Visible = false;
             divlocation.Visible = false;
             RVReferralReport.Visible = false;
-            if (highcheck.Checked == true)
+            if (!highcheck.Checked == true)
             {
                 tdMsg.InnerHtml = "";
                 RVReferralReport.Visible = false;
@@ -1050,7 +1050,7 @@ namespace ReferalDB.Reports
             {
                 if (ddlStatus.SelectedItem.Value != "0")
                 {
-                    if (highcheck.Checked == false)
+                    if (!highcheck.Checked == false)
                     {
                         RVReferralReport.Visible = true;
                         tdMsg.InnerHtml = "";
@@ -1108,7 +1108,7 @@ namespace ReferalDB.Reports
             {
                 if (txtStartAge.Text != "" && txtEndAge.Text != "")
                 {
-                    if (highcheck.Checked == false)
+                    if (!highcheck.Checked == false)
                     {
                     RVReferralReport.Visible = true;
                     tdMsg.InnerHtml = "";
@@ -1170,7 +1170,7 @@ namespace ReferalDB.Reports
             {
                 if (txtStartAge.Text != "" && txtEndAge.Text != "" && ddlStatus.SelectedItem.Value!="0")
                 {
-                    if (highcheck.Checked == false)
+                    if (!highcheck.Checked == false)
                     {
                     RVReferralReport.Visible = true;
                     tdMsg.InnerHtml = "";
@@ -1289,7 +1289,7 @@ namespace ReferalDB.Reports
             RVReferralReport.Visible = false;
             if(ddlFundingStatus.SelectedItem.Value!="0")
             {
-                if (highcheck.Checked == false)
+                if (!highcheck.Checked == false)
                 {
             tdMsg.InnerHtml = "";
             RVReferralReport.Visible = true;
@@ -1361,7 +1361,7 @@ namespace ReferalDB.Reports
             //if (ddlState.SelectedItem.Value != "0")
             //{
                 tdMsg.InnerHtml = "";
-                if (highcheck.Checked == false)
+                if (!highcheck.Checked == false)
                 {
                 RVReferralReport.Visible = true;
                 sess = (clsSession)Session["UserSession"];
@@ -1432,7 +1432,7 @@ namespace ReferalDB.Reports
             //if (ddlQuarter.SelectedItem.Value != "0")
             //{
                 tdMsg.InnerHtml = "";
-                 if (highcheck.Checked == false)
+                 if (!highcheck.Checked == false)
                  {
                      tdMsg.InnerHtml = "";
                 RVReferralReport.Visible = true;
