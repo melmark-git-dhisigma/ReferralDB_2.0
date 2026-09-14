@@ -32,6 +32,8 @@ using DocumentFormat.OpenXml.VariantTypes;
 using MathNet.Numerics.LinearAlgebra.Factorization;
 using Org.BouncyCastle.Utilities.Encoders;
 using NPOI.SS.Util;
+using System.Diagnostics;
+using NPOI.OpenXmlFormats.Wordprocessing;
 namespace ReferalDB.Reports
 {
     public partial class ReferralReports : System.Web.UI.Page
@@ -168,45 +170,70 @@ namespace ReferalDB.Reports
             }
             else
             {
-                hdnMenu.Value = "AllReferral";
-                tdMsg.InnerHtml = "";
-                HeadingDiv.Visible = true;
-                divfunded.Visible = false;
-                referralage.Visible = false;
-                HeadingDiv.InnerHtml = "All Referrals";
-                RVReferralReport.Visible = false;
-                sess = (clsSession)Session["UserSession"];
-                divlocation.Visible = false;
-                divbirthdate.Visible = false;
-                allgrid.Visible = true;
-                 alldata = GetData(sess.SchoolId.ToString());
-                if (alldata != null && alldata.Rows.Count > 0)
+                Stopwatch sw = Stopwatch.StartNew();
+                clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                try
                 {
-                 ViewState["alldata"] = DataTableToJson(alldata);
-                allgrid.DataSource = alldata;
-                allgrid.DataBind();
+                    csrplog.StartTime = DateTime.Now;
+                    hdnMenu.Value = "AllReferral";
+                    tdMsg.InnerHtml = "";
+                    HeadingDiv.Visible = true;
+                    divfunded.Visible = false;
+                    referralage.Visible = false;
+                    HeadingDiv.InnerHtml = "All Referrals";
+                    RVReferralReport.Visible = false;
+                    sess = (clsSession)Session["UserSession"];
+                    divlocation.Visible = false;
+                    divbirthdate.Visible = false;
+                    allgrid.Visible = true;
+                    csrplog.ReportName = HeadingDiv.InnerHtml;
+                    csrplog.ServerID = Environment.MachineName;
+                    csrplog.UserId = sess.LoginId;
+                    csrplog.Parameters = "SchoolId=" + sess.SchoolId;
+                    alldata = GetData(sess.SchoolId.ToString());
+                    if (alldata != null && alldata.Rows.Count > 0)
+                    {
+                        csrplog.RowCount = alldata.Rows.Count;
+                        ViewState["alldata"] = DataTableToJson(alldata);
+                        allgrid.DataSource = alldata;
+                        allgrid.DataBind();
                     
-                    Btnexport.Visible = true;
+                        Btnexport.Visible = true;
+                    }
+                    else
+                    {
+                        csrplog.RowCount = 0;
+                        allgrid.Visible = false;
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
+                        btnexporttr.Visible = false;
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
+
+
+
+
+                    }
+                    string script2 = "hideoverlay();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show2", script2, true);
+                    csrplog.Status = "Success";
                 }
-                else
+                catch (Exception ex)
                 {
-                    allgrid.Visible = false;
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = "No data available";
-                    Btnexport.Visible = false;
-                    Btnexport1.Visible = false;
-                    Btnexport3.Visible = false;
-                    btnexporttr.Visible = false;
-                    btnexportqtr.Visible = false;
-                    btnexportloc.Visible = false;
-
-
-
-
+                    csrplog.Status = "Failed";
+                    csrplog.ErrorMessage = ex.Message;
+                    throw;
                 }
-                string script2 = "hideoverlay();";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "show2", script2, true);
-
+                finally
+                {
+                    sw.Stop();
+                    csrplog.EndTime = DateTime.Now;
+                    csrplog.DurationMs = sw.ElapsedMilliseconds;
+                    ReportLogger.Save(csrplog);
+                }
             }
 
         }
@@ -781,43 +808,69 @@ namespace ReferalDB.Reports
         }
             else
             {
-                
-                contactdrop.Visible = true;
-                ddlReferrals.Visible = true;
-                contactshow.Visible = true;
-                LoadReferrals();
-                sess = (clsSession)Session["UserSession"];
-                System.Data.DataTable dt = Getallcontact(sess.SchoolId.ToString(),"0");
-
-                if (dt != null && dt.Rows.Count > 0)
+                Stopwatch sw = Stopwatch.StartNew();
+                clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                try
                 {
-                    ViewState["alldata"] = DataTableToJson(dt);
-                    string htmlTable = GenerateHtmlTablecont(dt);
-                    string script4 = "showoverlaycont();";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script4, true);
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = htmlTable;
+                    csrplog.StartTime = DateTime.Now;
+                    csrplog.ReportName = HeadingDiv.InnerHtml;
+                    csrplog.ServerID = Environment.MachineName;
+                    contactdrop.Visible = true;
+                    ddlReferrals.Visible = true;
+                    contactshow.Visible = true;
+                    LoadReferrals();
+                    sess = (clsSession)Session["UserSession"];
+                    csrplog.UserId = sess.LoginId;
+                    csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString();
 
-                    string script3 = "Applypagination2();";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                    System.Data.DataTable dt = Getallcontact(sess.SchoolId.ToString(), "0");
+
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        csrplog.RowCount = dt.Rows.Count;
+                        ViewState["alldata"] = DataTableToJson(dt);
+                        string htmlTable = GenerateHtmlTablecont(dt);
+                        string script4 = "showoverlaycont();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script4, true);
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = htmlTable;
+
+                        string script3 = "Applypagination2();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
                     
-                    Btnexport1.Visible = true;
+                        Btnexport1.Visible = true;
+                    }
+                    else
+                    {
+                        csrplog.RowCount = 0;
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
+                        btnexporttr.Visible = false;
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
+
+
+                    }
+                    string script2 = "hideoverlay();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script2, true);
+                    csrplog.Status = "Success";
                 }
-                else
+                catch (Exception ex)
                 {
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = "No data available";
-                    Btnexport.Visible = false;
-                    Btnexport1.Visible = false;
-                    Btnexport3.Visible = false;
-                    btnexporttr.Visible = false;
-                    btnexportqtr.Visible = false;
-                    btnexportloc.Visible = false;
-
-
+                    csrplog.Status = "Failed";
+                    csrplog.ErrorMessage = ex.Message;
+                    throw;
                 }
-                string script2 = "hideoverlay();";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script2, true);
+                finally
+                {
+                    sw.Stop();
+                    csrplog.EndTime = DateTime.Now;
+                    csrplog.DurationMs = sw.ElapsedMilliseconds;
+                    ReportLogger.Save(csrplog);
+                }
             }
         }
         private void LoadReferrals()
@@ -903,34 +956,61 @@ namespace ReferalDB.Reports
             if (!highcheck.Checked == true)
             {
                 sess = (clsSession)Session["UserSession"];
-                alldata = GetLocationData(sess.SchoolId.ToString(), txtcity.Text, ddlState.SelectedItem.Value);
-                if (alldata != null && alldata.Rows.Count > 0)
+                Stopwatch sw = Stopwatch.StartNew();
+                clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                try
                 {
-                    ViewState["alldata"] = DataTableToJson(alldata);
-                    string htmlTable = GenerateHtmlTable(alldata);
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = htmlTable;
-                    string script3 = "Applypagination();";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show9", script3, true);
-                    Btnexport.Visible = false;
-                    btnexportloc.Visible = true;
-        }
-                else
-                {
+                    csrplog.StartTime = DateTime.Now;
+                    csrplog.ReportName = HeadingDiv.InnerHtml;
+                    csrplog.ServerID = Environment.MachineName;
+                    csrplog.UserId = sess.LoginId;
+                    csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                         "&txtcity=" + txtcity.Text +
+                                         "&ddlState=" + ddlState.SelectedItem.Value;
+                    alldata = GetLocationData(sess.SchoolId.ToString(), txtcity.Text, ddlState.SelectedItem.Value);
+                    if (alldata != null && alldata.Rows.Count > 0)
+                    {
+                        csrplog.RowCount = alldata.Rows.Count;
+                        ViewState["alldata"] = DataTableToJson(alldata);
+                        string htmlTable = GenerateHtmlTable(alldata);
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = htmlTable;
+                        string script3 = "Applypagination();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show9", script3, true);
+                        Btnexport.Visible = false;
+                        btnexportloc.Visible = true;
+                    }
+                    else
+                    {
+                        csrplog.RowCount = 0;
+                        nodata.Visible = true;
+                        nodata.Text = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
+                        btnexporttr.Visible = false;
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
 
-                    nodata.Visible = true;
-                    nodata.Text = "No data available";
-                    Btnexport.Visible = false;
-                    Btnexport1.Visible = false;
-                    Btnexport3.Visible = false;
-                    btnexporttr.Visible = false;
-                    btnexportqtr.Visible = false;
-                    btnexportloc.Visible = false;
 
-
+                    }
+                    string script2 = "hideoverlay();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
+                    csrplog.Status = "Success";
                 }
-                string script2 = "hideoverlay();";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
+                catch (Exception ex)
+                {
+                    csrplog.Status = "Failed";
+                    csrplog.ErrorMessage = ex.Message;
+                    throw;
+                }
+                finally
+                {
+                    sw.Stop();
+                    csrplog.EndTime = DateTime.Now;
+                    csrplog.DurationMs = sw.ElapsedMilliseconds;
+                    ReportLogger.Save(csrplog);
+                }
             }
             else
             {
@@ -982,36 +1062,62 @@ namespace ReferalDB.Reports
                 tdMsg.InnerHtml = "";
                 RVReferralReport.Visible = false;
                 sess = (clsSession)Session["UserSession"];
-
-                alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
-                if (alldata != null && alldata.Rows.Count > 0)
+                Stopwatch sw = Stopwatch.StartNew();
+                clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                try
                 {
-                    ViewState["alldata"] = DataTableToJson(alldata);
-                    string htmlTable = GenerateHtmlTable(alldata);
-                    RVReferralReport.Visible = false;
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = htmlTable;
-                    string script3 = "Applypagination();";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
-                    Btnexport.Visible = false;
-                    btnexportqtr.Visible = true;
-        }
-                else
-                {
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = "No data available";
-                    Btnexport.Visible = false;
-                    Btnexport1.Visible = false;
-                    Btnexport3.Visible = false;
-                    btnexporttr.Visible = false;
-                    btnexportqtr.Visible = false;
-                    btnexportloc.Visible = false;
+                    csrplog.StartTime = DateTime.Now;
+                    csrplog.ReportName = HeadingDiv.InnerHtml;
+                    csrplog.ServerID = Environment.MachineName;
+                    csrplog.UserId = sess.LoginId;
+                    csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                         "&ddlQuarter=" + ddlQuarter.SelectedItem.Value;
+                    alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
+                    if (alldata != null && alldata.Rows.Count > 0)
+                    {
+                        csrplog.RowCount = alldata.Rows.Count;
+                        ViewState["alldata"] = DataTableToJson(alldata);
+                        string htmlTable = GenerateHtmlTable(alldata);
+                        RVReferralReport.Visible = false;
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = htmlTable;
+                        string script3 = "Applypagination();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
+                        Btnexport.Visible = false;
+                        btnexportqtr.Visible = true;
+                    }
+                    else
+                    {
+                        csrplog.RowCount = 0;
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
+                        btnexporttr.Visible = false;
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
 
 
 
+                    }
+                    string script2 = "hideoverlay();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                    csrplog.Status = "Success";
                 }
-                string script2 = "hideoverlay();";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                catch (Exception ex)
+                {
+                    csrplog.Status = "Failed";
+                    csrplog.ErrorMessage = ex.Message;
+                    throw;
+                }
+                finally
+                {
+                    sw.Stop();
+                    csrplog.EndTime = DateTime.Now;
+                    csrplog.DurationMs = sw.ElapsedMilliseconds;
+                    ReportLogger.Save(csrplog);
+                }
             }
             else
             {
@@ -1063,37 +1169,63 @@ namespace ReferalDB.Reports
                     }
                     else
                     {
-
-                        RVReferralReport.Visible = true;
-                        tdMsg.InnerHtml = "";
-                        alldata = GetTrackData(sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
-                        if (alldata != null && alldata.Rows.Count > 0)
+                        Stopwatch sw = Stopwatch.StartNew();
+                        clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                        try
                         {
-                            ViewState["alldata"] = DataTableToJson(alldata);
-                            string htmlTable = GenerateHtmlTable(alldata);
-                            reporttable.Visible = true;
-                            reporttable.InnerHtml = htmlTable;
-                            string script3 = "Applypagination();";
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show3", script3, true);
-                            Btnexport.Visible = false;
-                            btnexporttr.Visible = true;
+                            csrplog.StartTime = DateTime.Now;
+                            csrplog.ReportName = HeadingDiv.InnerHtml;
+                            csrplog.ServerID = Environment.MachineName;
+                            csrplog.UserId = sess.LoginId;
+                            csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                                 "&ddlStatus=" + ddlStatus.SelectedItem.Value;
+                            RVReferralReport.Visible = true;
+                            tdMsg.InnerHtml = "";
+                            alldata = GetTrackData(sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
+                            if (alldata != null && alldata.Rows.Count > 0)
+                            {
+                                csrplog.RowCount = alldata.Rows.Count;
+                                ViewState["alldata"] = DataTableToJson(alldata);
+                                string htmlTable = GenerateHtmlTable(alldata);
+                                reporttable.Visible = true;
+                                reporttable.InnerHtml = htmlTable;
+                                string script3 = "Applypagination();";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "show3", script3, true);
+                                Btnexport.Visible = false;
+                                btnexporttr.Visible = true;
                            
+                            }
+                            else
+                            {
+                                csrplog.RowCount = 0;
+                                reporttable.Visible = true;
+                                reporttable.InnerHtml = "No data available";
+                                Btnexport.Visible = false;
+                                Btnexport1.Visible = false;
+                                Btnexport3.Visible = false;
+                                btnexporttr.Visible = false;
+                                btnexportqtr.Visible = false;
+                                btnexportloc.Visible = false;
+
+
+                            }
+                            string script2 = "hideoverlay();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show4", script2, true);
+                            csrplog.Status = "Success";
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            reporttable.Visible = true;
-                            reporttable.InnerHtml = "No data available";
-                            Btnexport.Visible = false;
-                            Btnexport1.Visible = false;
-                            Btnexport3.Visible = false;
-                            btnexporttr.Visible = false;
-                            btnexportqtr.Visible = false;
-                            btnexportloc.Visible = false;
-
-
+                            csrplog.Status = "Failed";
+                            csrplog.ErrorMessage = ex.Message;
+                            throw;
                         }
-                        string script2 = "hideoverlay();";
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show4", script2, true);
+                        finally
+                        {
+                            sw.Stop();
+                            csrplog.EndTime = DateTime.Now;
+                            csrplog.DurationMs = sw.ElapsedMilliseconds;
+                            ReportLogger.Save(csrplog);
+                        }
 
 
                     }
@@ -1122,37 +1254,67 @@ namespace ReferalDB.Reports
                 }
                     else
                     {
-                        RVReferralReport.Visible = false;
-                        tdMsg.InnerHtml = "";
-                        alldata = GetAgeData(sess.SchoolId.ToString(), txtStartAge.Text, txtEndAge.Text);
-                        if (alldata != null && alldata.Rows.Count > 0)
+                        Stopwatch sw = Stopwatch.StartNew();
+                        clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                        try
                         {
-                            ViewState["alldata"] = DataTableToJson(alldata);
-                            string htmlTable = GenerateHtmlTable(alldata);
-                            reporttable.Visible = true;
-                            reporttable.InnerHtml = htmlTable;
-                            string script3 = "Applypagination();";
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
-                            Btnexport.Visible = false;
-                            btnexporttr.Visible = true;
+                            csrplog.StartTime = DateTime.Now;
+                            csrplog.ReportName = HeadingDiv.InnerHtml;
+                            csrplog.ServerID = Environment.MachineName;
+                            csrplog.UserId = sess.LoginId;
+                            csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                                 "&txtStartAge=" + txtStartAge.Text +
+                                                 "&txtEndAge=" + txtEndAge.Text;
 
+
+                            RVReferralReport.Visible = false;
+                            tdMsg.InnerHtml = "";
+                            alldata = GetAgeData(sess.SchoolId.ToString(), txtStartAge.Text, txtEndAge.Text);
+                            if (alldata != null && alldata.Rows.Count > 0)
+                            {
+                                csrplog.RowCount = alldata.Rows.Count;
+                                ViewState["alldata"] = DataTableToJson(alldata);
+                                string htmlTable = GenerateHtmlTable(alldata);
+                                reporttable.Visible = true;
+                                reporttable.InnerHtml = htmlTable;
+                                string script3 = "Applypagination();";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                                Btnexport.Visible = false;
+                                btnexporttr.Visible = true;
+
+                            }
+                            else
+                            {
+                                csrplog.RowCount = 0;
+                                reporttable.Visible = true;
+                                reporttable.InnerHtml = "No data available";
+                                Btnexport.Visible = false;
+                                Btnexport1.Visible = false;
+                                Btnexport3.Visible = false;
+                                btnexporttr.Visible = false;
+                                btnexportqtr.Visible = false;
+                                btnexportloc.Visible = false;
+
+
+
+                            }
+                            string script2 = "hideoverlay();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+                            csrplog.Status = "Success";
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            reporttable.Visible = true;
-                            reporttable.InnerHtml = "No data available";
-                            Btnexport.Visible = false;
-                            Btnexport1.Visible = false;
-                            Btnexport3.Visible = false;
-                            btnexporttr.Visible = false;
-                            btnexportqtr.Visible = false;
-                            btnexportloc.Visible = false;
-
-
-
+                            csrplog.Status = "Failed";
+                            csrplog.ErrorMessage = ex.Message;
+                            throw;
                         }
-                        string script2 = "hideoverlay();";
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+                        finally
+                        {
+                            sw.Stop();
+                            csrplog.EndTime = DateTime.Now;
+                            csrplog.DurationMs = sw.ElapsedMilliseconds;
+                            ReportLogger.Save(csrplog);
+                        }
                     }
                 }
                 else if (txtStartAge.Text == "")
@@ -1185,37 +1347,67 @@ namespace ReferalDB.Reports
                 }
                     else
                     {
-                        RVReferralReport.Visible = false;
-                        tdMsg.InnerHtml = "";
-                        alldata = GetActiveAgeData(sess.SchoolId.ToString(), txtStartAge.Text, txtEndAge.Text, sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
-                        if (alldata != null && alldata.Rows.Count > 0)
+                        Stopwatch sw = Stopwatch.StartNew();
+                        clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                        try
                         {
-                            ViewState["alldata"] = DataTableToJson(alldata);
-                            string htmlTable = GenerateHtmlTable(alldata);
-                            reporttable.Visible = true;
-                            reporttable.InnerHtml = htmlTable;
-                            string script3 = "Applypagination();";
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script3, true);
-                            Btnexport.Visible = false;
-                            btnexporttr.Visible = true;
+                            csrplog.StartTime = DateTime.Now;
+                            csrplog.ReportName = HeadingDiv.InnerHtml;
+                            csrplog.ServerID = Environment.MachineName;
+                            csrplog.UserId = sess.LoginId;
+                            csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                                 "&txtStartAge=" + txtStartAge.Text +
+                                                 "&txtEndAge=" + txtEndAge.Text +
+                                                 "&ddlStatus=" + ddlStatus.SelectedItem.Value;
 
+                            RVReferralReport.Visible = false;
+                            tdMsg.InnerHtml = "";
+                            alldata = GetActiveAgeData(sess.SchoolId.ToString(), txtStartAge.Text, txtEndAge.Text, sess.SchoolId.ToString(), ddlStatus.SelectedItem.Value);
+                            if (alldata != null && alldata.Rows.Count > 0)
+                            {
+                                csrplog.RowCount = alldata.Rows.Count;
+                                ViewState["alldata"] = DataTableToJson(alldata);
+                                string htmlTable = GenerateHtmlTable(alldata);
+                                reporttable.Visible = true;
+                                reporttable.InnerHtml = htmlTable;
+                                string script3 = "Applypagination();";
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "show7", script3, true);
+                                Btnexport.Visible = false;
+                                btnexporttr.Visible = true;
+
+                            }
+                            else
+                            {
+                                csrplog.RowCount = 0;
+                                reporttable.Visible = true;
+                                reporttable.InnerHtml = "No data available";
+                                Btnexport.Visible = false;
+                                Btnexport1.Visible = false;
+                                Btnexport3.Visible = false;
+                                btnexporttr.Visible = false;
+                                btnexportqtr.Visible = false;
+                                btnexportloc.Visible = false;
+
+
+
+                            }
+                            string script2 = "hideoverlay();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show8", script2, true);
+                            csrplog.Status = "Success";
                         }
-                        else
+                        catch (Exception ex)
                         {
-                            reporttable.Visible = true;
-                            reporttable.InnerHtml = "No data available";
-                            Btnexport.Visible = false;
-                            Btnexport1.Visible = false;
-                            Btnexport3.Visible = false;
-                            btnexporttr.Visible = false;
-                            btnexportqtr.Visible = false;
-                            btnexportloc.Visible = false;
-
-
-
+                            csrplog.Status = "Failed";
+                            csrplog.ErrorMessage = ex.Message;
+                            throw;
                         }
-                        string script2 = "hideoverlay();";
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show8", script2, true);
+                        finally
+                        {
+                            sw.Stop();
+                            csrplog.EndTime = DateTime.Now;
+                            csrplog.DurationMs = sw.ElapsedMilliseconds;
+                            ReportLogger.Save(csrplog);
+                        }
                     }
                 }
                 else if (ddlStatus.SelectedItem.Value == "0")
@@ -1305,42 +1497,69 @@ namespace ReferalDB.Reports
             }
             else
             {
-                    reporttable.Visible = false;
-                    reporttable.InnerHtml = "";
-                    nodata.Visible = false;
-                    nodata.Text = "";
-                    RVReferralReport.Visible = false;
-                    sess = (clsSession)Session["UserSession"];
-                    System.Data.DataTable dt = Getfunddata(sess.SchoolId.ToString(), ddlFundingStatus.SelectedItem.Value);
-                    if (dt != null && dt.Rows.Count > 0)
+                    Stopwatch sw = Stopwatch.StartNew();
+                    clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                    try
                     {
-                    string htmlTable = GenerateHtmlTablefund(dt, ddlFundingStatus.SelectedItem.Value);
-                    reporttable.Visible = true;
-                    reporttable.InnerHtml = htmlTable;
-                    string script3 = "Applypagination();";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
-                    Btnexport.Visible = false;
-                        Btnexport1.Visible = false;
-                    Btnexport3.Visible = true;
-                        btnexporttr.Visible = false;
+                        csrplog.StartTime = DateTime.Now;
+                        csrplog.ReportName = HeadingDiv.InnerHtml;
+                        csrplog.ServerID = Environment.MachineName;
+                        reporttable.Visible = false;
+                        reporttable.InnerHtml = "";
+                        nodata.Visible = false;
+                        nodata.Text = "";
+                        RVReferralReport.Visible = false;
+                        sess = (clsSession)Session["UserSession"];
+                        csrplog.UserId = sess.LoginId;
+                        csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                             "&ddlFundingStatus=" + ddlFundingStatus.SelectedItem.Value;
+                        System.Data.DataTable dt = Getfunddata(sess.SchoolId.ToString(), ddlFundingStatus.SelectedItem.Value);
+                        if (dt != null && dt.Rows.Count > 0)
+                        {
+                            csrplog.RowCount = dt.Rows.Count;
+                            string htmlTable = GenerateHtmlTablefund(dt, ddlFundingStatus.SelectedItem.Value);
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = htmlTable;
+                            string script3 = "Applypagination();";
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
+                            Btnexport.Visible = false;
+                            Btnexport1.Visible = false;
+                            Btnexport3.Visible = true;
+                            btnexporttr.Visible = false;
+                        }
+                        else
+                        {
+                            csrplog.RowCount = 0;
+                            reporttable.Visible = true;
+                            reporttable.InnerHtml = "No data available";
+                            Btnexport.Visible = false;
+                            Btnexport1.Visible = false;
+                            Btnexport3.Visible = false;
+                            btnexporttr.Visible = false;
+
+                            btnexportqtr.Visible = false;
+                            btnexportloc.Visible = false;
+
+
+
+                        }
+                        string script2 = "hideoverlay();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                        csrplog.Status = "Success";
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        reporttable.Visible = true;
-                        reporttable.InnerHtml = "No data available";
-                        Btnexport.Visible = false;
-                        Btnexport1.Visible = false;
-                        Btnexport3.Visible = false;
-                        btnexporttr.Visible = false;
-
-                        btnexportqtr.Visible = false;
-                        btnexportloc.Visible = false;
-
-
-
+                        csrplog.Status = "Failed";
+                        csrplog.ErrorMessage = ex.Message;
+                        throw;
                     }
-                    string script2 = "hideoverlay();";
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                    finally
+                    {
+                        sw.Stop();
+                        csrplog.EndTime = DateTime.Now;
+                        csrplog.DurationMs = sw.ElapsedMilliseconds;
+                        ReportLogger.Save(csrplog);
+                    }
                 }
             }
             else
@@ -1378,9 +1597,21 @@ namespace ReferalDB.Reports
                 else
                 {
                     sess = (clsSession)Session["UserSession"];
+                Stopwatch sw = Stopwatch.StartNew();
+                clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                try
+                {
+                    csrplog.StartTime = DateTime.Now;
+                    csrplog.ReportName = HeadingDiv.InnerHtml;
+                    csrplog.ServerID = Environment.MachineName;
+                    csrplog.UserId = sess.LoginId;
+                    csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                         "&txtcity=" + txtcity.Text +
+                                         "&ddlState=" + ddlState.SelectedItem.Value;
                     alldata = GetLocationData(sess.SchoolId.ToString(), txtcity.Text, ddlState.SelectedItem.Value);
                     if (alldata != null && alldata.Rows.Count > 0)
                     {
+                        csrplog.RowCount = alldata.Rows.Count;
                         ViewState["alldata"] = DataTableToJson(alldata);
                         string htmlTable = GenerateHtmlTable(alldata);
                         reporttable.Visible = true;
@@ -1388,26 +1619,41 @@ namespace ReferalDB.Reports
                         string script3 = "Applypagination();";
                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show9", script3, true);
                         Btnexport.Visible = false;
-                    btnexportloc.Visible = true;
-                }
-                else
+                        btnexportloc.Visible = true;
+                    }
+                    else
                     {
-                        
+                        csrplog.RowCount = 0;
                         nodata.Visible = true;
                         nodata.Text = "No data available";
                         Btnexport.Visible = false;
                         Btnexport1.Visible = false;
                         Btnexport3.Visible = false;
-                    btnexporttr.Visible = false;
-                    btnexportqtr.Visible = false;
-                    btnexportloc.Visible = false;
+                        btnexporttr.Visible = false;
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
 
 
 
-                }
-                string script2 = "hideoverlay();";
+                    }
+                    string script2 = "hideoverlay();";
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show10", script2, true);
+                    csrplog.Status = "Success";
                 }
+                catch (Exception ex)
+                {
+                    csrplog.Status = "Failed";
+                    csrplog.ErrorMessage = ex.Message;
+                    throw;
+                }
+                finally
+                {
+                    sw.Stop();
+                    csrplog.EndTime = DateTime.Now;
+                    csrplog.DurationMs = sw.ElapsedMilliseconds;
+                    ReportLogger.Save(csrplog);
+                }
+            }
             //}
             //else if (ddlState.SelectedItem.Value == "0")
             //else
@@ -1470,37 +1716,63 @@ namespace ReferalDB.Reports
                      tdMsg.InnerHtml = "";
                      RVReferralReport.Visible = false;
                      sess = (clsSession)Session["UserSession"];
-
-                     alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
-                     if (alldata != null && alldata.Rows.Count > 0)
-                     {
-                         ViewState["alldata"] = DataTableToJson(alldata);
-                         string htmlTable = GenerateHtmlTable(alldata);
-                         reporttable.Visible = true;
-                         reporttable.InnerHtml = htmlTable;
-                         string script3 = "Applypagination();";
-                         ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
-                         Btnexport.Visible = false;
+                Stopwatch sw = Stopwatch.StartNew();
+                clsReportExecutionLog csrplog = new clsReportExecutionLog();
+                try
+                {
+                    csrplog.StartTime = DateTime.Now;
+                    csrplog.ReportName = HeadingDiv.InnerHtml;
+                    csrplog.ServerID = Environment.MachineName;
+                    csrplog.UserId = sess.LoginId;
+                    csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                         "&ddlQuarter=" + ddlQuarter.SelectedItem.Value;
+                    alldata = GetQuarterData(sess.SchoolId.ToString(), ddlQuarter.SelectedItem.Value);
+                    if (alldata != null && alldata.Rows.Count > 0)
+                    {
+                        csrplog.RowCount = alldata.Rows.Count;
+                        ViewState["alldata"] = DataTableToJson(alldata);
+                        string htmlTable = GenerateHtmlTable(alldata);
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = htmlTable;
+                        string script3 = "Applypagination();";
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "show11", script3, true);
+                        Btnexport.Visible = false;
                         btnexporttr.Visible = false;
-                    btnexportqtr.Visible = true;
-                     }
-                     else
-                     {
-                         reporttable.Visible = true;
-                         reporttable.InnerHtml = "No data available";
-                         Btnexport.Visible = false;
-                         Btnexport1.Visible = false;
-                         Btnexport3.Visible = false;
-                    btnexporttr.Visible = false;
-                    btnexportqtr.Visible = false;
-                    btnexportloc.Visible = false;
+                        btnexportqtr.Visible = true;
+                    }
+                    else
+                    {
+                        csrplog.RowCount = 0;
+                        reporttable.Visible = true;
+                        reporttable.InnerHtml = "No data available";
+                        Btnexport.Visible = false;
+                        Btnexport1.Visible = false;
+                        Btnexport3.Visible = false;
+                        btnexporttr.Visible = false;
+                        btnexportqtr.Visible = false;
+                        btnexportloc.Visible = false;
 
 
 
+                    }
+                    string script2 = "hideoverlay();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
+                    csrplog.Status = "Success";
                 }
-                string script2 = "hideoverlay();";
-                     ScriptManager.RegisterStartupScript(this, this.GetType(), "show12", script2, true);
-                 }
+                catch (Exception ex)
+                {
+                    csrplog.Status = "Failed";
+                    csrplog.ErrorMessage = ex.Message;
+                    throw;
+                }
+                finally
+                {
+                    sw.Stop();
+                    csrplog.EndTime = DateTime.Now;
+                    csrplog.DurationMs = sw.ElapsedMilliseconds;
+                    ReportLogger.Save(csrplog);
+                }
+            }
             //}
             //else
             //{
@@ -2367,43 +2639,69 @@ namespace ReferalDB.Reports
             var selectedItems = ddlReferrals.Items.Cast<ListItem>().Where(i => i.Selected).ToList();
             System.Data.DataTable dt = null;
             sess = (clsSession)Session["UserSession"];
-            
-            if (selectedItems.Count == 0 || selectedItems.Count == ddlReferrals.Items.Count)
+            Stopwatch sw = Stopwatch.StartNew();
+            clsReportExecutionLog csrplog = new clsReportExecutionLog();
+            try
             {
-                dt = Getallcontact(sess.SchoolId.ToString(), "0");
+                csrplog.StartTime = DateTime.Now;
+                csrplog.ReportName = HeadingDiv.InnerHtml;
+                csrplog.ServerID = Environment.MachineName;
+                csrplog.UserId = sess.LoginId;
+                csrplog.Parameters = "SchoolId=" + sess.SchoolId.ToString() +
+                                     "&selectedItems=" + string.Join(",", selectedItems.Select(i => i.Value));
+                if (selectedItems.Count == 0 || selectedItems.Count == ddlReferrals.Items.Count)
+                {
+                    dt = Getallcontact(sess.SchoolId.ToString(), "0");
                
-    }
-            else
-            {
-                string studs = string.Join(",", selectedItems.Select(i => i.Value));
-                dt = Getallcontact(sess.SchoolId.ToString(), studs);
-            }
-            if (dt != null && dt.Rows.Count > 0)
-            {
-                ViewState["alldata"] = DataTableToJson(dt);
-                string htmlTable = GenerateHtmlTablecont(dt);
-                reporttable.Visible = true;
-                reporttable.InnerHtml = htmlTable;
-                string script3 = "Applypagination2();";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
-                Btnexport1.Visible = true;
-            }
-            else
-            {
-                reporttable.Visible = true;
-                reporttable.InnerHtml = "No data available";
-                Btnexport.Visible = false;
-                Btnexport1.Visible = false;
-                Btnexport3.Visible = false;
-                btnexporttr.Visible = false;
-                btnexportqtr.Visible = false;
-                btnexportloc.Visible = false;
+                }
+                else
+                {
+                    string studs = string.Join(",", selectedItems.Select(i => i.Value));
+                    dt = Getallcontact(sess.SchoolId.ToString(), studs);
+                }
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    csrplog.RowCount = dt.Rows.Count;
+                    ViewState["alldata"] = DataTableToJson(dt);
+                    string htmlTable = GenerateHtmlTablecont(dt);
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = htmlTable;
+                    string script3 = "Applypagination2();";
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "show5", script3, true);
+                    Btnexport1.Visible = true;
+                }
+                else
+                {
+                    csrplog.RowCount = 0;
+                    reporttable.Visible = true;
+                    reporttable.InnerHtml = "No data available";
+                    Btnexport.Visible = false;
+                    Btnexport1.Visible = false;
+                    Btnexport3.Visible = false;
+                    btnexporttr.Visible = false;
+                    btnexportqtr.Visible = false;
+                    btnexportloc.Visible = false;
 
 
 
+                }
+                string script2 = "hideoverlay();";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+                csrplog.Status = "Success";
             }
-            string script2 = "hideoverlay();";
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "show6", script2, true);
+            catch (Exception ex)
+            {
+                csrplog.Status = "Failed";
+                csrplog.ErrorMessage = ex.Message;
+                throw;
+            }
+            finally
+            {
+                sw.Stop();
+                csrplog.EndTime = DateTime.Now;
+                csrplog.DurationMs = sw.ElapsedMilliseconds;
+                ReportLogger.Save(csrplog);
+            }
         }
 
     }
